@@ -197,4 +197,18 @@ template $RyuonWindow: Adw.ApplicationWindow {
       split_view.collapsed: true;
     }
   }
+
+  // Short windows use a smaller cover (set from code), so the folder position fits.
+  // Only one breakpoint applies at a time, hence the combined one.
+  Adw.Breakpoint short_breakpoint {
+    condition ("max-height: 700sp")
+  }
+
+  Adw.Breakpoint short_narrow_breakpoint {
+    condition ("max-width: 560sp and max-height: 700sp")
+
+    setters {
+      split_view.collapsed: true;
+    }
+  }
 }

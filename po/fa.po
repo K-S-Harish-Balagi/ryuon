@@ -8,8 +8,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: amberol\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/amberol/-/issues/\n"
-"POT-Creation-Date: 2026-07-08 19:26+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 00:09+0530\n"
 "PO-Revision-Date: 2026-08-08 02:08+0330\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Farsi\n"
@@ -20,60 +20,122 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.9\n"
 
-#: data/io.bassi.Amberol.desktop.in.in:2 data/io.bassi.Amberol.metainfo.xml.in.in:6
-msgid "Amberol"
-msgstr "امبرول"
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:2
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:6
+msgid "Ryuon"
+msgstr ""
 
-#: data/io.bassi.Amberol.desktop.in.in:3
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:3
 msgid "Music Player"
 msgstr "پخش‌کنندهٔ آهنگ"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/io.bassi.Amberol.desktop.in.in:11
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:11
 msgid "music;player;media;audio;playlist;"
 msgstr "music;player:media;موزیک;آهنگ;موسیقی;صدا;صوت;آوا;پخش‌کننده;رسانه;"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:7
-msgid "Plays music, and nothing else"
-msgstr "پخش آهنگ و هیچ چیز دیگر"
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:26
+#, fuzzy
+msgid "Music library folder"
+msgstr "پخش‌کنندهٔ آهنگ"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:9
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:27
 msgid ""
-"Amberol is a music player with no delusions of grandeur. If you just want to "
-"play music available on your local system then Amberol is the music player you "
-"are looking for."
+"The folder that holds your music, one subfolder per album. Empty when no "
+"library is set."
 msgstr ""
-"امبرول پخش‌کنندهٔ آهنگی بدون توهّم بزرگی است. اگر فقط می‌خواهید آهنگ‌های روی سامانهٔ "
-"محلیتان را پخش کنید، امبرول پخش‌کنندهٔ آهنگیست که دنبالش می‌گردید."
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:14
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:31
+#, fuzzy
+msgid "Song to resume"
+msgstr "صف آهنگ‌ها"
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:32
+msgid ""
+"The song that was playing from the music library when the application last "
+"ran."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:36
+msgid "Position to resume"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:37
+msgid "How far into the song to resume, in seconds."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:48
+msgid "Folder order"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:49
+msgid ""
+"The order folders play in: by name, newest first, most songs first, recently "
+"played first, or the manual order kept after moving songs or folders."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:53
+msgid "Open the library at start"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:54
+msgid ""
+"Open the music library automatically when the application starts with an "
+"empty queue."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:58
+msgid "Tidy names on screen"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:59
+msgid ""
+"Show song, artist, album and folder names without download-site tags, "
+"bitrate labels and underscores. Files are never renamed."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:7
+msgid "Plays your music, folder by folder"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:9
+msgid ""
+"Ryuon is a local music player. Point it at your music folder once and it "
+"plays one folder after another. It is a fork of Amberol by Emmanuele Bassi."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:13
 msgid "Current features:"
 msgstr "ویژگی‌های کنونی:"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:16
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:15
 msgid "adaptive UI"
 msgstr "رابط کاربری تطبیقی"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:17
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:16
 msgid "UI recoloring using the album art"
 msgstr "تغییر رنگ رابط کاربری با استفاده از تصویر آلبوم"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:18
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:17
 msgid "drag and drop support to queue songs"
 msgstr "پشتیبانی از کشیدن و انداختن برای صف کردن آهنگ‌ها"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:19
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:18
 msgid "shuffle and repeat"
 msgstr "بُر زدن و تکرار"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:20
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:19
 msgid "MPRIS integration"
 msgstr "یکپارچگی MPRIS"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:48
-#: data/io.bassi.Amberol.metainfo.xml.in.in:50
-msgid "Emmanuele Bassi"
-msgstr "امانوئل باسی"
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:27
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:29
+msgid "Harish"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:47
+msgid "First release of Ryuon, a rebranded fork of Amberol 2026.1"
+msgstr ""
 
 #: src/gtk/playback-control.blp:21
 msgid "Play the Previous Song"
@@ -147,54 +209,113 @@ msgid "Open Directory"
 msgstr "گشودن شاخه"
 
 #: src/gtk/playback-control.blp:164
+#, fuzzy
+msgid "Open _Library"
+msgstr "گشودن شاخه"
+
+#: src/gtk/playback-control.blp:169
+msgid "C_hoose Music Library…"
+msgstr ""
+
+#: src/gtk/playback-control.blp:174
+msgid "Reset to Folder _Order"
+msgstr ""
+
+#: src/gtk/playback-control.blp:179
+#, fuzzy
+msgid "Sort Fol_ders"
+msgstr "افزودن شاخه"
+
+#: src/gtk/playback-control.blp:182
+msgid "By _Name"
+msgstr ""
+
+#: src/gtk/playback-control.blp:188
+msgid "Ne_west First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:194
+msgid "_Most Songs First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:200
+msgid "_Recently Played First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:206
+msgid "M_anual Order"
+msgstr ""
+
+#: src/gtk/playback-control.blp:213
+msgid "R_ename Files on Disk…"
+msgstr ""
+
+#: src/gtk/playback-control.blp:218
+msgid "_Undo Rename"
+msgstr ""
+
+#: src/gtk/playback-control.blp:223
 msgid "Add _Song"
 msgstr "افزودن _آهنگ"
 
-#: src/gtk/playback-control.blp:169
+#: src/gtk/playback-control.blp:228
 msgid "Add _Folder"
 msgstr "افزودن _شاخه"
 
-#: src/gtk/playback-control.blp:174
+#: src/gtk/playback-control.blp:233
 msgid "Clear"
 msgstr "پاک‌سازی"
 
 # این متن یک دکمه برای فعال کردن اینکه از رنگ غالب تصویر جلد آهنگ به عنوان رنگ غالب برنامه استفاده شود، است.
-#: src/gtk/playback-control.blp:181
+#: src/gtk/playback-control.blp:240
 msgid "_Match Cover Art"
 msgstr "انطباق با تصویر جلد"
 
-#: src/gtk/playback-control.blp:186
+#: src/gtk/playback-control.blp:245
 msgid "_Background Playback"
 msgstr "_پخش در پس‌زمینه"
 
-#: src/gtk/playback-control.blp:193
+#: src/gtk/playback-control.blp:250
+msgid "Open Library at S_tart"
+msgstr ""
+
+#: src/gtk/playback-control.blp:255
+msgid "T_idy Names"
+msgstr ""
+
+#: src/gtk/playback-control.blp:262
 msgid "_ReplayGain"
 msgstr "_بهرهٔ بازپخش"
 
-#: src/gtk/playback-control.blp:196
+#: src/gtk/playback-control.blp:265
 msgctxt "replaygain-menu"
 msgid "_Album"
 msgstr "آلبو_م"
 
-#: src/gtk/playback-control.blp:202
+#: src/gtk/playback-control.blp:271
 msgctxt "replaygain-menu"
 msgid "_Song"
 msgstr "آهن_گ"
 
-#: src/gtk/playback-control.blp:208
+#: src/gtk/playback-control.blp:277
 msgctxt "replaygain-menu"
 msgid "_Disabled"
 msgstr "_از کار افتاده"
 
-#: src/gtk/playback-control.blp:217
+#: src/gtk/playback-control.blp:286
+msgid "_Preferences"
+msgstr ""
+
+#: src/gtk/playback-control.blp:291
 msgid "_Keyboard Shortcuts"
 msgstr "_میان‌برهای صفحه‌کلید"
 
-#: src/gtk/playback-control.blp:222
-msgid "_About Amberol"
+#: src/gtk/playback-control.blp:296
+#, fuzzy
+msgid "_About Ryuon"
 msgstr "_دربارهٔ امبرول"
 
-#: src/gtk/playback-control.blp:227
+#: src/gtk/playback-control.blp:301
 msgid "_Quit"
 msgstr "_خروج"
 
@@ -202,37 +323,48 @@ msgstr "_خروج"
 msgid "Search Songs in the Playlist"
 msgstr "جست‌وجوی آهنگ‌های سیاههٔ پخش"
 
-#: src/gtk/playlist-view.blp:25
+#: src/gtk/playlist-view.blp:24
+#, fuzzy
+msgid "Show Folders"
+msgstr "افزودن شاخه"
+
+#: src/gtk/playlist-view.blp:33
 msgid "Playlist"
 msgstr "سیاههٔ پخش"
 
-#: src/gtk/playlist-view.blp:47
+#: src/gtk/playlist-view.blp:55
 msgid "Close the Playlist"
 msgstr "بستن سیاههٔ پخش"
 
-#: src/gtk/playlist-view.blp:55
+#: src/gtk/playlist-view.blp:63
 msgid "Select Songs in the Playlist"
 msgstr "گزینش آهنگ‌های سیاههٔ پخش"
 
-#: src/gtk/playlist-view.blp:62
+#: src/gtk/playlist-view.blp:70
 msgid "Search songs"
 msgstr "جست‌وجوی آهنگ‌ها"
 
-#: src/gtk/playlist-view.blp:66
+#: src/gtk/playlist-view.blp:74
 msgctxt "a11y"
 msgid "Search"
 msgstr "جست‌وجو"
 
-#: src/gtk/playlist-view.blp:67
+#: src/gtk/playlist-view.blp:75
 msgctxt "a11y"
 msgid "Type to search songs"
 msgstr "نوشتن برای جست‌وجوی آهنگ‌ها"
 
-#: src/gtk/playlist-view.blp:110
+#: src/gtk/playlist-view.blp:126
+#, fuzzy
+msgctxt "a11y"
+msgid "Folders"
+msgstr "افزودن شاخه"
+
+#: src/gtk/playlist-view.blp:148
 msgid "Select All Songs"
 msgstr "گزینش تمامی آهنگ‌ها"
 
-#: src/gtk/playlist-view.blp:123
+#: src/gtk/playlist-view.blp:161
 msgid "Remove Selected Songs"
 msgstr "برداشتن آهنگ‌های برگزیده"
 
@@ -288,50 +420,66 @@ msgstr "افزودن شاخه‌ای به سیاههٔ پخش"
 
 #: src/gtk/shortcuts-dialog.blp:47
 msgctxt "shortcut window"
+msgid "Open the music library"
+msgstr ""
+
+#: src/gtk/shortcuts-dialog.blp:52
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr ""
+
+#: src/gtk/shortcuts-dialog.blp:57
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Show folders or songs in the playlist"
+msgstr "جست‌وجوی آهنگ‌های سیاههٔ پخش"
+
+#: src/gtk/shortcuts-dialog.blp:62
+msgctxt "shortcut window"
 msgid "Clear the playlist"
 msgstr "پاک‌سازی سیاههٔ پخش"
 
-#: src/gtk/shortcuts-dialog.blp:52
+#: src/gtk/shortcuts-dialog.blp:67
 msgctxt "shortcut window"
 msgid "Toggle the playlist pane"
 msgstr "تغییر وضعیت قاب سیاههٔ پخش"
 
-#: src/gtk/shortcuts-dialog.blp:57
+#: src/gtk/shortcuts-dialog.blp:72
 msgctxt "shortcut window"
 msgid "Search the playlist"
 msgstr "جست‌وجوی سیاههٔ پخش"
 
-#: src/gtk/shortcuts-dialog.blp:62
+#: src/gtk/shortcuts-dialog.blp:77
 msgctxt "shortcut window"
 msgid "Toggle shuffling songs"
 msgstr "تغییر وضعیت بُر زدن آهنگ‌ها"
 
-#: src/gtk/shortcuts-dialog.blp:68
+#: src/gtk/shortcuts-dialog.blp:83
 msgctxt "shortcut window"
 msgid "Playback"
 msgstr "پخش"
 
-#: src/gtk/shortcuts-dialog.blp:71
+#: src/gtk/shortcuts-dialog.blp:86
 msgctxt "shortcut window"
 msgid "Toggle play/pause"
 msgstr "تغییر وضعیت پخش/مکث"
 
-#: src/gtk/shortcuts-dialog.blp:76
+#: src/gtk/shortcuts-dialog.blp:91
 msgctxt "shortcut window"
 msgid "Previous song"
 msgstr "آهنگ پیشین"
 
-#: src/gtk/shortcuts-dialog.blp:81
+#: src/gtk/shortcuts-dialog.blp:96
 msgctxt "shortcut window"
 msgid "Next song"
 msgstr "آهنگ بعدی"
 
-#: src/gtk/shortcuts-dialog.blp:86
+#: src/gtk/shortcuts-dialog.blp:101
 msgctxt "shortcut window"
 msgid "Seek backwards in the current song"
 msgstr "عقب رفتن در آهنگ کنونی"
 
-#: src/gtk/shortcuts-dialog.blp:91
+#: src/gtk/shortcuts-dialog.blp:106
 msgctxt "shortcut window"
 msgid "Seek forward in the current song"
 msgstr "جلو رفتن در آهنگ کنونی"
@@ -349,56 +497,66 @@ msgstr ""
 "مدیر پرونده‌تان به پنجرهٔ برنامه بکشید"
 
 #: src/gtk/window.blp:48
+#, fuzzy
+msgid "Open Library"
+msgstr "گشودن شاخه"
+
+#: src/gtk/window.blp:58
 msgid "Restore Playlist"
 msgstr "بازگردانی سیاههٔ پخش"
 
-#: src/gtk/window.blp:58
+#: src/gtk/window.blp:68
 msgid "Add Folder"
 msgstr "افزودن شاخه"
 
-#: src/gtk/window.blp:67
+#: src/gtk/window.blp:77
 msgid "Add Song"
 msgstr "افزودن آهنگ"
 
-#: src/gtk/window.blp:128
+#: src/gtk/window.blp:138
 msgctxt "a11y"
 msgid "Elapsed time"
 msgstr "زمان رفته"
 
-#: src/gtk/window.blp:142
+#: src/gtk/window.blp:152
 msgctxt "a11y"
 msgid "Remaining time"
 msgstr "زمان مانده"
 
+#: src/application.rs:308
+msgid "Ryuon is a fork of Amberol by Emmanuele Bassi."
+msgstr ""
+
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/application.rs:243
+#: src/application.rs:311
 msgid "translator-credits"
 msgstr ""
 "دانیال بهزادی <dani.behzi@ubuntu.com>\n"
 "سید حسین موسوی فرد <shmf.mousavi1385@gmail.com>\n"
 "سید اسحاق مقیم شهیدانی <eshagh094@gmail.com>"
 
-#: src/application.rs:255
-msgid "Amberol needs to run in the background to play music"
+#: src/application.rs:323
+#, fuzzy
+msgid "Ryuon needs to run in the background to play music"
 msgstr "لازم است امبرول برای پخش آهنگ در پس‌زمینه اجرا شود"
 
 #: src/audio/inhibit_controller.rs:40
 msgid "Playback in progress"
 msgstr "پخش در حال انجام"
 
-#: src/audio/song.rs:341
+#: src/audio/song.rs:362
 msgid "Unknown artist"
 msgstr "هنرمند ناشناس"
 
-#: src/audio/song.rs:348
+#: src/audio/song.rs:369
 msgid "Unknown title"
 msgstr "عنوان ناشناس"
 
-#: src/audio/song.rs:355
+#: src/audio/song.rs:377
 msgid "Unknown album"
 msgstr "آلبوم ناشناس"
 
-#: src/cover_picture.rs:75
+#: src/cover_picture.rs:79
 msgid "Cover image"
 msgstr "تصویر جلد"
 
@@ -414,68 +572,389 @@ msgstr "تکرار تمامی آهنگ‌ها"
 msgid "Repeat the Current Song"
 msgstr "تکرار آهنگ کنونی"
 
-#: src/window.rs:149
+#: src/window.rs:191
 msgid "Audio files"
 msgstr "پرونده‌های صوتی"
 
-#: src/window.rs:159
+#: src/window.rs:201
 msgid "_Add Song"
 msgstr "_افزودن آهنگ"
 
-#: src/window.rs:163
+#: src/window.rs:205
 msgid "Open File"
 msgstr "گشودن پرونده"
 
-#: src/window.rs:168 src/window.rs:190 src/window.rs:1487
+#: src/window.rs:210 src/window.rs:232 src/window.rs:277 src/window.rs:2809
 msgid "Unable to access files"
 msgstr "ناتوان در دسترسی به پرونده‌ها"
 
-#: src/window.rs:182
+#: src/window.rs:224
 msgid "_Add Folder"
 msgstr "_افزودن شاخه"
 
-#: src/window.rs:185
+#: src/window.rs:227
 msgid "Open Folder"
 msgstr "گشودن شاخه"
 
-#: src/window.rs:512
+#: src/window.rs:262
+msgid "_Use as Library"
+msgstr ""
+
+#: src/window.rs:265
+msgid "Choose Music Library"
+msgstr ""
+
+#: src/window.rs:710 src/window.rs:946
+msgid "Choose a music library first"
+msgstr ""
+
+#: src/window.rs:716
+#, rust-format
+msgid "Music library not found: {}"
+msgstr ""
+
+#: src/window.rs:748
+msgid "No songs found in the music library"
+msgstr ""
+
+#: src/window.rs:789
+msgid "Library"
+msgstr ""
+
+#: src/window.rs:792
+#, fuzzy
+msgid "Music Library"
+msgstr "پخش‌کنندهٔ آهنگ"
+
+#: src/window.rs:793
+msgid "Not chosen"
+msgstr ""
+
+#: src/window.rs:798
+msgid "_Choose…"
+msgstr ""
+
+#: src/window.rs:825
+msgid "Open Library at Start"
+msgstr ""
+
+#: src/window.rs:826
+msgid "When Ryuon starts with an empty playlist"
+msgstr ""
+
+#: src/window.rs:833
+msgid "By Name"
+msgstr ""
+
+#: src/window.rs:834
+msgid "Newest First"
+msgstr ""
+
+#: src/window.rs:835
+msgid "Most Songs First"
+msgstr ""
+
+#: src/window.rs:836
+msgid "Recently Played First"
+msgstr ""
+
+#: src/window.rs:837
+msgid "Manual Order"
+msgstr ""
+
+#: src/window.rs:841
+msgid "Folder Order"
+msgstr ""
+
+#: src/window.rs:858
+msgid "Tidy Names"
+msgstr ""
+
+#: src/window.rs:859
+msgid ""
+"Hide download-site tags, bitrates and underscores on screen; files are not "
+"renamed"
+msgstr ""
+
+#: src/window.rs:865
+msgid "Rename Files on Disk…"
+msgstr ""
+
+#: src/window.rs:871
+#, fuzzy
+msgid "Playback"
+msgstr "پخش"
+
+#: src/window.rs:873
+#, fuzzy
+msgid "Background Playback"
+msgstr "_پخش در پس‌زمینه"
+
+#: src/window.rs:874
+msgid "Keep playing after the window is closed"
+msgstr ""
+
+# این متن یک دکمه برای فعال کردن اینکه از رنگ غالب تصویر جلد آهنگ به عنوان رنگ غالب برنامه استفاده شود، است.
+#: src/window.rs:879
+#, fuzzy
+msgid "Match Cover Art"
+msgstr "انطباق با تصویر جلد"
+
+#: src/window.rs:880
+msgid "Color the window from the cover of the playing song"
+msgstr ""
+
+#: src/window.rs:914
+msgid "Ryuon Cannot Rename Files Here"
+msgstr ""
+
+#: src/window.rs:916
+msgid ""
+"The music library is read-only for Ryuon. To allow renaming, run this "
+"command in a terminal, then restart Ryuon:"
+msgstr ""
+
+#: src/window.rs:926
+msgid "_Copy Command"
+msgstr ""
+
+#: src/window.rs:926
+msgid "_Close"
+msgstr ""
+
+#: src/window.rs:934
+msgid "Command copied"
+msgstr ""
+
+#: src/window.rs:952
+#, rust-format
+msgid "Unable to read the music library: {}"
+msgstr ""
+
+#: src/window.rs:957
+msgid "All names in the music library are already tidy"
+msgstr ""
+
+#. Translators: the `{}` are the number of folders, the number of songs and the
+#. music library location
+#: src/window.rs:969
+#, rust-format
+msgid ""
+"{} folders and {} songs in {} get their tidy names. Nothing is deleted, and "
+"Undo Rename puts every name back."
+msgstr ""
+
+#: src/window.rs:975
+#, rust-format
+msgid "One tidy name is already taken, so it gets a number added."
+msgid_plural "{} tidy names are already taken, so they get a number added."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:981
+msgid "Rename Files on Disk?"
+msgstr ""
+
+#: src/window.rs:1001
+msgid "Changes"
+msgstr ""
+
+#: src/window.rs:1009
+#, rust-format
+msgid "Type {} to confirm"
+msgstr ""
+
+#: src/window.rs:1013
+#, rust-format
+msgid "Type the number of changes, {}, to confirm"
+msgstr ""
+
+#: src/window.rs:1021
+msgid "_Cancel"
+msgstr "_لغو"
+
+#: src/window.rs:1021
+msgid "_Rename"
+msgstr ""
+
+#: src/window.rs:1073
+#, rust-format
+msgid "Renamed one folder or song"
+msgid_plural "Renamed {} folders and songs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:1078 src/window.rs:1247
+msgid "Undo"
+msgstr ""
+
+#: src/window.rs:1084
+#, rust-format
+msgid "Nothing was renamed: {}"
+msgstr ""
+
+#: src/window.rs:1091
+#, rust-format
+msgid "Renamed {} of {}, then stopped: {}. Undo Rename puts them back."
+msgstr ""
+
+#: src/window.rs:1109
+#, rust-format
+msgid "Unable to read the rename record: {}"
+msgstr ""
+
+#: src/window.rs:1119
+#, rust-format
+msgid "Put back one name"
+msgid_plural "Put back {} names"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:1124
+#, rust-format
+msgid "Undo stopped: {}"
+msgstr ""
+
+#: src/window.rs:1232
+msgid "Turn off shuffle to change the order"
+msgstr ""
+
+#: src/window.rs:1365
+msgid ""
+"The new folder order applies when shuffle is off and the library opens again"
+msgstr ""
+
+#: src/window.rs:1413
+#, fuzzy, rust-format
+msgid "One song"
+msgid_plural "{} songs"
+msgstr[0] "آهنگ بعدی"
+msgstr[1] "آهنگ بعدی"
+
+#: src/window.rs:1420
+#, fuzzy
+msgid "Playing"
+msgstr "در ادامه پخش می‌شود"
+
+#: src/window.rs:1430 src/window.rs:1584
+#, fuzzy
+msgid "Play This Folder Next"
+msgstr "پخش آهنگ بعدی"
+
+#: src/window.rs:1431 src/window.rs:1585
+#, fuzzy
+msgid "Move Folder Up"
+msgstr "گشودن شاخه"
+
+#: src/window.rs:1432 src/window.rs:1586
+msgid "Move Folder Down"
+msgstr ""
+
+#: src/window.rs:1437
+msgid "Folder Options"
+msgstr ""
+
+#: src/window.rs:1490 src/window.rs:1492 src/window.rs:1520
+#, rust-format
+msgid "“{}” plays next"
+msgstr ""
+
+#: src/window.rs:1495 src/window.rs:1524
+#, rust-format
+msgid "Moved “{}” up"
+msgstr ""
+
+#: src/window.rs:1498 src/window.rs:1529
+#, rust-format
+msgid "Moved “{}” down"
+msgstr ""
+
+#: src/window.rs:1515
+msgid "This folder is already playing"
+msgstr ""
+
+#: src/window.rs:1559
+#, rust-format
+msgid "Moved “{}”"
+msgstr ""
+
+#: src/window.rs:1577
+#, fuzzy
+msgid "Play Next"
+msgstr "در ادامه پخش می‌شود"
+
+#: src/window.rs:1578
+msgid "Move Up"
+msgstr ""
+
+#: src/window.rs:1579
+msgid "Move Down"
+msgstr ""
+
+#: src/window.rs:1590
+#, fuzzy
+msgid "Remove from Playlist"
+msgstr "بازگردانی سیاههٔ پخش"
+
+#. Translators: the `{}` placeholders are, in order: folder number, number
+#. of folders, song number in the folder, number of songs in the folder
+#: src/window.rs:1645
+#, rust-format
+msgid "Folder {} of {} · Song {} of {}"
+msgstr ""
+
+#: src/window.rs:1657
+#, rust-format
+msgid "Up next: {} · one song"
+msgid_plural "Up next: {} · {} songs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:1676
 msgid "No available song found"
 msgstr "هیچ آهنگی پیدا نشد"
 
-#: src/window.rs:574
+#: src/window.rs:1750
 msgid "No songs found"
 msgstr "هیچ آهنگی پیدا نشد"
 
-#: src/window.rs:607
+#: src/window.rs:1800
 msgid "Added a new song"
 msgstr "آهنگی جدید اضافه شد"
 
-#: src/window.rs:608
+#: src/window.rs:1801
 msgid "Play"
 msgstr "پخش"
 
 #. Translators: the `{}` must be left unmodified;
 #. it will be expanded to the number of songs added
 #. to the playlist
-#: src/window.rs:617
+#: src/window.rs:1810
 #, rust-format
 msgid "Added one song"
 msgid_plural "Added {} songs"
 msgstr[0] "آهنگی اضافه شد"
 msgstr[1] "{} آهنگ اضافه شدند"
 
-#: src/window.rs:1247
+#: src/window.rs:1818
+#, rust-format
+msgid "Skipped one duplicate"
+msgid_plural "Skipped {} duplicates"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:2552
 msgid "Unable to access dropped files"
 msgstr "ناتوان در دسترسی به پرونده‌های انداخته"
 
-#: src/window.rs:1341
+#: src/window.rs:2649
 #, rust-format
 msgid "{} minute"
 msgid_plural "{} minutes"
 msgstr[0] "{} دقیقه"
 msgstr[1] "{} دقیقه"
 
-#: src/window.rs:1352
+#: src/window.rs:2660
 #, rust-format
 msgid "{hours} hour {minutes} remaining"
 msgid_plural "{hours} hours {minutes} remaining"
@@ -485,20 +964,20 @@ msgstr[1] "{hours} ساعت و {minutes} مانده"
 #. Translators: the '{}' must be left unmodified, and
 #. it will be replaced by the number of minutes remaining
 #. in the playlist
-#: src/window.rs:1362
+#: src/window.rs:2670
 #, rust-format
 msgid "{} minute remaining"
 msgid_plural "{} minutes remaining"
 msgstr[0] "{} دقیقه مانده"
 msgstr[1] "{} دقیقه مانده"
 
-#: src/window.rs:1466
+#: src/window.rs:2788
 msgid "No song selected"
 msgstr "هیچ آهنگی گزیده نشده"
 
 #. Translators: The '{}' must be left unmodified, and
 #. it is expanded to the number of songs selected
-#: src/window.rs:1471
+#: src/window.rs:2793
 #, rust-format
 msgid "{} song selected"
 msgid_plural "{} songs selected"
@@ -508,17 +987,31 @@ msgstr[1] "{} آهنگ گزیده شده"
 #. Translators: `{title}` and `{artist}` must be left
 #. untranslated; they will expand to the title and
 #. artist of the currently playing song, respectively
-#: src/window.rs:1527
+#: src/window.rs:2849
 #, rust-format
 msgid "Currently playing “{title}” by “{artist}”"
 msgstr "در حال پخش «{title}» از «{artist}»"
 
-#: src/window.rs:1564
+#: src/window.rs:2886
 msgid "Unable to open folder"
 msgstr "ناتوان در گشودن شاخه"
 
-#~ msgid "_Cancel"
-#~ msgstr "_لغو"
+#~ msgid "Amberol"
+#~ msgstr "امبرول"
+
+#~ msgid "Plays music, and nothing else"
+#~ msgstr "پخش آهنگ و هیچ چیز دیگر"
+
+#~ msgid ""
+#~ "Amberol is a music player with no delusions of grandeur. If you just want "
+#~ "to play music available on your local system then Amberol is the music "
+#~ "player you are looking for."
+#~ msgstr ""
+#~ "امبرول پخش‌کنندهٔ آهنگی بدون توهّم بزرگی است. اگر فقط می‌خواهید آهنگ‌های روی "
+#~ "سامانهٔ محلیتان را پخش کنید، امبرول پخش‌کنندهٔ آهنگیست که دنبالش می‌گردید."
+
+#~ msgid "Emmanuele Bassi"
+#~ msgstr "امانوئل باسی"
 
 #~ msgid "_Track"
 #~ msgstr "_قطعه"
@@ -553,10 +1046,6 @@ msgstr "ناتوان در گشودن شاخه"
 #~ msgstr "امبرول دارد در پس‌زمینه اجرا می‌شود"
 
 #~ msgctxt "shortcut window"
-#~ msgid "Songs Queue"
-#~ msgstr "صف آهنگ‌ها"
-
-#~ msgctxt "shortcut window"
 #~ msgid "Queue a Song"
 #~ msgstr "افزودن یک آهنگ به صف"
 
@@ -571,9 +1060,6 @@ msgstr "ناتوان در گشودن شاخه"
 #~ msgctxt "shortcut window"
 #~ msgid "Previous Track"
 #~ msgstr "قطعهٔ قبلی"
-
-#~ msgid "Playing next"
-#~ msgstr "در ادامه پخش می‌شود"
 
 #~ msgctxt "shortcut window"
 #~ msgid "Seek Backwards"
@@ -620,7 +1106,8 @@ msgstr "ناتوان در گشودن شاخه"
 #~ msgstr "استوار نگه‌داشتن رابط کاربری هنگام تغییر وضعیت فهرست پخش"
 
 #~ msgid ""
-#~ "Many, many thanks to all of those who opened an issue after the 0.4.0 release!"
+#~ "Many, many thanks to all of those who opened an issue after the 0.4.0 "
+#~ "release!"
 #~ msgstr ""
 #~ "تشکر بسیار فراوان از همه کسانی که بعد از نگارش ۰.۴.۰ مشکلی را باز کردند!"
 
@@ -637,7 +1124,8 @@ msgstr "ناتوان در گشودن شاخه"
 #~ msgstr "هنگام راه‌اندازی آمبرول یک صفحهٔ اولیه را نشان می‌دهد"
 
 #~ msgid "Make the layout more mobile friendly without impacting desktop users"
-#~ msgstr "بدون تأثیر بر کاربران میزکار، طرح‌بندی را برای تلفن همراه راحت‌تر می‌کند"
+#~ msgstr ""
+#~ "بدون تأثیر بر کاربران میزکار، طرح‌بندی را برای تلفن همراه راحت‌تر می‌کند"
 
 #~ msgid "Allow removing songs from the playlist"
 #~ msgstr "اجازهٔ برداشتن آهنگ از فهرست پخش را می‌دهد"
@@ -645,7 +1133,8 @@ msgstr "ناتوان در گشودن شاخه"
 #~ msgid ""
 #~ "Add initial (experimental) support for recursive loading of music folders"
 #~ msgstr ""
-#~ "پشتیبانی اولیه (آزمایشی) را برای بارگذاری بازگشتی شاخه‌های موسیقی اضافه کنید"
+#~ "پشتیبانی اولیه (آزمایشی) را برای بارگذاری بازگشتی شاخه‌های موسیقی اضافه "
+#~ "کنید"
 
 #~ msgid "Show the cover art for music tracks in the playlist"
 #~ msgstr "تصویر جلد قطعه‌های موسیقی را در فهرست پخش نمایش می‌دهد"

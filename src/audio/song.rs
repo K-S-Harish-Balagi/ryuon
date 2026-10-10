@@ -138,6 +138,10 @@ impl SongData {
             }
         };
 
+        let has_tags = [&artist, &title, &album]
+            .iter()
+            .any(|t| t.as_deref().is_some_and(|t| !t.trim().is_empty()));
+
         // No title tag (or tags we could not read): show the file name, not "Unknown title"
         if title.as_deref().map_or(true, |t| t.trim().is_empty()) {
             title = path
@@ -163,6 +167,11 @@ impl SongData {
                 }
                 if let Some(ref album) = album {
                     hasher.update(album);
+                }
+                // Without tags, the name alone would make "01 Track.mp3" in every album folder
+                // the same song, and all but one would be skipped as duplicates
+                if !has_tags {
+                    hasher.update(file.uri().as_bytes());
                 }
 
                 Some(format!("{:x}", hasher.finalize()))

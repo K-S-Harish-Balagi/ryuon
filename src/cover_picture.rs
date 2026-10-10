@@ -14,6 +14,8 @@ pub enum CoverSize {
     #[default]
     Large = 0,
     Small = 1,
+    // For short windows, so the main view fits its 660 px minimum height
+    Medium = 2,
 }
 
 impl AsRef<str> for CoverSize {
@@ -21,6 +23,7 @@ impl AsRef<str> for CoverSize {
         match self {
             CoverSize::Large => "large",
             CoverSize::Small => "small",
+            CoverSize::Medium => "medium",
         }
     }
 }
@@ -33,6 +36,7 @@ mod imp {
 
     const LARGE_SIZE: i32 = 192;
     const SMALL_SIZE: i32 = 48;
+    const MEDIUM_SIZE: i32 = 144;
 
     #[derive(Debug, Default)]
     pub struct CoverPicture {
@@ -115,6 +119,7 @@ mod imp {
             match self.cover_size.get() {
                 CoverSize::Large => (LARGE_SIZE, LARGE_SIZE, -1, -1),
                 CoverSize::Small => (SMALL_SIZE, SMALL_SIZE, -1, -1),
+                CoverSize::Medium => (MEDIUM_SIZE, MEDIUM_SIZE, -1, -1),
             }
         }
 

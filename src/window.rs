@@ -18,6 +18,7 @@ use log::debug;
 use crate::{
     audio::{AudioPlayer, RepeatMode, ReplayGainMode, Song},
     config::APPLICATION_ID,
+    cover_picture::CoverSize,
     drag_overlay::DragOverlay,
     i18n::{i18n, i18n_f, i18n_k, ni18n_f, ni18n_k},
     library::{self, FolderSort, FolderStats},
@@ -121,6 +122,10 @@ mod imp {
         pub announced_folder: Cell<usize>,
         // The move that undoes the last reorder: (start, len, to)
         pub undo_move: Cell<Option<(u32, u32, u32)>>,
+        #[template_child]
+        pub short_breakpoint: TemplateChild<adw::Breakpoint>,
+        #[template_child]
+        pub short_narrow_breakpoint: TemplateChild<adw::Breakpoint>,
         pub last_played_folder: RefCell<Option<PathBuf>>,
         // Songs are being added to the queue
         pub loading: Cell<bool>,
@@ -335,6 +340,8 @@ mod imp {
                 pending_resume: RefCell::default(),
                 announced_folder: Cell::new(0),
                 undo_move: Cell::new(None),
+                short_breakpoint: TemplateChild::default(),
+                short_narrow_breakpoint: TemplateChild::default(),
                 last_played_folder: RefCell::new(None),
                 loading: Cell::new(false),
                 replaygain_mode: Cell::new(ReplayGainMode::default()),
@@ -419,6 +426,7 @@ impl Window {
 
         win.setup_waveform();
         win.setup_actions();
+        win.setup_short_layout();
         win.update_undo_rename();
         win.setup_playlist();
         win.setup_drop_target();
@@ -533,6 +541,22 @@ impl Window {
                     .activate(|this: &Window, _, _| this.show_preferences())
                     .build(),
             ]);
+        }
+    }
+
+    fn setup_short_layout(&self) {
+        let imp = self.imp();
+        for breakpoint in [imp.short_breakpoint.get(), imp.short_narrow_breakpoint.get()] {
+            breakpoint.connect_apply(clone!(
+                #[weak(rename_to = win)]
+                self,
+                move |_| win.imp().song_cover.album_image().set_cover_size(CoverSize::Medium)
+            ));
+            breakpoint.connect_unapply(clone!(
+                #[weak(rename_to = win)]
+                self,
+                move |_| win.imp().song_cover.album_image().set_cover_size(CoverSize::Large)
+            ));
         }
     }
 
@@ -1752,7 +1776,7 @@ impl Window {
                                     .find(|&i| queue.song_at(i).map_or(false, |s| s.uri() == uri));
                                 if let Some(index) = found {
                                     player.skip_to(index);
-                                    player.pause();
+                                    player.cue();
                                     // Changing song saved it at 0 s; keep the old position
                                     // until the seek has happened
                                     let _ = win

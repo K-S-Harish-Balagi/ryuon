@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AMBEROL SK\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/amberol/-/issues/\n"
-"POT-Creation-Date: 2025-08-20 02:48+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 00:09+0530\n"
 "PO-Revision-Date: 2025-08-20 09:21+0200\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovenčina <LL@li.org>\n"
@@ -17,351 +17,488 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n>=2 && n<=4 ? 1 : 2);\n"
 "X-Generator: Poedit 3.6\n"
 
-#: data/io.bassi.Amberol.desktop.in.in:2
-#: data/io.bassi.Amberol.metainfo.xml.in.in:6
-msgid "Amberol"
-msgstr "Amberol"
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:2
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:6
+msgid "Ryuon"
+msgstr ""
 
-#: data/io.bassi.Amberol.desktop.in.in:3
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:3
 msgid "Music Player"
 msgstr "Prehrávač hudby"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/io.bassi.Amberol.desktop.in.in:11
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:11
 msgid "music;player;media;audio;playlist;"
 msgstr "hudba;prehrávač;médiá;médium;audio;playlist;zvuk;zoznam skladieb;"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:7
-msgid "Plays music, and nothing else"
-msgstr "Prehráva hudbu a nič viac"
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:26
+#, fuzzy
+msgid "Music library folder"
+msgstr "Prehrávač hudby"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:9
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:27
 msgid ""
-"Amberol is a music player with no delusions of grandeur. If you just want to "
-"play music available on your local system then Amberol is the music player "
-"you are looking for."
+"The folder that holds your music, one subfolder per album. Empty when no "
+"library is set."
 msgstr ""
-"Amberol je prehrávač hudby, ktorý sa na nič nehrá. Ak chcete jednoducho "
-"prehrávať hudbu dostupnú vo vašom lokálnom systéme, potom je Amberol "
-"prehrávač hudby, ktorý hľadáte."
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:14
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:31
+msgid "Song to resume"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:32
+msgid ""
+"The song that was playing from the music library when the application last "
+"ran."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:36
+msgid "Position to resume"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:37
+msgid "How far into the song to resume, in seconds."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:48
+msgid "Folder order"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:49
+msgid ""
+"The order folders play in: by name, newest first, most songs first, recently "
+"played first, or the manual order kept after moving songs or folders."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:53
+msgid "Open the library at start"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:54
+msgid ""
+"Open the music library automatically when the application starts with an "
+"empty queue."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:58
+msgid "Tidy names on screen"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:59
+msgid ""
+"Show song, artist, album and folder names without download-site tags, "
+"bitrate labels and underscores. Files are never renamed."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:7
+msgid "Plays your music, folder by folder"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:9
+msgid ""
+"Ryuon is a local music player. Point it at your music folder once and it "
+"plays one folder after another. It is a fork of Amberol by Emmanuele Bassi."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:13
 msgid "Current features:"
 msgstr "Aktuálne funkcie:"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:16
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:15
 msgid "adaptive UI"
 msgstr "adaptívne používateľské rozhranie"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:17
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:16
 msgid "UI recoloring using the album art"
 msgstr "sfarbenie používateľského rozhrania pomocou obalu albumu"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:18
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:17
 msgid "drag and drop support to queue songs"
 msgstr "podpora ťahania a pustenia na pridávanie skladieb do fronty"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:19
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:18
 msgid "shuffle and repeat"
 msgstr "zamiešanie a opakovanie"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:20
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:19
 msgid "MPRIS integration"
 msgstr "Integrácia rozhrania MPRIS"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:48
-msgid "Emmanuele Bassi"
-msgstr "Emmanuele Bassi"
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:27
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:29
+msgid "Harish"
+msgstr ""
 
-#: src/audio/inhibit_controller.rs:40
-msgid "Playback in progress"
-msgstr "Prebieha prehrávanie"
-
-#: src/audio/song.rs:317
-msgid "Unknown artist"
-msgstr "Neznámy interpret"
-
-#: src/audio/song.rs:324
-msgid "Unknown title"
-msgstr "Neznámy názov"
-
-#: src/audio/song.rs:331
-msgid "Unknown album"
-msgstr "Neznámy album"
-
-#: src/gtk/help-overlay.ui:11
-msgctxt "shortcut window"
-msgid "General"
-msgstr "Všeobecné"
-
-#: src/gtk/help-overlay.ui:14
-msgctxt "shortcut window"
-msgid "Toggle primary menu"
-msgstr "Prepnutie prvotnej ponuky"
-
-#: src/gtk/help-overlay.ui:20
-msgctxt "shortcut window"
-msgid "Copy song details to the clipboard"
-msgstr "Skopírovanie podrobností o skladbe do schránky"
-
-#: src/gtk/help-overlay.ui:26
-msgctxt "shortcut window"
-msgid "Show shortcuts"
-msgstr "Zobrazenie klávesových skratiek"
-
-#: src/gtk/help-overlay.ui:32
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "Ukončenie"
-
-#: src/gtk/help-overlay.ui:40
-msgctxt "shortcut window"
-msgid "Playlist"
-msgstr "Zoznam skladieb"
-
-#: src/gtk/help-overlay.ui:43
-msgctxt "shortcut window"
-msgid "Add a song to the playlist"
-msgstr "Pridanie skladby do zoznamu skladieb"
-
-#: src/gtk/help-overlay.ui:49
-msgctxt "shortcut window"
-msgid "Add a folder to the playlist"
-msgstr "Pridanie priečinka do zoznamu skladieb"
-
-#: src/gtk/help-overlay.ui:55
-msgctxt "shortcut window"
-msgid "Clear the playlist"
-msgstr "Vymazanie zoznamu skladieb"
-
-#: src/gtk/help-overlay.ui:61
-msgctxt "shortcut window"
-msgid "Toggle the playlist pane"
-msgstr "Prepnutie panela so zoznamom skladieb"
-
-#: src/gtk/help-overlay.ui:67
-msgctxt "shortcut window"
-msgid "Toggle shuffling songs"
-msgstr "Prepnutie zamiešavania skladieb"
-
-#: src/gtk/help-overlay.ui:75
-msgctxt "shortcut window"
-msgid "Playback"
-msgstr "Prehrávanie"
-
-#: src/gtk/help-overlay.ui:78
-msgctxt "shortcut window"
-msgid "Toggle play/pause"
-msgstr "Prepnutie prehrávania/pozastavenia"
-
-#: src/gtk/help-overlay.ui:84
-msgctxt "shortcut window"
-msgid "Previous song"
-msgstr "Predchádzajúca skladba"
-
-#: src/gtk/help-overlay.ui:90
-msgctxt "shortcut window"
-msgid "Next song"
-msgstr "Nasledujúca skladba"
-
-#: src/gtk/help-overlay.ui:96
-msgctxt "shortcut window"
-msgid "Seek backwards in the current song"
-msgstr "Posunutie dozadu v aktuálnej skladbe"
-
-#: src/gtk/help-overlay.ui:102
-msgctxt "shortcut window"
-msgid "Seek forward in the current song"
-msgstr "Posunutie dopredu v aktuálnej skladbe"
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:47
+msgid "First release of Ryuon, a rebranded fork of Amberol 2026.1"
+msgstr ""
 
 # tooltip
-#: src/gtk/playback-control.ui:21
+#: src/gtk/playback-control.blp:21
 msgid "Play the Previous Song"
 msgstr "Prehrá predchádzajúcu skladbu"
 
-#: src/gtk/playback-control.ui:26
+#: src/gtk/playback-control.blp:28
 msgctxt "a11y"
 msgid "Skip backwards"
 msgstr "Preskočiť dozadu"
 
 # tooltip
-#: src/gtk/playback-control.ui:35
+#: src/gtk/playback-control.blp:36
 msgid "Toggle Play"
 msgstr "Prepne prehrávanie"
 
-#: src/gtk/playback-control.ui:41
+#: src/gtk/playback-control.blp:44
 msgctxt "a11y"
 msgid "Toggle play"
 msgstr "Prepnúť prehrávanie"
 
 # tooltip
-#: src/gtk/playback-control.ui:50
+#: src/gtk/playback-control.blp:52
 msgid "Play the Next Song"
 msgstr "Prehrá nasledujúcu skladbu"
 
-#: src/gtk/playback-control.ui:55
+#: src/gtk/playback-control.blp:59
 msgctxt "a11y"
 msgid "Skip forward"
 msgstr "Preskočiť dopredu"
 
 # tooltip
-#: src/gtk/playback-control.ui:78
+#: src/gtk/playback-control.blp:79
 msgid "Toggle Playlist"
 msgstr "Prepne zoznam skladieb"
 
-#: src/gtk/playback-control.ui:83
+#: src/gtk/playback-control.blp:86
 msgctxt "a11y"
 msgid "Toggle playlist"
 msgstr "Prepnúť zoznam skladieb"
 
 # tooltip
-#: src/gtk/playback-control.ui:92
+#: src/gtk/playback-control.blp:94
 msgid "Shuffle the Playlist"
 msgstr "Zamieša zoznam skladieb"
 
-#: src/gtk/playback-control.ui:94
+#: src/gtk/playback-control.blp:97
 msgctxt "a11y"
 msgid "Shuffle"
 msgstr "Zamiešať"
 
 # tooltip
-#: src/gtk/playback-control.ui:113 src/playback_control.rs:114
+#: src/gtk/playback-control.blp:116
 msgid "Enable Repeat"
 msgstr "Povolí opakovanie"
 
-#: src/gtk/playback-control.ui:118
+#: src/gtk/playback-control.blp:123
 msgctxt "a11y"
 msgid "Repeat"
 msgstr "Opakovať"
 
-#: src/gtk/playback-control.ui:129
+#: src/gtk/playback-control.blp:133
 msgid "Main Menu"
 msgstr "Hlavná ponuka"
 
-#: src/gtk/playback-control.ui:135
+#: src/gtk/playback-control.blp:141
 msgctxt "a11y"
 msgid "Primary menu"
 msgstr "Prvotná ponuka"
 
-#: src/gtk/playback-control.ui:151
+#: src/gtk/playback-control.blp:152
 msgid "Copy"
 msgstr "Kopírovať"
 
-#: src/gtk/playback-control.ui:155
+#: src/gtk/playback-control.blp:157
 msgid "Open Directory"
 msgstr "Otvoriť adresár"
 
-#: src/gtk/playback-control.ui:161
+#: src/gtk/playback-control.blp:164
+#, fuzzy
+msgid "Open _Library"
+msgstr "Otvoriť adresár"
+
+#: src/gtk/playback-control.blp:169
+msgid "C_hoose Music Library…"
+msgstr ""
+
+#: src/gtk/playback-control.blp:174
+msgid "Reset to Folder _Order"
+msgstr ""
+
+#: src/gtk/playback-control.blp:179
+#, fuzzy
+msgid "Sort Fol_ders"
+msgstr "Pridať priečinok"
+
+#: src/gtk/playback-control.blp:182
+msgid "By _Name"
+msgstr ""
+
+#: src/gtk/playback-control.blp:188
+msgid "Ne_west First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:194
+msgid "_Most Songs First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:200
+msgid "_Recently Played First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:206
+msgid "M_anual Order"
+msgstr ""
+
+#: src/gtk/playback-control.blp:213
+msgid "R_ename Files on Disk…"
+msgstr ""
+
+#: src/gtk/playback-control.blp:218
+msgid "_Undo Rename"
+msgstr ""
+
+#: src/gtk/playback-control.blp:223
 msgid "Add _Song"
 msgstr "Pridať _skladbu"
 
-#: src/gtk/playback-control.ui:165
+#: src/gtk/playback-control.blp:228
 msgid "Add _Folder"
 msgstr "Pri_dať priečinok"
 
-#: src/gtk/playback-control.ui:169
+#: src/gtk/playback-control.blp:233
 msgid "Clear"
 msgstr "Vymazať"
 
-#: src/gtk/playback-control.ui:175
+#: src/gtk/playback-control.blp:240
 msgid "_Match Cover Art"
 msgstr "_Zladiť obal albumu"
 
-#: src/gtk/playback-control.ui:179
+#: src/gtk/playback-control.blp:245
 msgid "_Background Playback"
 msgstr "_Prehrávanie na pozadí"
 
-#: src/gtk/playback-control.ui:185
+#: src/gtk/playback-control.blp:250
+msgid "Open Library at S_tart"
+msgstr ""
+
+#: src/gtk/playback-control.blp:255
+msgid "T_idy Names"
+msgstr ""
+
+#: src/gtk/playback-control.blp:262
 msgid "_ReplayGain"
 msgstr "_Režim ReplayGain"
 
-#: src/gtk/playback-control.ui:187
+#: src/gtk/playback-control.blp:265
 msgctxt "replaygain-menu"
 msgid "_Album"
 msgstr "_Album"
 
-#: src/gtk/playback-control.ui:192
+#: src/gtk/playback-control.blp:271
 msgctxt "replaygain-menu"
 msgid "_Song"
 msgstr "_Skladba"
 
-#: src/gtk/playback-control.ui:197
+#: src/gtk/playback-control.blp:277
 msgctxt "replaygain-menu"
 msgid "_Disabled"
 msgstr "_Zakázané"
 
-#: src/gtk/playback-control.ui:205
+#: src/gtk/playback-control.blp:286
+msgid "_Preferences"
+msgstr ""
+
+#: src/gtk/playback-control.blp:291
 msgid "_Keyboard Shortcuts"
 msgstr "_Klávesové skratky"
 
-#: src/gtk/playback-control.ui:209
-msgid "_About Amberol"
+#: src/gtk/playback-control.blp:296
+#, fuzzy
+msgid "_About Ryuon"
 msgstr "_O aplikácii Amberol"
 
-#: src/gtk/playback-control.ui:213
+#: src/gtk/playback-control.blp:301
 msgid "_Quit"
 msgstr "_Ukončiť"
 
 # tooltip
-#: src/gtk/playlist-view.ui:14
+#: src/gtk/playlist-view.blp:16
 msgid "Search Songs in the Playlist"
 msgstr "Vyhľadá skladby v zozname skladieb"
 
-#: src/gtk/playlist-view.ui:24
+#: src/gtk/playlist-view.blp:24
+#, fuzzy
+msgid "Show Folders"
+msgstr "Pridať priečinok"
+
+#: src/gtk/playlist-view.blp:33
 msgid "Playlist"
 msgstr "Zoznam skladieb"
 
 # tooltip
-#: src/gtk/playlist-view.ui:46
+#: src/gtk/playlist-view.blp:55
 msgid "Close the Playlist"
 msgstr "Zavrie zoznam skladieb"
 
 # tooltip
-#: src/gtk/playlist-view.ui:54
+#: src/gtk/playlist-view.blp:63
 msgid "Select Songs in the Playlist"
 msgstr "Vyberie skladby zo zoznamu skladieb"
 
 # placeholder text
-#: src/gtk/playlist-view.ui:63
+#: src/gtk/playlist-view.blp:70
 msgid "Search songs"
 msgstr "Vyhľadajte skladby"
 
 # placeholder text
-#: src/gtk/playlist-view.ui:66
+#: src/gtk/playlist-view.blp:74
 msgctxt "a11y"
 msgid "Search"
 msgstr "Vyhľadať"
 
-#: src/gtk/playlist-view.ui:67
+#: src/gtk/playlist-view.blp:75
 msgctxt "a11y"
 msgid "Type to search songs"
 msgstr "Písaním vyhľadáte skladby"
 
+#: src/gtk/playlist-view.blp:126
+#, fuzzy
+msgctxt "a11y"
+msgid "Folders"
+msgstr "Pridať priečinok"
+
 # tooltip
-#: src/gtk/playlist-view.ui:113
+#: src/gtk/playlist-view.blp:148
 msgid "Select All Songs"
 msgstr "Vyberie všetky skladby"
 
 # tooltip
-#: src/gtk/playlist-view.ui:126
+#: src/gtk/playlist-view.blp:161
 msgid "Remove Selected Songs"
 msgstr "Odstráni vybrané skladby"
 
-#: src/gtk/queue-row.ui:27
+#: src/gtk/queue-row.blp:27
 msgctxt "a11y"
 msgid "No cover available"
 msgstr "Nie je dostupný žiadny obal"
 
-#: src/gtk/queue-row.ui:84
+#: src/gtk/queue-row.blp:81
 msgctxt "a11y"
 msgid "Currently playing"
 msgstr "Aktuálne prehrávané"
 
-#: src/gtk/window.ui:13
+#: src/gtk/shortcuts-dialog.blp:10
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Všeobecné"
+
+#: src/gtk/shortcuts-dialog.blp:13
+msgctxt "shortcut window"
+msgid "Toggle primary menu"
+msgstr "Prepnutie prvotnej ponuky"
+
+#: src/gtk/shortcuts-dialog.blp:18
+msgctxt "shortcut window"
+msgid "Copy song details to the clipboard"
+msgstr "Skopírovanie podrobností o skladbe do schránky"
+
+#: src/gtk/shortcuts-dialog.blp:23
+msgctxt "shortcut window"
+msgid "Show shortcuts"
+msgstr "Zobrazenie klávesových skratiek"
+
+#: src/gtk/shortcuts-dialog.blp:28
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Ukončenie"
+
+#: src/gtk/shortcuts-dialog.blp:34
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Zoznam skladieb"
+
+#: src/gtk/shortcuts-dialog.blp:37
+msgctxt "shortcut window"
+msgid "Add a song to the playlist"
+msgstr "Pridanie skladby do zoznamu skladieb"
+
+#: src/gtk/shortcuts-dialog.blp:42
+msgctxt "shortcut window"
+msgid "Add a folder to the playlist"
+msgstr "Pridanie priečinka do zoznamu skladieb"
+
+#: src/gtk/shortcuts-dialog.blp:47
+msgctxt "shortcut window"
+msgid "Open the music library"
+msgstr ""
+
+#: src/gtk/shortcuts-dialog.blp:52
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr ""
+
+# tooltip
+#: src/gtk/shortcuts-dialog.blp:57
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Show folders or songs in the playlist"
+msgstr "Vyhľadá skladby v zozname skladieb"
+
+#: src/gtk/shortcuts-dialog.blp:62
+msgctxt "shortcut window"
+msgid "Clear the playlist"
+msgstr "Vymazanie zoznamu skladieb"
+
+#: src/gtk/shortcuts-dialog.blp:67
+msgctxt "shortcut window"
+msgid "Toggle the playlist pane"
+msgstr "Prepnutie panela so zoznamom skladieb"
+
+#: src/gtk/shortcuts-dialog.blp:72
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Search the playlist"
+msgstr "Vymazanie zoznamu skladieb"
+
+#: src/gtk/shortcuts-dialog.blp:77
+msgctxt "shortcut window"
+msgid "Toggle shuffling songs"
+msgstr "Prepnutie zamiešavania skladieb"
+
+#: src/gtk/shortcuts-dialog.blp:83
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Prehrávanie"
+
+#: src/gtk/shortcuts-dialog.blp:86
+msgctxt "shortcut window"
+msgid "Toggle play/pause"
+msgstr "Prepnutie prehrávania/pozastavenia"
+
+#: src/gtk/shortcuts-dialog.blp:91
+msgctxt "shortcut window"
+msgid "Previous song"
+msgstr "Predchádzajúca skladba"
+
+#: src/gtk/shortcuts-dialog.blp:96
+msgctxt "shortcut window"
+msgid "Next song"
+msgstr "Nasledujúca skladba"
+
+#: src/gtk/shortcuts-dialog.blp:101
+msgctxt "shortcut window"
+msgid "Seek backwards in the current song"
+msgstr "Posunutie dozadu v aktuálnej skladbe"
+
+#: src/gtk/shortcuts-dialog.blp:106
+msgctxt "shortcut window"
+msgid "Seek forward in the current song"
+msgstr "Posunutie dopredu v aktuálnej skladbe"
+
+#: src/gtk/window.blp:15
 msgid "Drop a song to add it to the playlist"
 msgstr "Pustením skladby ju pridáte do zoznamu skladieb"
 
-#: src/gtk/window.ui:43
+#: src/gtk/window.blp:39
 msgid ""
 "Select a file or a folder, or drag files from your file manager to the "
 "application window to add songs to the playlist"
@@ -369,111 +506,473 @@ msgstr ""
 "Na pridanie skladieb do zoznamu skladieb vyberte súbor alebo priečinok, "
 "alebo pretiahnite súbory z vášho správcu súborov do okna aplikácie"
 
-#: src/gtk/window.ui:52
+#: src/gtk/window.blp:48
+#, fuzzy
+msgid "Open Library"
+msgstr "Otvoriť adresár"
+
+#: src/gtk/window.blp:58
 msgid "Restore Playlist"
 msgstr "Obnoviť zoznam skladieb"
 
-#: src/gtk/window.ui:62
+#: src/gtk/window.blp:68
 msgid "Add Folder"
 msgstr "Pridať priečinok"
 
-#: src/gtk/window.ui:71
+#: src/gtk/window.blp:77
 msgid "Add Song"
 msgstr "Pridať skladbu"
 
-#: src/gtk/window.ui:148
+#: src/gtk/window.blp:138
 msgctxt "a11y"
 msgid "Elapsed time"
 msgstr "Uplynulý čas"
 
-#: src/gtk/window.ui:160
+#: src/gtk/window.blp:152
 msgctxt "a11y"
 msgid "Remaining time"
 msgstr "Zostávajúci čas"
 
+#: src/application.rs:308
+msgid "Ryuon is a fork of Amberol by Emmanuele Bassi."
+msgstr ""
+
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/application.rs:243
+#: src/application.rs:311
 msgid "translator-credits"
 msgstr ""
 "Nostragodus <nostragodus@gmail.com>\n"
 "Dušan Kazik <prescott66@gmail.com>"
 
-#: src/application.rs:255
-msgid "Amberol needs to run in the background to play music"
+#: src/application.rs:323
+#, fuzzy
+msgid "Ryuon needs to run in the background to play music"
 msgstr ""
 "Aby bolo možné prehrávať hudbu, musí byť aplikácia Amberol spustená na pozadí"
 
-#: src/cover_picture.rs:75
+#: src/audio/inhibit_controller.rs:40
+msgid "Playback in progress"
+msgstr "Prebieha prehrávanie"
+
+#: src/audio/song.rs:362
+msgid "Unknown artist"
+msgstr "Neznámy interpret"
+
+#: src/audio/song.rs:369
+msgid "Unknown title"
+msgstr "Neznámy názov"
+
+#: src/audio/song.rs:377
+msgid "Unknown album"
+msgstr "Neznámy album"
+
+#: src/cover_picture.rs:79
 msgid "Cover image"
 msgstr "Obrázok obalu"
 
+#: src/playback_control.rs:115
+#, fuzzy
+msgid "Do Not Repeat"
+msgstr "Opakovať"
+
 # tooltip
-#: src/playback_control.rs:118
+#: src/playback_control.rs:119
 msgid "Repeat All Songs"
 msgstr "Opakuje všetky skladby"
 
 # tooltip
-#: src/playback_control.rs:122
+#: src/playback_control.rs:123
 msgid "Repeat the Current Song"
 msgstr "Opakuje aktuálnu skladbu"
 
-#: src/window.rs:149
+#: src/window.rs:191
 msgid "Audio files"
 msgstr "Audio súbory"
 
-#: src/window.rs:159
+#: src/window.rs:201
 msgid "_Add Song"
 msgstr "_Pridať skladbu"
 
 # dialog title
-#: src/window.rs:163
+#: src/window.rs:205
 msgid "Open File"
 msgstr "Otvorenie súboru"
 
-#: src/window.rs:168 src/window.rs:190 src/window.rs:1482
+#: src/window.rs:210 src/window.rs:232 src/window.rs:277 src/window.rs:2809
 msgid "Unable to access files"
 msgstr "Nie je možné získať prístup k súborom"
 
-#: src/window.rs:182
+#: src/window.rs:224
 msgid "_Add Folder"
 msgstr "_Pridať priečinok"
 
 # dialog title
-#: src/window.rs:185
+#: src/window.rs:227
 msgid "Open Folder"
 msgstr "Otvorenie priečinku"
 
-#: src/window.rs:508
+#: src/window.rs:262
+msgid "_Use as Library"
+msgstr ""
+
+#: src/window.rs:265
+msgid "Choose Music Library"
+msgstr ""
+
+#: src/window.rs:710 src/window.rs:946
+msgid "Choose a music library first"
+msgstr ""
+
+#: src/window.rs:716
+#, rust-format
+msgid "Music library not found: {}"
+msgstr ""
+
+#: src/window.rs:748
+msgid "No songs found in the music library"
+msgstr ""
+
+#: src/window.rs:789
+msgid "Library"
+msgstr ""
+
+#: src/window.rs:792
+#, fuzzy
+msgid "Music Library"
+msgstr "Prehrávač hudby"
+
+#: src/window.rs:793
+msgid "Not chosen"
+msgstr ""
+
+#: src/window.rs:798
+msgid "_Choose…"
+msgstr ""
+
+#: src/window.rs:825
+msgid "Open Library at Start"
+msgstr ""
+
+#: src/window.rs:826
+msgid "When Ryuon starts with an empty playlist"
+msgstr ""
+
+#: src/window.rs:833
+msgid "By Name"
+msgstr ""
+
+#: src/window.rs:834
+msgid "Newest First"
+msgstr ""
+
+#: src/window.rs:835
+msgid "Most Songs First"
+msgstr ""
+
+#: src/window.rs:836
+msgid "Recently Played First"
+msgstr ""
+
+#: src/window.rs:837
+msgid "Manual Order"
+msgstr ""
+
+#: src/window.rs:841
+msgid "Folder Order"
+msgstr ""
+
+#: src/window.rs:858
+msgid "Tidy Names"
+msgstr ""
+
+#: src/window.rs:859
+msgid ""
+"Hide download-site tags, bitrates and underscores on screen; files are not "
+"renamed"
+msgstr ""
+
+#: src/window.rs:865
+msgid "Rename Files on Disk…"
+msgstr ""
+
+#: src/window.rs:871
+#, fuzzy
+msgid "Playback"
+msgstr "Prehrávanie"
+
+#: src/window.rs:873
+#, fuzzy
+msgid "Background Playback"
+msgstr "_Prehrávanie na pozadí"
+
+#: src/window.rs:874
+msgid "Keep playing after the window is closed"
+msgstr ""
+
+#: src/window.rs:879
+#, fuzzy
+msgid "Match Cover Art"
+msgstr "_Zladiť obal albumu"
+
+#: src/window.rs:880
+msgid "Color the window from the cover of the playing song"
+msgstr ""
+
+#: src/window.rs:914
+msgid "Ryuon Cannot Rename Files Here"
+msgstr ""
+
+#: src/window.rs:916
+msgid ""
+"The music library is read-only for Ryuon. To allow renaming, run this "
+"command in a terminal, then restart Ryuon:"
+msgstr ""
+
+#: src/window.rs:926
+msgid "_Copy Command"
+msgstr ""
+
+#: src/window.rs:926
+msgid "_Close"
+msgstr ""
+
+#: src/window.rs:934
+msgid "Command copied"
+msgstr ""
+
+#: src/window.rs:952
+#, rust-format
+msgid "Unable to read the music library: {}"
+msgstr ""
+
+#: src/window.rs:957
+msgid "All names in the music library are already tidy"
+msgstr ""
+
+#. Translators: the `{}` are the number of folders, the number of songs and the
+#. music library location
+#: src/window.rs:969
+#, rust-format
+msgid ""
+"{} folders and {} songs in {} get their tidy names. Nothing is deleted, and "
+"Undo Rename puts every name back."
+msgstr ""
+
+#: src/window.rs:975
+#, rust-format
+msgid "One tidy name is already taken, so it gets a number added."
+msgid_plural "{} tidy names are already taken, so they get a number added."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/window.rs:981
+msgid "Rename Files on Disk?"
+msgstr ""
+
+#: src/window.rs:1001
+msgid "Changes"
+msgstr ""
+
+#: src/window.rs:1009
+#, rust-format
+msgid "Type {} to confirm"
+msgstr ""
+
+#: src/window.rs:1013
+#, rust-format
+msgid "Type the number of changes, {}, to confirm"
+msgstr ""
+
+#: src/window.rs:1021
+msgid "_Cancel"
+msgstr ""
+
+#: src/window.rs:1021
+msgid "_Rename"
+msgstr ""
+
+#: src/window.rs:1073
+#, rust-format
+msgid "Renamed one folder or song"
+msgid_plural "Renamed {} folders and songs"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/window.rs:1078 src/window.rs:1247
+msgid "Undo"
+msgstr ""
+
+#: src/window.rs:1084
+#, rust-format
+msgid "Nothing was renamed: {}"
+msgstr ""
+
+#: src/window.rs:1091
+#, rust-format
+msgid "Renamed {} of {}, then stopped: {}. Undo Rename puts them back."
+msgstr ""
+
+#: src/window.rs:1109
+#, rust-format
+msgid "Unable to read the rename record: {}"
+msgstr ""
+
+#: src/window.rs:1119
+#, rust-format
+msgid "Put back one name"
+msgid_plural "Put back {} names"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/window.rs:1124
+#, rust-format
+msgid "Undo stopped: {}"
+msgstr ""
+
+#: src/window.rs:1232
+msgid "Turn off shuffle to change the order"
+msgstr ""
+
+#: src/window.rs:1365
+msgid ""
+"The new folder order applies when shuffle is off and the library opens again"
+msgstr ""
+
+#: src/window.rs:1413
+#, fuzzy, rust-format
+msgid "One song"
+msgid_plural "{} songs"
+msgstr[0] "Nasledujúca skladba"
+msgstr[1] "Nasledujúca skladba"
+msgstr[2] "Nasledujúca skladba"
+
+#: src/window.rs:1420
+#, fuzzy
+msgid "Playing"
+msgstr "Prehrať"
+
+# tooltip
+#: src/window.rs:1430 src/window.rs:1584
+#, fuzzy
+msgid "Play This Folder Next"
+msgstr "Prehrá nasledujúcu skladbu"
+
+# dialog title
+#: src/window.rs:1431 src/window.rs:1585
+#, fuzzy
+msgid "Move Folder Up"
+msgstr "Otvorenie priečinku"
+
+#: src/window.rs:1432 src/window.rs:1586
+msgid "Move Folder Down"
+msgstr ""
+
+#: src/window.rs:1437
+msgid "Folder Options"
+msgstr ""
+
+#: src/window.rs:1490 src/window.rs:1492 src/window.rs:1520
+#, rust-format
+msgid "“{}” plays next"
+msgstr ""
+
+#: src/window.rs:1495 src/window.rs:1524
+#, rust-format
+msgid "Moved “{}” up"
+msgstr ""
+
+#: src/window.rs:1498 src/window.rs:1529
+#, rust-format
+msgid "Moved “{}” down"
+msgstr ""
+
+#: src/window.rs:1515
+msgid "This folder is already playing"
+msgstr ""
+
+#: src/window.rs:1559
+#, rust-format
+msgid "Moved “{}”"
+msgstr ""
+
+# tooltip
+#: src/window.rs:1577
+#, fuzzy
+msgid "Play Next"
+msgstr "Prehrá nasledujúcu skladbu"
+
+#: src/window.rs:1578
+msgid "Move Up"
+msgstr ""
+
+#: src/window.rs:1579
+msgid "Move Down"
+msgstr ""
+
+#: src/window.rs:1590
+#, fuzzy
+msgid "Remove from Playlist"
+msgstr "Obnoviť zoznam skladieb"
+
+#. Translators: the `{}` placeholders are, in order: folder number, number
+#. of folders, song number in the folder, number of songs in the folder
+#: src/window.rs:1645
+#, rust-format
+msgid "Folder {} of {} · Song {} of {}"
+msgstr ""
+
+#: src/window.rs:1657
+#, rust-format
+msgid "Up next: {} · one song"
+msgid_plural "Up next: {} · {} songs"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/window.rs:1676
 msgid "No available song found"
 msgstr "Nenašla sa žiadna dostupná skladba"
 
-#: src/window.rs:569
+#: src/window.rs:1750
 msgid "No songs found"
 msgstr "Nenašli sa žiadne skladby"
 
-#: src/window.rs:602
+#: src/window.rs:1800
 msgid "Added a new song"
 msgstr "Pridaná nová skladba"
 
-#: src/window.rs:603
+#: src/window.rs:1801
 msgid "Play"
 msgstr "Prehrať"
 
 #. Translators: the `{}` must be left unmodified;
 #. it will be expanded to the number of songs added
 #. to the playlist
-#: src/window.rs:612
+#: src/window.rs:1810
+#, rust-format
 msgid "Added one song"
 msgid_plural "Added {} songs"
 msgstr[0] "Pridaná jedna skladba"
 msgstr[1] "Pridané {} skladby"
 msgstr[2] "Pridaných {} skladieb"
 
-#: src/window.rs:1242
+#: src/window.rs:1818
+#, rust-format
+msgid "Skipped one duplicate"
+msgid_plural "Skipped {} duplicates"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/window.rs:2552
 msgid "Unable to access dropped files"
 msgstr "Nie je možné získať prístup k pusteným súborom"
 
-#: src/window.rs:1336
+#: src/window.rs:2649
+#, rust-format
 msgid "{} minute"
 msgid_plural "{} minutes"
 msgstr[0] "{} minúta"
@@ -482,7 +981,8 @@ msgstr[2] "{} minút"
 
 # ten plural forms platí pre hodiny alebo pre minúty, pre obe naraz je to asi somarina, nahlas bug a opýtaj sa na to vývojárov
 # DK: zatial by som to nechal takto
-#: src/window.rs:1347
+#: src/window.rs:2660
+#, rust-format
 msgid "{hours} hour {minutes} remaining"
 msgid_plural "{hours} hours {minutes} remaining"
 msgstr[0] "Zostáva: {hours} hod. a {minutes} min."
@@ -492,20 +992,22 @@ msgstr[2] "Zostáva: {hours} hod. a {minutes} min."
 #. Translators: the '{}' must be left unmodified, and
 #. it will be replaced by the number of minutes remaining
 #. in the playlist
-#: src/window.rs:1357
+#: src/window.rs:2670
+#, rust-format
 msgid "{} minute remaining"
 msgid_plural "{} minutes remaining"
 msgstr[0] "Zostáva {} minúta"
 msgstr[1] "Zostávajú {} minúty"
 msgstr[2] "Zostáva {} minút"
 
-#: src/window.rs:1461
+#: src/window.rs:2788
 msgid "No song selected"
 msgstr "Žiadna vybraná skladba"
 
 #. Translators: The '{}' must be left unmodified, and
 #. it is expanded to the number of songs selected
-#: src/window.rs:1466
+#: src/window.rs:2793
+#, rust-format
 msgid "{} song selected"
 msgid_plural "{} songs selected"
 msgstr[0] "{} vybraná skladba"
@@ -515,13 +1017,32 @@ msgstr[2] "{} vybraných skladieb"
 #. Translators: `{title}` and `{artist}` must be left
 #. untranslated; they will expand to the title and
 #. artist of the currently playing song, respectively
-#: src/window.rs:1522
+#: src/window.rs:2849
+#, rust-format
 msgid "Currently playing “{title}” by “{artist}”"
 msgstr "Aktuálne prehrávaná skladba „{title}“ od interpreta „{artist}”"
 
-#: src/window.rs:1559
+#: src/window.rs:2886
 msgid "Unable to open folder"
 msgstr "Nie je možné otvoriť priečinok"
+
+#~ msgid "Amberol"
+#~ msgstr "Amberol"
+
+#~ msgid "Plays music, and nothing else"
+#~ msgstr "Prehráva hudbu a nič viac"
+
+#~ msgid ""
+#~ "Amberol is a music player with no delusions of grandeur. If you just want "
+#~ "to play music available on your local system then Amberol is the music "
+#~ "player you are looking for."
+#~ msgstr ""
+#~ "Amberol je prehrávač hudby, ktorý sa na nič nehrá. Ak chcete jednoducho "
+#~ "prehrávať hudbu dostupnú vo vašom lokálnom systéme, potom je Amberol "
+#~ "prehrávač hudby, ktorý hľadáte."
+
+#~ msgid "Emmanuele Bassi"
+#~ msgstr "Emmanuele Bassi"
 
 #~ msgid "Nostragodus"
 #~ msgstr "Nostragodus"

@@ -276,6 +276,14 @@ impl AudioPlayer {
         }
     }
 
+    /// Loads the current song ready to play, paused: for resuming where playback stopped,
+    /// so media controls show Paused at the saved position rather than Stopped
+    pub fn cue(&self) {
+        if self.state.current_song().is_some() && !self.state.playing() {
+            self.set_playback_state(PlaybackState::Paused);
+        }
+    }
+
     pub fn stop(&self) {
         self.set_playback_state(PlaybackState::Stopped);
     }

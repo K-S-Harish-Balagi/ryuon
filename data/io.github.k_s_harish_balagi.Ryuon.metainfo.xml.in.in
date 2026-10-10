@@ -28,6 +28,9 @@
   <developer id="io.github.k_s_harish_balagi">
     <name>Harish</name>
   </developer>
+  <url type="homepage">https://github.com/K-S-Harish-Balagi/ryuon</url>
+  <url type="vcs-browser">https://github.com/K-S-Harish-Balagi/ryuon</url>
+  <url type="bugtracker">https://github.com/K-S-Harish-Balagi/ryuon/issues</url>
   <translation type="gettext">ryuon</translation>
   <custom>
     <value key="Purism::form_factor">mobile</value>

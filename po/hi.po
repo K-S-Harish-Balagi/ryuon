@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: amberol main\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/amberol/-/issues/\n"
-"POT-Creation-Date: 2024-03-25 22:32+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 00:09+0530\n"
 "PO-Revision-Date: 2024-03-29 12:37+0530\n"
 "Last-Translator: Scrambled777 <weblate.scrambled777@simplelogin.com>\n"
 "Language-Team: Hindi\n"
@@ -18,309 +18,474 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Gtranslator 46.0\n"
 
-#: data/io.bassi.Amberol.desktop.in.in:3
-#: data/io.bassi.Amberol.appdata.xml.in.in:6
-msgid "Amberol"
-msgstr "Amberol"
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:2
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:6
+msgid "Ryuon"
+msgstr ""
 
-#: data/io.bassi.Amberol.desktop.in.in:4
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:3
 msgid "Music Player"
 msgstr "म्यूजिक प्लेयर"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/io.bassi.Amberol.desktop.in.in:12
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:11
 msgid "music;player;media;audio;playlist;"
 msgstr "music;player;media;audio;playlist;संगीत;प्लेयर;मीडिया;ऑडियो;प्लेलिस्ट;"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:7
-msgid "Plays music, and nothing else"
-msgstr "संगीत बजाता है और कुछ नहीं"
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:26
+#, fuzzy
+msgid "Music library folder"
+msgstr "म्यूजिक प्लेयर"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:9
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:27
 msgid ""
-"Amberol is a music player with no delusions of grandeur. If you just want to "
-"play music available on your local system then Amberol is the music player "
-"you are looking for."
+"The folder that holds your music, one subfolder per album. Empty when no "
+"library is set."
 msgstr ""
-"Amberol एक म्यूजिक प्लेयर है जिसे भव्यता का कोई भ्रम नहीं है। यदि आप केवल अपने स्थानीय "
-"सिस्टम पर उपलब्ध संगीत चलाना चाहते हैं तो Amberol वह म्यूजिक प्लेयर है जिसे आप तलाश रहे हैं।"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:14
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:31
+msgid "Song to resume"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:32
+msgid ""
+"The song that was playing from the music library when the application last "
+"ran."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:36
+msgid "Position to resume"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:37
+msgid "How far into the song to resume, in seconds."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:48
+msgid "Folder order"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:49
+msgid ""
+"The order folders play in: by name, newest first, most songs first, recently "
+"played first, or the manual order kept after moving songs or folders."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:53
+msgid "Open the library at start"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:54
+msgid ""
+"Open the music library automatically when the application starts with an "
+"empty queue."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:58
+msgid "Tidy names on screen"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:59
+msgid ""
+"Show song, artist, album and folder names without download-site tags, "
+"bitrate labels and underscores. Files are never renamed."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:7
+msgid "Plays your music, folder by folder"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:9
+msgid ""
+"Ryuon is a local music player. Point it at your music folder once and it "
+"plays one folder after another. It is a fork of Amberol by Emmanuele Bassi."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:13
 msgid "Current features:"
 msgstr "वर्तमान विशेषताएं:"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:16
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:15
 msgid "adaptive UI"
 msgstr "अनुकूली UI"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:17
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:16
 msgid "UI recoloring using the album art"
 msgstr "एल्बम कला का उपयोग करके UI को फिर से रंगना"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:18
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:17
 msgid "drag and drop support to queue songs"
 msgstr "गानों को कतारबद्ध करने के लिए खींचें और छोड़ें"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:19
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:18
 msgid "shuffle and repeat"
 msgstr "फेरबदल करें और दोहराएं"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:20
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:19
 msgid "MPRIS integration"
 msgstr "MPRIS एकीकरण"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:44
-msgid "Emmanuele Bassi"
-msgstr "इमैनुएल बस्सी"
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:27
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:29
+msgid "Harish"
+msgstr ""
 
-#: src/audio/inhibit_controller.rs:40
-msgid "Playback in progress"
-msgstr "प्लेबैक प्रगति पर है"
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:47
+msgid "First release of Ryuon, a rebranded fork of Amberol 2026.1"
+msgstr ""
 
-#: src/audio/song.rs:325
-msgid "Unknown artist"
-msgstr "अज्ञात कलाकार"
-
-#: src/audio/song.rs:332
-msgid "Unknown title"
-msgstr "अज्ञात शीर्षक"
-
-#: src/audio/song.rs:339
-msgid "Unknown album"
-msgstr "अज्ञात एल्बम"
-
-#: src/gtk/help-overlay.ui:11
-msgctxt "shortcut window"
-msgid "General"
-msgstr "जनरल"
-
-#: src/gtk/help-overlay.ui:14
-msgctxt "shortcut window"
-msgid "Toggle primary menu"
-msgstr "प्राथमिक मेनू टॉगल करें"
-
-#: src/gtk/help-overlay.ui:20
-msgctxt "shortcut window"
-msgid "Copy song details to the clipboard"
-msgstr "गाने के विवरण को क्लिपबोर्ड पर कॉपी करें"
-
-#: src/gtk/help-overlay.ui:26
-msgctxt "shortcut window"
-msgid "Show shortcuts"
-msgstr "शॉर्टकट दिखाएँ"
-
-#: src/gtk/help-overlay.ui:32
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "छोड़ें"
-
-#: src/gtk/help-overlay.ui:40
-msgctxt "shortcut window"
-msgid "Playlist"
-msgstr "प्लेलिस्ट"
-
-#: src/gtk/help-overlay.ui:43
-msgctxt "shortcut window"
-msgid "Add a song to the playlist"
-msgstr "प्लेलिस्ट में एक गाना जोड़ें"
-
-#: src/gtk/help-overlay.ui:49
-msgctxt "shortcut window"
-msgid "Add a folder to the playlist"
-msgstr "प्लेलिस्ट में एक फ़ोल्डर जोड़ें"
-
-#: src/gtk/help-overlay.ui:55
-msgctxt "shortcut window"
-msgid "Clear the playlist"
-msgstr "प्लेलिस्ट साफ़ करें"
-
-#: src/gtk/help-overlay.ui:61
-msgctxt "shortcut window"
-msgid "Toggle the playlist pane"
-msgstr "प्लेलिस्ट फलक टॉगल करें"
-
-#: src/gtk/help-overlay.ui:67
-msgctxt "shortcut window"
-msgid "Toggle shuffling songs"
-msgstr "गानो का फेरबदल टॉगल करें"
-
-#: src/gtk/help-overlay.ui:75
-msgctxt "shortcut window"
-msgid "Playback"
-msgstr "प्लेबैक"
-
-#: src/gtk/help-overlay.ui:78
-msgctxt "shortcut window"
-msgid "Toggle play/pause"
-msgstr "बजाएं/रोकें टॉगल करें"
-
-#: src/gtk/help-overlay.ui:84
-msgctxt "shortcut window"
-msgid "Previous song"
-msgstr "पिछला गाना"
-
-#: src/gtk/help-overlay.ui:90
-msgctxt "shortcut window"
-msgid "Next song"
-msgstr "अगला गाना"
-
-#: src/gtk/help-overlay.ui:96
-msgctxt "shortcut window"
-msgid "Seek backwards in the current song"
-msgstr "मौजूदा गाने में पीछे की ओर खोजें"
-
-#: src/gtk/help-overlay.ui:102
-msgctxt "shortcut window"
-msgid "Seek forward in the current song"
-msgstr "मौजूदा गाने में आगे की ओर खोजें"
-
-#: src/gtk/playback-control.ui:21
+#: src/gtk/playback-control.blp:21
 msgid "Play the Previous Song"
 msgstr "पिछला गाना बजाएं"
 
-#: src/gtk/playback-control.ui:26
+#: src/gtk/playback-control.blp:28
 msgctxt "a11y"
 msgid "Skip backwards"
 msgstr "पीछे जाएँ"
 
-#: src/gtk/playback-control.ui:35
+#: src/gtk/playback-control.blp:36
 msgid "Toggle Play"
 msgstr "बजाना टॉगल करें"
 
-#: src/gtk/playback-control.ui:41
+#: src/gtk/playback-control.blp:44
 msgctxt "a11y"
 msgid "Toggle play"
 msgstr "बजाना टॉगल करें"
 
-#: src/gtk/playback-control.ui:50
+#: src/gtk/playback-control.blp:52
 msgid "Play the Next Song"
 msgstr "अगला गाना बजाएं"
 
-#: src/gtk/playback-control.ui:55
+#: src/gtk/playback-control.blp:59
 msgctxt "a11y"
 msgid "Skip forward"
 msgstr "आगे जाएँ"
 
-#: src/gtk/playback-control.ui:78
+#: src/gtk/playback-control.blp:79
 msgid "Toggle Playlist"
 msgstr "प्लेलिस्ट टॉगल करें"
 
-#: src/gtk/playback-control.ui:83
+#: src/gtk/playback-control.blp:86
 msgctxt "a11y"
 msgid "Toggle playlist"
 msgstr "प्लेलिस्ट टॉगल करें"
 
-#: src/gtk/playback-control.ui:92
+#: src/gtk/playback-control.blp:94
 msgid "Shuffle the Playlist"
 msgstr "प्लेलिस्ट में फेरबदल करें"
 
-#: src/gtk/playback-control.ui:94
+#: src/gtk/playback-control.blp:97
 msgctxt "a11y"
 msgid "Shuffle"
 msgstr "फेरबदल"
 
-#: src/gtk/playback-control.ui:113 src/playback_control.rs:114
+#: src/gtk/playback-control.blp:116
 msgid "Enable Repeat"
 msgstr "दोहराना सक्षम करें"
 
-#: src/gtk/playback-control.ui:118
+#: src/gtk/playback-control.blp:123
 msgctxt "a11y"
 msgid "Repeat"
 msgstr "दोहराएं"
 
-#: src/gtk/playback-control.ui:129
+#: src/gtk/playback-control.blp:133
 msgid "Main Menu"
 msgstr "मुख्य मेन्यू"
 
-#: src/gtk/playback-control.ui:135
+#: src/gtk/playback-control.blp:141
 msgctxt "a11y"
 msgid "Primary menu"
 msgstr "प्राथमिक मेन्यू"
 
-#: src/gtk/playback-control.ui:151
+#: src/gtk/playback-control.blp:152
 msgid "Copy"
 msgstr "कॉपी"
 
-#: src/gtk/playback-control.ui:157
+#: src/gtk/playback-control.blp:157
+#, fuzzy
+msgid "Open Directory"
+msgstr "फाइल खोलें"
+
+#: src/gtk/playback-control.blp:164
+msgid "Open _Library"
+msgstr ""
+
+#: src/gtk/playback-control.blp:169
+msgid "C_hoose Music Library…"
+msgstr ""
+
+#: src/gtk/playback-control.blp:174
+msgid "Reset to Folder _Order"
+msgstr ""
+
+#: src/gtk/playback-control.blp:179
+#, fuzzy
+msgid "Sort Fol_ders"
+msgstr "फोल्डर जोड़ें"
+
+#: src/gtk/playback-control.blp:182
+msgid "By _Name"
+msgstr ""
+
+#: src/gtk/playback-control.blp:188
+msgid "Ne_west First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:194
+msgid "_Most Songs First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:200
+msgid "_Recently Played First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:206
+msgid "M_anual Order"
+msgstr ""
+
+#: src/gtk/playback-control.blp:213
+msgid "R_ename Files on Disk…"
+msgstr ""
+
+#: src/gtk/playback-control.blp:218
+msgid "_Undo Rename"
+msgstr ""
+
+#: src/gtk/playback-control.blp:223
 msgid "Add _Song"
 msgstr "गाना जोड़ें (_S)"
 
-#: src/gtk/playback-control.ui:161
+#: src/gtk/playback-control.blp:228
 msgid "Add _Folder"
 msgstr "फोल्डर जोड़ें (_F)"
 
-#: src/gtk/playback-control.ui:165
+#: src/gtk/playback-control.blp:233
 msgid "Clear"
 msgstr "साफ़"
 
-#: src/gtk/playback-control.ui:171
+#: src/gtk/playback-control.blp:240
 msgid "_Match Cover Art"
 msgstr "कवर कला का मिलान (_M)"
 
-#: src/gtk/playback-control.ui:175
+#: src/gtk/playback-control.blp:245
 msgid "_Background Playback"
 msgstr "पृष्ठभूमि प्लेबैक (_B)"
 
-#: src/gtk/playback-control.ui:181
+#: src/gtk/playback-control.blp:250
+msgid "Open Library at S_tart"
+msgstr ""
+
+#: src/gtk/playback-control.blp:255
+msgid "T_idy Names"
+msgstr ""
+
+#: src/gtk/playback-control.blp:262
 msgid "_ReplayGain"
 msgstr "रिप्लेगैन (_R)"
 
-#: src/gtk/playback-control.ui:183
+#: src/gtk/playback-control.blp:265
 msgctxt "replaygain-menu"
 msgid "_Album"
 msgstr "एल्बम (_A)"
 
-#: src/gtk/playback-control.ui:188
+#: src/gtk/playback-control.blp:271
 msgctxt "replaygain-menu"
 msgid "_Song"
 msgstr "गाना (_S)"
 
-#: src/gtk/playback-control.ui:193
+#: src/gtk/playback-control.blp:277
 msgctxt "replaygain-menu"
 msgid "_Disabled"
 msgstr "अक्षम (_D)"
 
-#: src/gtk/playback-control.ui:201
+#: src/gtk/playback-control.blp:286
+msgid "_Preferences"
+msgstr ""
+
+#: src/gtk/playback-control.blp:291
 msgid "_Keyboard Shortcuts"
 msgstr "कीबोर्ड शॉर्टकट (_K)"
 
-#: src/gtk/playback-control.ui:205
-msgid "_About Amberol"
+#: src/gtk/playback-control.blp:296
+#, fuzzy
+msgid "_About Ryuon"
 msgstr "Amberol के बारे में (_A)"
 
-#: src/gtk/playback-control.ui:209
+#: src/gtk/playback-control.blp:301
 msgid "_Quit"
 msgstr "छोड़ें (_Q)"
 
-#: src/gtk/playlist-view.ui:18
-msgid "Playlist"
-msgstr "प्लेलिस्ट"
-
-#: src/gtk/playlist-view.ui:49
+#: src/gtk/playlist-view.blp:16
 msgid "Search Songs in the Playlist"
 msgstr "प्लेलिस्ट में गाने खोजें"
 
-#: src/gtk/playlist-view.ui:61
-msgid "Select Songs in the Playlist"
-msgstr "प्लेलिस्ट में गाने खोजें"
+#: src/gtk/playlist-view.blp:24
+#, fuzzy
+msgid "Show Folders"
+msgstr "फोल्डर जोड़ें"
 
-#: src/gtk/playlist-view.ui:74
+#: src/gtk/playlist-view.blp:33
+msgid "Playlist"
+msgstr "प्लेलिस्ट"
+
+#: src/gtk/playlist-view.blp:55
 msgid "Close the Playlist"
 msgstr "प्लेलिस्ट बंद करें"
 
-#: src/gtk/playlist-view.ui:133
+#: src/gtk/playlist-view.blp:63
+msgid "Select Songs in the Playlist"
+msgstr "प्लेलिस्ट में गाने खोजें"
+
+#: src/gtk/playlist-view.blp:70
+msgid "Search songs"
+msgstr ""
+
+#: src/gtk/playlist-view.blp:74
+msgctxt "a11y"
+msgid "Search"
+msgstr ""
+
+#: src/gtk/playlist-view.blp:75
+msgctxt "a11y"
+msgid "Type to search songs"
+msgstr ""
+
+#: src/gtk/playlist-view.blp:126
+#, fuzzy
+msgctxt "a11y"
+msgid "Folders"
+msgstr "फोल्डर जोड़ें"
+
+#: src/gtk/playlist-view.blp:148
 msgid "Select All Songs"
 msgstr "सभी गाने चुनें"
 
-#: src/gtk/playlist-view.ui:146
+#: src/gtk/playlist-view.blp:161
 msgid "Remove Selected Songs"
 msgstr "चयनित गाने हटाएँ"
 
-#: src/gtk/window.ui:13
+#: src/gtk/queue-row.blp:27
+msgctxt "a11y"
+msgid "No cover available"
+msgstr ""
+
+#: src/gtk/queue-row.blp:81
+msgctxt "a11y"
+msgid "Currently playing"
+msgstr ""
+
+#: src/gtk/shortcuts-dialog.blp:10
+msgctxt "shortcut window"
+msgid "General"
+msgstr "जनरल"
+
+#: src/gtk/shortcuts-dialog.blp:13
+msgctxt "shortcut window"
+msgid "Toggle primary menu"
+msgstr "प्राथमिक मेनू टॉगल करें"
+
+#: src/gtk/shortcuts-dialog.blp:18
+msgctxt "shortcut window"
+msgid "Copy song details to the clipboard"
+msgstr "गाने के विवरण को क्लिपबोर्ड पर कॉपी करें"
+
+#: src/gtk/shortcuts-dialog.blp:23
+msgctxt "shortcut window"
+msgid "Show shortcuts"
+msgstr "शॉर्टकट दिखाएँ"
+
+#: src/gtk/shortcuts-dialog.blp:28
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "छोड़ें"
+
+#: src/gtk/shortcuts-dialog.blp:34
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "प्लेलिस्ट"
+
+#: src/gtk/shortcuts-dialog.blp:37
+msgctxt "shortcut window"
+msgid "Add a song to the playlist"
+msgstr "प्लेलिस्ट में एक गाना जोड़ें"
+
+#: src/gtk/shortcuts-dialog.blp:42
+msgctxt "shortcut window"
+msgid "Add a folder to the playlist"
+msgstr "प्लेलिस्ट में एक फ़ोल्डर जोड़ें"
+
+#: src/gtk/shortcuts-dialog.blp:47
+msgctxt "shortcut window"
+msgid "Open the music library"
+msgstr ""
+
+#: src/gtk/shortcuts-dialog.blp:52
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr ""
+
+#: src/gtk/shortcuts-dialog.blp:57
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Show folders or songs in the playlist"
+msgstr "प्लेलिस्ट में गाने खोजें"
+
+#: src/gtk/shortcuts-dialog.blp:62
+msgctxt "shortcut window"
+msgid "Clear the playlist"
+msgstr "प्लेलिस्ट साफ़ करें"
+
+#: src/gtk/shortcuts-dialog.blp:67
+msgctxt "shortcut window"
+msgid "Toggle the playlist pane"
+msgstr "प्लेलिस्ट फलक टॉगल करें"
+
+#: src/gtk/shortcuts-dialog.blp:72
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Search the playlist"
+msgstr "प्लेलिस्ट साफ़ करें"
+
+#: src/gtk/shortcuts-dialog.blp:77
+msgctxt "shortcut window"
+msgid "Toggle shuffling songs"
+msgstr "गानो का फेरबदल टॉगल करें"
+
+#: src/gtk/shortcuts-dialog.blp:83
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "प्लेबैक"
+
+#: src/gtk/shortcuts-dialog.blp:86
+msgctxt "shortcut window"
+msgid "Toggle play/pause"
+msgstr "बजाएं/रोकें टॉगल करें"
+
+#: src/gtk/shortcuts-dialog.blp:91
+msgctxt "shortcut window"
+msgid "Previous song"
+msgstr "पिछला गाना"
+
+#: src/gtk/shortcuts-dialog.blp:96
+msgctxt "shortcut window"
+msgid "Next song"
+msgstr "अगला गाना"
+
+#: src/gtk/shortcuts-dialog.blp:101
+msgctxt "shortcut window"
+msgid "Seek backwards in the current song"
+msgstr "मौजूदा गाने में पीछे की ओर खोजें"
+
+#: src/gtk/shortcuts-dialog.blp:106
+msgctxt "shortcut window"
+msgid "Seek forward in the current song"
+msgstr "मौजूदा गाने में आगे की ओर खोजें"
+
+#: src/gtk/window.blp:15
 msgid "Drop a song to add it to the playlist"
 msgstr "किसी गीत को प्लेलिस्ट में जोड़ने के लिए उसे छोड़ें"
 
-#: src/gtk/window.ui:43
+#: src/gtk/window.blp:39
 msgid ""
 "Select a file or a folder, or drag files from your file manager to the "
 "application window to add songs to the playlist"
@@ -328,105 +493,462 @@ msgstr ""
 "किसी फ़ाइल या फ़ोल्डर का चयन करें, या प्लेलिस्ट में गाने जोड़ने के लिए फ़ाइलों को अपने फ़ाइल "
 "प्रबंधक से एप्लिकेशन विंडो पर खींचें"
 
-#: src/gtk/window.ui:52
+#: src/gtk/window.blp:48
+msgid "Open Library"
+msgstr ""
+
+#: src/gtk/window.blp:58
 msgid "Restore Playlist"
 msgstr "प्लेलिस्ट पुनर्स्थापित करें"
 
-#: src/gtk/window.ui:62
+#: src/gtk/window.blp:68
 msgid "Add Folder"
 msgstr "फोल्डर जोड़ें"
 
-#: src/gtk/window.ui:71
+#: src/gtk/window.blp:77
 msgid "Add Song"
 msgstr "गाना जोड़ें"
 
-#: src/gtk/window.ui:148
+#: src/gtk/window.blp:138
 msgctxt "a11y"
 msgid "Elapsed time"
 msgstr "बीता समय"
 
-#: src/gtk/window.ui:160
+#: src/gtk/window.blp:152
 msgctxt "a11y"
 msgid "Remaining time"
 msgstr "शेष समय"
 
+#: src/application.rs:308
+msgid "Ryuon is a fork of Amberol by Emmanuele Bassi."
+msgstr ""
+
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/application.rs:229
+#: src/application.rs:311
 msgid "translator-credits"
 msgstr "Scrambled777 <weblate.scrambled777@simplelogin.com>"
 
-#: src/application.rs:241
-msgid "Amberol needs to run in the background to play music"
+#: src/application.rs:323
+#, fuzzy
+msgid "Ryuon needs to run in the background to play music"
 msgstr "संगीत बजाने के लिए Amberol को पृष्ठभूमि में चलाने की आवश्यकता है"
 
-#: src/playback_control.rs:118
+#: src/audio/inhibit_controller.rs:40
+msgid "Playback in progress"
+msgstr "प्लेबैक प्रगति पर है"
+
+#: src/audio/song.rs:362
+msgid "Unknown artist"
+msgstr "अज्ञात कलाकार"
+
+#: src/audio/song.rs:369
+msgid "Unknown title"
+msgstr "अज्ञात शीर्षक"
+
+#: src/audio/song.rs:377
+msgid "Unknown album"
+msgstr "अज्ञात एल्बम"
+
+#: src/cover_picture.rs:79
+msgid "Cover image"
+msgstr ""
+
+#: src/playback_control.rs:115
+#, fuzzy
+msgid "Do Not Repeat"
+msgstr "दोहराएं"
+
+#: src/playback_control.rs:119
 msgid "Repeat All Songs"
 msgstr "सभी गाने दोहराएँ"
 
-#: src/playback_control.rs:122
+#: src/playback_control.rs:123
 msgid "Repeat the Current Song"
 msgstr "वर्तमान गीत को दोहराएँ"
 
-#: src/window.rs:432
+#: src/window.rs:191
 msgid "Audio files"
 msgstr "ऑडियो फाइलें"
 
-#: src/window.rs:437
+#: src/window.rs:201
 msgid "_Add Song"
 msgstr "गाना जोड़ें (_A)"
 
-#: src/window.rs:440
+#: src/window.rs:205
 msgid "Open File"
 msgstr "फाइल खोलें"
 
-#: src/window.rs:445 src/window.rs:465 src/window.rs:1354
+#: src/window.rs:210 src/window.rs:232 src/window.rs:277 src/window.rs:2809
 msgid "Unable to access files"
 msgstr "फ़ाइलों तक पहुंचने में असमर्थ"
 
-#: src/window.rs:457
+#: src/window.rs:224
 msgid "_Add Folder"
 msgstr "फोल्डर जोड़ें (_A)"
 
-#: src/window.rs:459
+#: src/window.rs:227
 msgid "Open Folder"
 msgstr "फोल्डर खोलें"
 
-#: src/window.rs:482
+#: src/window.rs:262
+msgid "_Use as Library"
+msgstr ""
+
+#: src/window.rs:265
+msgid "Choose Music Library"
+msgstr ""
+
+#: src/window.rs:710 src/window.rs:946
+msgid "Choose a music library first"
+msgstr ""
+
+#: src/window.rs:716
+#, rust-format
+msgid "Music library not found: {}"
+msgstr ""
+
+#: src/window.rs:748
+msgid "No songs found in the music library"
+msgstr ""
+
+#: src/window.rs:789
+msgid "Library"
+msgstr ""
+
+#: src/window.rs:792
+#, fuzzy
+msgid "Music Library"
+msgstr "म्यूजिक प्लेयर"
+
+#: src/window.rs:793
+msgid "Not chosen"
+msgstr ""
+
+#: src/window.rs:798
+msgid "_Choose…"
+msgstr ""
+
+#: src/window.rs:825
+msgid "Open Library at Start"
+msgstr ""
+
+#: src/window.rs:826
+msgid "When Ryuon starts with an empty playlist"
+msgstr ""
+
+#: src/window.rs:833
+msgid "By Name"
+msgstr ""
+
+#: src/window.rs:834
+msgid "Newest First"
+msgstr ""
+
+#: src/window.rs:835
+msgid "Most Songs First"
+msgstr ""
+
+#: src/window.rs:836
+msgid "Recently Played First"
+msgstr ""
+
+#: src/window.rs:837
+msgid "Manual Order"
+msgstr ""
+
+#: src/window.rs:841
+msgid "Folder Order"
+msgstr ""
+
+#: src/window.rs:858
+msgid "Tidy Names"
+msgstr ""
+
+#: src/window.rs:859
+msgid ""
+"Hide download-site tags, bitrates and underscores on screen; files are not "
+"renamed"
+msgstr ""
+
+#: src/window.rs:865
+msgid "Rename Files on Disk…"
+msgstr ""
+
+#: src/window.rs:871
+#, fuzzy
+msgid "Playback"
+msgstr "प्लेबैक"
+
+#: src/window.rs:873
+#, fuzzy
+msgid "Background Playback"
+msgstr "पृष्ठभूमि प्लेबैक (_B)"
+
+#: src/window.rs:874
+msgid "Keep playing after the window is closed"
+msgstr ""
+
+#: src/window.rs:879
+#, fuzzy
+msgid "Match Cover Art"
+msgstr "कवर कला का मिलान (_M)"
+
+#: src/window.rs:880
+msgid "Color the window from the cover of the playing song"
+msgstr ""
+
+#: src/window.rs:914
+msgid "Ryuon Cannot Rename Files Here"
+msgstr ""
+
+#: src/window.rs:916
+msgid ""
+"The music library is read-only for Ryuon. To allow renaming, run this "
+"command in a terminal, then restart Ryuon:"
+msgstr ""
+
+#: src/window.rs:926
+msgid "_Copy Command"
+msgstr ""
+
+#: src/window.rs:926
+msgid "_Close"
+msgstr ""
+
+#: src/window.rs:934
+msgid "Command copied"
+msgstr ""
+
+#: src/window.rs:952
+#, rust-format
+msgid "Unable to read the music library: {}"
+msgstr ""
+
+#: src/window.rs:957
+msgid "All names in the music library are already tidy"
+msgstr ""
+
+#. Translators: the `{}` are the number of folders, the number of songs and the
+#. music library location
+#: src/window.rs:969
+#, rust-format
+msgid ""
+"{} folders and {} songs in {} get their tidy names. Nothing is deleted, and "
+"Undo Rename puts every name back."
+msgstr ""
+
+#: src/window.rs:975
+#, rust-format
+msgid "One tidy name is already taken, so it gets a number added."
+msgid_plural "{} tidy names are already taken, so they get a number added."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:981
+msgid "Rename Files on Disk?"
+msgstr ""
+
+#: src/window.rs:1001
+msgid "Changes"
+msgstr ""
+
+#: src/window.rs:1009
+#, rust-format
+msgid "Type {} to confirm"
+msgstr ""
+
+#: src/window.rs:1013
+#, rust-format
+msgid "Type the number of changes, {}, to confirm"
+msgstr ""
+
+#: src/window.rs:1021
+msgid "_Cancel"
+msgstr ""
+
+#: src/window.rs:1021
+msgid "_Rename"
+msgstr ""
+
+#: src/window.rs:1073
+#, rust-format
+msgid "Renamed one folder or song"
+msgid_plural "Renamed {} folders and songs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:1078 src/window.rs:1247
+msgid "Undo"
+msgstr ""
+
+#: src/window.rs:1084
+#, rust-format
+msgid "Nothing was renamed: {}"
+msgstr ""
+
+#: src/window.rs:1091
+#, rust-format
+msgid "Renamed {} of {}, then stopped: {}. Undo Rename puts them back."
+msgstr ""
+
+#: src/window.rs:1109
+#, rust-format
+msgid "Unable to read the rename record: {}"
+msgstr ""
+
+#: src/window.rs:1119
+#, rust-format
+msgid "Put back one name"
+msgid_plural "Put back {} names"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:1124
+#, rust-format
+msgid "Undo stopped: {}"
+msgstr ""
+
+#: src/window.rs:1232
+msgid "Turn off shuffle to change the order"
+msgstr ""
+
+#: src/window.rs:1365
+msgid ""
+"The new folder order applies when shuffle is off and the library opens again"
+msgstr ""
+
+#: src/window.rs:1413
+#, fuzzy, rust-format
+msgid "One song"
+msgid_plural "{} songs"
+msgstr[0] "अगला गाना"
+msgstr[1] "अगला गाना"
+
+#: src/window.rs:1420
+#, fuzzy
+msgid "Playing"
+msgstr "बजाएँ"
+
+#: src/window.rs:1430 src/window.rs:1584
+#, fuzzy
+msgid "Play This Folder Next"
+msgstr "अगला गाना बजाएं"
+
+#: src/window.rs:1431 src/window.rs:1585
+#, fuzzy
+msgid "Move Folder Up"
+msgstr "फोल्डर खोलें"
+
+#: src/window.rs:1432 src/window.rs:1586
+msgid "Move Folder Down"
+msgstr ""
+
+#: src/window.rs:1437
+msgid "Folder Options"
+msgstr ""
+
+#: src/window.rs:1490 src/window.rs:1492 src/window.rs:1520
+#, rust-format
+msgid "“{}” plays next"
+msgstr ""
+
+#: src/window.rs:1495 src/window.rs:1524
+#, rust-format
+msgid "Moved “{}” up"
+msgstr ""
+
+#: src/window.rs:1498 src/window.rs:1529
+#, rust-format
+msgid "Moved “{}” down"
+msgstr ""
+
+#: src/window.rs:1515
+msgid "This folder is already playing"
+msgstr ""
+
+#: src/window.rs:1559
+#, rust-format
+msgid "Moved “{}”"
+msgstr ""
+
+#: src/window.rs:1577
+#, fuzzy
+msgid "Play Next"
+msgstr "अगला गाना बजाएं"
+
+#: src/window.rs:1578
+msgid "Move Up"
+msgstr ""
+
+#: src/window.rs:1579
+msgid "Move Down"
+msgstr ""
+
+#: src/window.rs:1590
+#, fuzzy
+msgid "Remove from Playlist"
+msgstr "प्लेलिस्ट पुनर्स्थापित करें"
+
+#. Translators: the `{}` placeholders are, in order: folder number, number
+#. of folders, song number in the folder, number of songs in the folder
+#: src/window.rs:1645
+#, rust-format
+msgid "Folder {} of {} · Song {} of {}"
+msgstr ""
+
+#: src/window.rs:1657
+#, rust-format
+msgid "Up next: {} · one song"
+msgid_plural "Up next: {} · {} songs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:1676
 msgid "No available song found"
 msgstr "कोई उपलब्ध गाना नहीं मिला"
 
-#: src/window.rs:537
+#: src/window.rs:1750
 msgid "No songs found"
 msgstr "कोई गाना नहीं मिला"
 
-#: src/window.rs:567
+#: src/window.rs:1800
 msgid "Added a new song"
 msgstr "नया गाना जोड़ा गया"
 
-#: src/window.rs:568
+#: src/window.rs:1801
 msgid "Play"
 msgstr "बजाएँ"
 
 #. Translators: the `{}` must be left unmodified;
 #. it will be expanded to the number of songs added
 #. to the playlist
-#: src/window.rs:577
+#: src/window.rs:1810
+#, rust-format
 msgid "Added one song"
 msgid_plural "Added {} songs"
 msgstr[0] "एक गाना जोड़ा गया"
 msgstr[1] "{} गाने जोड़े गए"
 
-#: src/window.rs:1118
+#: src/window.rs:1818
+#, rust-format
+msgid "Skipped one duplicate"
+msgid_plural "Skipped {} duplicates"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:2552
 msgid "Unable to access dropped files"
 msgstr "गिराई गई फ़ाइलों तक पहुंचने में असमर्थ"
 
-#: src/window.rs:1212
+#: src/window.rs:2649
+#, rust-format
 msgid "{} minute"
 msgid_plural "{} minutes"
 msgstr[0] "{} मिनट"
 msgstr[1] "{} मिनट"
 
-#: src/window.rs:1223
+#: src/window.rs:2660
+#, rust-format
 msgid "{hours} hour {minutes} remaining"
 msgid_plural "{hours} hours {minutes} remaining"
 msgstr[0] "{hours} घंटा {minutes} शेष"
@@ -435,19 +957,21 @@ msgstr[1] "{hours} घंटे {minutes} शेष"
 #. Translators: the '{}' must be left unmodified, and
 #. it will be replaced by the number of minutes remaining
 #. in the playlist
-#: src/window.rs:1233
+#: src/window.rs:2670
+#, rust-format
 msgid "{} minute remaining"
 msgid_plural "{} minutes remaining"
 msgstr[0] "{} मिनट शेष"
 msgstr[1] "{} मिनट शेष"
 
-#: src/window.rs:1333
+#: src/window.rs:2788
 msgid "No song selected"
 msgstr "कोई गाना चयनित नहीं"
 
 #. Translators: The '{}' must be left unmodified, and
 #. it is expanded to the number of songs selected
-#: src/window.rs:1338
+#: src/window.rs:2793
+#, rust-format
 msgid "{} song selected"
 msgid_plural "{} songs selected"
 msgstr[0] "{} गीत चयनित"
@@ -456,6 +980,30 @@ msgstr[1] "{} गाने चयनित"
 #. Translators: `{title}` and `{artist}` must be left
 #. untranslated; they will expand to the title and
 #. artist of the currently playing song, respectively
-#: src/window.rs:1392
+#: src/window.rs:2849
+#, rust-format
 msgid "Currently playing “{title}” by “{artist}”"
 msgstr "अभी \"{artist}\" द्वारा \"{title}\" बजाया जा रहा है"
+
+#: src/window.rs:2886
+#, fuzzy
+msgid "Unable to open folder"
+msgstr "फ़ाइलों तक पहुंचने में असमर्थ"
+
+#~ msgid "Amberol"
+#~ msgstr "Amberol"
+
+#~ msgid "Plays music, and nothing else"
+#~ msgstr "संगीत बजाता है और कुछ नहीं"
+
+#~ msgid ""
+#~ "Amberol is a music player with no delusions of grandeur. If you just want "
+#~ "to play music available on your local system then Amberol is the music "
+#~ "player you are looking for."
+#~ msgstr ""
+#~ "Amberol एक म्यूजिक प्लेयर है जिसे भव्यता का कोई भ्रम नहीं है। यदि आप केवल अपने स्थानीय "
+#~ "सिस्टम पर उपलब्ध संगीत चलाना चाहते हैं तो Amberol वह म्यूजिक प्लेयर है जिसे आप तलाश "
+#~ "रहे हैं।"
+
+#~ msgid "Emmanuele Bassi"
+#~ msgstr "इमैनुएल बस्सी"

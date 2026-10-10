@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: amberol main\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/amberol/issues\n"
-"POT-Creation-Date: 2023-01-05 10:55+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 00:09+0530\n"
 "PO-Revision-Date: 2023-01-13 11:36+0100\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
@@ -19,313 +19,479 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: data/io.bassi.Amberol.desktop.in.in:3
-#: data/io.bassi.Amberol.appdata.xml.in.in:6
-msgid "Amberol"
-msgstr "Amberol"
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:2
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:6
+msgid "Ryuon"
+msgstr ""
 
-#: data/io.bassi.Amberol.desktop.in.in:4
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:3
 msgid "Music Player"
 msgstr "Glazbeni reproduktor"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/io.bassi.Amberol.desktop.in.in:12
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:11
 msgid "music;player;media;audio;playlist;"
 msgstr "glazba;reproduktor;medij;zvuk;popis izvođenja;"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:7
-msgid "Plays music, and nothing else"
-msgstr "Slušajte glazbu i ništa više od toga"
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:26
+#, fuzzy
+msgid "Music library folder"
+msgstr "Glazbeni reproduktor"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:9
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:27
 msgid ""
-"Amberol is a music player with no delusions of grandeur. If you just want to "
-"play music available on your local system then Amberol is the music player "
-"you are looking for."
+"The folder that holds your music, one subfolder per album. Empty when no "
+"library is set."
 msgstr ""
-"Amberol je glazbeni reproduktor bez obzira na njegovu jednostavnost. Ako "
-"samo želite slušati glazbu dostupnu na vašem lokalnom sustavu, tada je "
-"Amberol glazbeni reproduktro koji tražite."
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:14
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:31
+msgid "Song to resume"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:32
+msgid ""
+"The song that was playing from the music library when the application last "
+"ran."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:36
+msgid "Position to resume"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:37
+msgid "How far into the song to resume, in seconds."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:48
+msgid "Folder order"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:49
+msgid ""
+"The order folders play in: by name, newest first, most songs first, recently "
+"played first, or the manual order kept after moving songs or folders."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:53
+msgid "Open the library at start"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:54
+msgid ""
+"Open the music library automatically when the application starts with an "
+"empty queue."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:58
+msgid "Tidy names on screen"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:59
+msgid ""
+"Show song, artist, album and folder names without download-site tags, "
+"bitrate labels and underscores. Files are never renamed."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:7
+msgid "Plays your music, folder by folder"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:9
+msgid ""
+"Ryuon is a local music player. Point it at your music folder once and it "
+"plays one folder after another. It is a fork of Amberol by Emmanuele Bassi."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:13
 msgid "Current features:"
 msgstr "Trenutne značajke:"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:16
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:15
 msgid "adaptive UI"
 msgstr "prilagodljivo grafičko sučelje"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:17
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:16
 msgid "UI recoloring using the album art"
 msgstr "grafičko sučelje mijenja boju prema omotu albuma"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:18
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:17
 msgid "drag and drop support to queue songs"
 msgstr "podrška za povlačenje i ispuštanje pjesme u red reprodukcije"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:19
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:18
 msgid "shuffle and repeat"
 msgstr "ponavljanje i naizmjenična repodukcija"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:20
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:19
 msgid "MPRIS integration"
 msgstr "MPRIS integracija"
 
-#: data/io.bassi.Amberol.appdata.xml.in.in:41
-msgid "Emmanuele Bassi"
-msgstr "Emmanuele Bassi"
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:27
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:29
+msgid "Harish"
+msgstr ""
 
-#: src/audio/inhibit_controller.rs:40
-msgid "Playback in progress"
-msgstr "Reprodukcija u tijeku"
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:47
+msgid "First release of Ryuon, a rebranded fork of Amberol 2026.1"
+msgstr ""
 
-#: src/audio/song.rs:328
-msgid "Unknown artist"
-msgstr "Nepoznat izvođač"
-
-#: src/audio/song.rs:335
-msgid "Unknown title"
-msgstr "Nepoznat naslov"
-
-#: src/audio/song.rs:342
-msgid "Unknown album"
-msgstr "Nepoznat album"
-
-#: src/gtk/help-overlay.ui:11
-msgctxt "shortcut window"
-msgid "General"
-msgstr "Općenito"
-
-#: src/gtk/help-overlay.ui:14
-msgctxt "shortcut window"
-msgid "Toggle primary menu"
-msgstr "Uklj/Isklj glavni izbornik"
-
-#: src/gtk/help-overlay.ui:20
-msgctxt "shortcut window"
-msgid "Copy song details to the clipboard"
-msgstr "Kopiraj pojedinosti pjesme u međuspremnik"
-
-#: src/gtk/help-overlay.ui:26
-msgctxt "shortcut window"
-msgid "Show Shortcuts"
-msgstr "Prikaži prečace tipkovnice"
-
-#: src/gtk/help-overlay.ui:32
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "Zatvori"
-
-#: src/gtk/help-overlay.ui:40
-msgctxt "shortcut window"
-msgid "Playlist"
-msgstr "Popis izvođenja"
-
-#: src/gtk/help-overlay.ui:43
-msgctxt "shortcut window"
-msgid "Add a song to the playlist"
-msgstr "Dodaj pjesmu u popis izvođenja"
-
-#: src/gtk/help-overlay.ui:49
-msgctxt "shortcut window"
-msgid "Add a folder to the playlist"
-msgstr "Dodaj mapu u popis izvođenja"
-
-#: src/gtk/help-overlay.ui:55
-msgctxt "shortcut window"
-msgid "Clear the playlist"
-msgstr "Obriši popis izvođenja"
-
-#: src/gtk/help-overlay.ui:61
-msgctxt "shortcut window"
-msgid "Toggle the playlist pane"
-msgstr "Uklj/Isklj panel popisa izvođenja"
-
-#: src/gtk/help-overlay.ui:67
-msgctxt "shortcut window"
-msgid "Toggle shuffling songs"
-msgstr "Uklj/Isklj naizmjeničnu reprodukciju"
-
-#: src/gtk/help-overlay.ui:75
-msgctxt "shortcut window"
-msgid "Playback"
-msgstr "Reprodukcija"
-
-#: src/gtk/help-overlay.ui:78
-msgctxt "shortcut window"
-msgid "Toggle Play/Pause"
-msgstr "Uklj/Isklj pauzu/reprodukciju"
-
-#: src/gtk/help-overlay.ui:84
-msgctxt "shortcut window"
-msgid "Previous song"
-msgstr "Prijašnja pjesma"
-
-#: src/gtk/help-overlay.ui:90
-msgctxt "shortcut window"
-msgid "Next song"
-msgstr "Sljedeća pjesma"
-
-#: src/gtk/help-overlay.ui:96
-msgctxt "shortcut window"
-msgid "Seek backwards in the current song"
-msgstr "Premotaj unatrag u trenutnoj pjesmi"
-
-#: src/gtk/help-overlay.ui:102
-msgctxt "shortcut window"
-msgid "Seek forward in the current song"
-msgstr "Premotaj unaprijed u trenutnoj pjesmi"
-
-#: src/gtk/playback-control.ui:30
-msgctxt "a11y"
-msgid "Elapsed time"
-msgstr "Proteklo vrijeme"
-
-#: src/gtk/playback-control.ui:42
-msgctxt "a11y"
-msgid "Remaining time"
-msgstr "Preostalo vrijeme"
-
-#: src/gtk/playback-control.ui:64
+#: src/gtk/playback-control.blp:21
 msgid "Play the Previous Song"
 msgstr "Reproduciraj prijašnju pjesmu"
 
-#: src/gtk/playback-control.ui:69
+#: src/gtk/playback-control.blp:28
 msgctxt "a11y"
 msgid "Skip backwards"
 msgstr "Prebaci unatrag"
 
-#: src/gtk/playback-control.ui:78
+#: src/gtk/playback-control.blp:36
 msgid "Toggle Play"
 msgstr "Uklj/Isklj reprodukciju"
 
-#: src/gtk/playback-control.ui:84
+#: src/gtk/playback-control.blp:44
 msgctxt "a11y"
 msgid "Toggle play"
 msgstr "Uklj/Isklj reprodukciju"
 
-#: src/gtk/playback-control.ui:93
+#: src/gtk/playback-control.blp:52
 msgid "Play the Next Song"
 msgstr "Reproduciraj sljedeću pjesmu"
 
-#: src/gtk/playback-control.ui:98
+#: src/gtk/playback-control.blp:59
 msgctxt "a11y"
 msgid "Skip forward"
 msgstr "Prebaci naprijed"
 
-#: src/gtk/playback-control.ui:121
+#: src/gtk/playback-control.blp:79
 msgid "Toggle Playlist"
 msgstr "Uklj/Isklj popis izvođenja"
 
-#: src/gtk/playback-control.ui:126
+#: src/gtk/playback-control.blp:86
 msgctxt "a11y"
 msgid "Toggle playlist"
 msgstr "Uklj/Isklj popis izvođenja"
 
-#: src/gtk/playback-control.ui:135
+#: src/gtk/playback-control.blp:94
 msgid "Shuffle the Playlist"
 msgstr "Naizmjenični popis izvođenja"
 
-#: src/gtk/playback-control.ui:137
+#: src/gtk/playback-control.blp:97
 msgctxt "a11y"
 msgid "Shuffle"
 msgstr "Naizmjenično"
 
-#: src/gtk/playback-control.ui:156 src/playback_control.rs:153
+#: src/gtk/playback-control.blp:116
 msgid "Enable Repeat"
 msgstr "Omogući ponavljanje"
 
-#: src/gtk/playback-control.ui:161
+#: src/gtk/playback-control.blp:123
 msgctxt "a11y"
 msgid "Repeat"
 msgstr "Ponovi"
 
-#: src/gtk/playback-control.ui:172
+#: src/gtk/playback-control.blp:133
 msgid "Main Menu"
 msgstr "Glavni izbornik"
 
-#: src/gtk/playback-control.ui:178
+#: src/gtk/playback-control.blp:141
 msgctxt "a11y"
 msgid "Primary menu"
 msgstr "Glavni izbornik"
 
-#: src/gtk/playback-control.ui:194
+#: src/gtk/playback-control.blp:152
 msgid "Copy"
 msgstr "Kopiraj"
 
-#: src/gtk/playback-control.ui:200
+#: src/gtk/playback-control.blp:157
+#, fuzzy
+msgid "Open Directory"
+msgstr "Otvori datoteku"
+
+#: src/gtk/playback-control.blp:164
+msgid "Open _Library"
+msgstr ""
+
+#: src/gtk/playback-control.blp:169
+msgid "C_hoose Music Library…"
+msgstr ""
+
+#: src/gtk/playback-control.blp:174
+msgid "Reset to Folder _Order"
+msgstr ""
+
+#: src/gtk/playback-control.blp:179
+#, fuzzy
+msgid "Sort Fol_ders"
+msgstr "Dodaj mapu"
+
+#: src/gtk/playback-control.blp:182
+msgid "By _Name"
+msgstr ""
+
+#: src/gtk/playback-control.blp:188
+msgid "Ne_west First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:194
+msgid "_Most Songs First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:200
+msgid "_Recently Played First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:206
+msgid "M_anual Order"
+msgstr ""
+
+#: src/gtk/playback-control.blp:213
+msgid "R_ename Files on Disk…"
+msgstr ""
+
+#: src/gtk/playback-control.blp:218
+msgid "_Undo Rename"
+msgstr ""
+
+#: src/gtk/playback-control.blp:223
 msgid "Add _Song"
 msgstr "Dodaj _pjesmu"
 
-#: src/gtk/playback-control.ui:204
+#: src/gtk/playback-control.blp:228
 msgid "Add _Folder"
 msgstr "Dodaj _mapu"
 
-#: src/gtk/playback-control.ui:208
+#: src/gtk/playback-control.blp:233
 msgid "Clear"
 msgstr "Obriši"
 
-#: src/gtk/playback-control.ui:214
+#: src/gtk/playback-control.blp:240
 msgid "_Match Cover Art"
 msgstr "_Uskladi omot albuma"
 
-#: src/gtk/playback-control.ui:220
+#: src/gtk/playback-control.blp:245
+msgid "_Background Playback"
+msgstr ""
+
+#: src/gtk/playback-control.blp:250
+msgid "Open Library at S_tart"
+msgstr ""
+
+#: src/gtk/playback-control.blp:255
+msgid "T_idy Names"
+msgstr ""
+
+#: src/gtk/playback-control.blp:262
 msgid "_ReplayGain"
 msgstr "_Normalizacija zvuka"
 
-#: src/gtk/playback-control.ui:222
+#: src/gtk/playback-control.blp:265
+#, fuzzy
+msgctxt "replaygain-menu"
 msgid "_Album"
 msgstr "_Album"
 
-#: src/gtk/playback-control.ui:227
-msgid "_Track"
-msgstr "_Pjesma"
+#: src/gtk/playback-control.blp:271
+#, fuzzy
+msgctxt "replaygain-menu"
+msgid "_Song"
+msgstr "Dodaj _pjesmu"
 
-#: src/gtk/playback-control.ui:232
-msgid "_Off"
-msgstr "_Isključi"
+#: src/gtk/playback-control.blp:277
+msgctxt "replaygain-menu"
+msgid "_Disabled"
+msgstr ""
 
-#: src/gtk/playback-control.ui:240
+#: src/gtk/playback-control.blp:286
+msgid "_Preferences"
+msgstr ""
+
+#: src/gtk/playback-control.blp:291
 msgid "_Keyboard Shortcuts"
 msgstr "_Prečaci tipkovnice"
 
-#: src/gtk/playback-control.ui:244
-msgid "_About Amberol"
+#: src/gtk/playback-control.blp:296
+#, fuzzy
+msgid "_About Ryuon"
 msgstr "_O Amberolu"
 
-#: src/gtk/playback-control.ui:248
+#: src/gtk/playback-control.blp:301
 msgid "_Quit"
 msgstr "_Zatvori"
 
-#: src/gtk/playlist-view.ui:19
-msgid "Playlist"
-msgstr "Popis izvođenja"
-
-#: src/gtk/playlist-view.ui:49
+#: src/gtk/playlist-view.blp:16
 msgid "Search Songs in the Playlist"
 msgstr "Pretraži pjesme u popisu izvođenja"
 
-#: src/gtk/playlist-view.ui:61
-msgid "Select Songs in the Playlist"
-msgstr "Odaberi pjesme u popisu izvođenja"
+#: src/gtk/playlist-view.blp:24
+#, fuzzy
+msgid "Show Folders"
+msgstr "Dodaj mapu"
 
-#: src/gtk/playlist-view.ui:74
+#: src/gtk/playlist-view.blp:33
+msgid "Playlist"
+msgstr "Popis izvođenja"
+
+#: src/gtk/playlist-view.blp:55
 msgid "Close the Playlist"
 msgstr "Zatvori popis izvođenja"
 
-#: src/gtk/playlist-view.ui:135
+#: src/gtk/playlist-view.blp:63
+msgid "Select Songs in the Playlist"
+msgstr "Odaberi pjesme u popisu izvođenja"
+
+#: src/gtk/playlist-view.blp:70
+msgid "Search songs"
+msgstr ""
+
+#: src/gtk/playlist-view.blp:74
+msgctxt "a11y"
+msgid "Search"
+msgstr ""
+
+#: src/gtk/playlist-view.blp:75
+msgctxt "a11y"
+msgid "Type to search songs"
+msgstr ""
+
+#: src/gtk/playlist-view.blp:126
+#, fuzzy
+msgctxt "a11y"
+msgid "Folders"
+msgstr "Dodaj mapu"
+
+#: src/gtk/playlist-view.blp:148
 msgid "Select All Songs"
 msgstr "Odaberi sve pjesme"
 
-#: src/gtk/playlist-view.ui:148
+#: src/gtk/playlist-view.blp:161
 msgid "Remove Selected Songs"
 msgstr "Ukloni odabrane pjesme"
 
-#: src/gtk/window.ui:12
-msgid "Drop a song to add it to the queue"
+#: src/gtk/queue-row.blp:27
+msgctxt "a11y"
+msgid "No cover available"
+msgstr ""
+
+#: src/gtk/queue-row.blp:81
+msgctxt "a11y"
+msgid "Currently playing"
+msgstr ""
+
+#: src/gtk/shortcuts-dialog.blp:10
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Općenito"
+
+#: src/gtk/shortcuts-dialog.blp:13
+msgctxt "shortcut window"
+msgid "Toggle primary menu"
+msgstr "Uklj/Isklj glavni izbornik"
+
+#: src/gtk/shortcuts-dialog.blp:18
+msgctxt "shortcut window"
+msgid "Copy song details to the clipboard"
+msgstr "Kopiraj pojedinosti pjesme u međuspremnik"
+
+#: src/gtk/shortcuts-dialog.blp:23
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Show shortcuts"
+msgstr "Prikaži prečace tipkovnice"
+
+#: src/gtk/shortcuts-dialog.blp:28
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Zatvori"
+
+#: src/gtk/shortcuts-dialog.blp:34
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Popis izvođenja"
+
+#: src/gtk/shortcuts-dialog.blp:37
+msgctxt "shortcut window"
+msgid "Add a song to the playlist"
+msgstr "Dodaj pjesmu u popis izvođenja"
+
+#: src/gtk/shortcuts-dialog.blp:42
+msgctxt "shortcut window"
+msgid "Add a folder to the playlist"
+msgstr "Dodaj mapu u popis izvođenja"
+
+#: src/gtk/shortcuts-dialog.blp:47
+msgctxt "shortcut window"
+msgid "Open the music library"
+msgstr ""
+
+#: src/gtk/shortcuts-dialog.blp:52
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr ""
+
+#: src/gtk/shortcuts-dialog.blp:57
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Show folders or songs in the playlist"
+msgstr "Pretraži pjesme u popisu izvođenja"
+
+#: src/gtk/shortcuts-dialog.blp:62
+msgctxt "shortcut window"
+msgid "Clear the playlist"
+msgstr "Obriši popis izvođenja"
+
+#: src/gtk/shortcuts-dialog.blp:67
+msgctxt "shortcut window"
+msgid "Toggle the playlist pane"
+msgstr "Uklj/Isklj panel popisa izvođenja"
+
+#: src/gtk/shortcuts-dialog.blp:72
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Search the playlist"
+msgstr "Obriši popis izvođenja"
+
+#: src/gtk/shortcuts-dialog.blp:77
+msgctxt "shortcut window"
+msgid "Toggle shuffling songs"
+msgstr "Uklj/Isklj naizmjeničnu reprodukciju"
+
+#: src/gtk/shortcuts-dialog.blp:83
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Reprodukcija"
+
+#: src/gtk/shortcuts-dialog.blp:86
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Toggle play/pause"
+msgstr "Uklj/Isklj pauzu/reprodukciju"
+
+#: src/gtk/shortcuts-dialog.blp:91
+msgctxt "shortcut window"
+msgid "Previous song"
+msgstr "Prijašnja pjesma"
+
+#: src/gtk/shortcuts-dialog.blp:96
+msgctxt "shortcut window"
+msgid "Next song"
+msgstr "Sljedeća pjesma"
+
+#: src/gtk/shortcuts-dialog.blp:101
+msgctxt "shortcut window"
+msgid "Seek backwards in the current song"
+msgstr "Premotaj unatrag u trenutnoj pjesmi"
+
+#: src/gtk/shortcuts-dialog.blp:106
+msgctxt "shortcut window"
+msgid "Seek forward in the current song"
+msgstr "Premotaj unaprijed u trenutnoj pjesmi"
+
+#: src/gtk/window.blp:15
+#, fuzzy
+msgid "Drop a song to add it to the playlist"
 msgstr "Ispustite pjesmu za dodavanje u popis izvođenja"
 
-#: src/gtk/window.ui:49
+#: src/gtk/window.blp:39
 msgid ""
 "Select a file or a folder, or drag files from your file manager to the "
 "application window to add songs to the playlist"
@@ -333,16 +499,39 @@ msgstr ""
 "Odaberite datoteku ili mapu, ili ispustite datoteku iz svojeg upravitelja "
 "datoteka u prozor aplikacije za dodavanje pjesme u popis izvođenja"
 
-#: src/gtk/window.ui:58
+#: src/gtk/window.blp:48
+msgid "Open Library"
+msgstr ""
+
+#: src/gtk/window.blp:58
+#, fuzzy
+msgid "Restore Playlist"
+msgstr "Uklj/Isklj popis izvođenja"
+
+#: src/gtk/window.blp:68
 msgid "Add Folder"
 msgstr "Dodaj mapu"
 
-#: src/gtk/window.ui:68
+#: src/gtk/window.blp:77
 msgid "Add Song"
 msgstr "Dodaj pjesmu"
 
+#: src/gtk/window.blp:138
+msgctxt "a11y"
+msgid "Elapsed time"
+msgstr "Proteklo vrijeme"
+
+#: src/gtk/window.blp:152
+msgctxt "a11y"
+msgid "Remaining time"
+msgstr "Preostalo vrijeme"
+
+#: src/application.rs:308
+msgid "Ryuon is a fork of Amberol by Emmanuele Bassi."
+msgstr ""
+
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/application.rs:188
+#: src/application.rs:311
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
@@ -350,84 +539,437 @@ msgstr ""
 "\n"
 "Milo Ivir <mail@milotype.de>"
 
-#: src/playback_control.rs:157
-msgid "Repeat All Tracks"
-msgstr "Ponovni sve pjesme"
+#: src/application.rs:323
+#, fuzzy
+msgid "Ryuon needs to run in the background to play music"
+msgstr ""
+"Amberol treba biti pokrenut u pozadini kako bi mogao reproducirati glazbu"
 
-#: src/playback_control.rs:161
-msgid "Repeat the Current Track"
+#: src/audio/inhibit_controller.rs:40
+msgid "Playback in progress"
+msgstr "Reprodukcija u tijeku"
+
+#: src/audio/song.rs:362
+msgid "Unknown artist"
+msgstr "Nepoznat izvođač"
+
+#: src/audio/song.rs:369
+msgid "Unknown title"
+msgstr "Nepoznat naslov"
+
+#: src/audio/song.rs:377
+msgid "Unknown album"
+msgstr "Nepoznat album"
+
+#: src/cover_picture.rs:79
+msgid "Cover image"
+msgstr ""
+
+#: src/playback_control.rs:115
+#, fuzzy
+msgid "Do Not Repeat"
+msgstr "Ponovi"
+
+#: src/playback_control.rs:119
+#, fuzzy
+msgid "Repeat All Songs"
+msgstr "Odaberi sve pjesme"
+
+#: src/playback_control.rs:123
+#, fuzzy
+msgid "Repeat the Current Song"
 msgstr "Ponovi trenutnu pjesmu"
 
-#: src/window.rs:409
-msgid "_Add Song"
-msgstr "_Dodaj pjesmu"
-
-#: src/window.rs:410 src/window.rs:450
-msgid "_Cancel"
-msgstr "_Odustani"
-
-#: src/window.rs:412
-msgid "Open File"
-msgstr "Otvori datoteku"
-
-#: src/window.rs:419
+#: src/window.rs:191
 msgid "Audio files"
 msgstr "Glazbene datoteke"
 
-#: src/window.rs:428 src/window.rs:1293
+#: src/window.rs:201
+msgid "_Add Song"
+msgstr "_Dodaj pjesmu"
+
+#: src/window.rs:205
+msgid "Open File"
+msgstr "Otvori datoteku"
+
+#: src/window.rs:210 src/window.rs:232 src/window.rs:277 src/window.rs:2809
 msgid "Unable to access files"
 msgstr "Nemoguć pristup datotekama"
 
-#: src/window.rs:449
+#: src/window.rs:224
 msgid "_Add Folder"
 msgstr "_Dodaj mapu"
 
-#: src/window.rs:452
+#: src/window.rs:227
 msgid "Open Folder"
 msgstr "Otvori mapu"
 
-#: src/window.rs:463
-msgid "Unable to access folders"
-msgstr "Nemoguć pristup mapama"
+#: src/window.rs:262
+msgid "_Use as Library"
+msgstr ""
 
-#: src/window.rs:475
+#: src/window.rs:265
+msgid "Choose Music Library"
+msgstr ""
+
+#: src/window.rs:710 src/window.rs:946
+msgid "Choose a music library first"
+msgstr ""
+
+#: src/window.rs:716
+#, rust-format
+msgid "Music library not found: {}"
+msgstr ""
+
+#: src/window.rs:748
+msgid "No songs found in the music library"
+msgstr ""
+
+#: src/window.rs:789
+msgid "Library"
+msgstr ""
+
+#: src/window.rs:792
+#, fuzzy
+msgid "Music Library"
+msgstr "Glazbeni reproduktor"
+
+#: src/window.rs:793
+msgid "Not chosen"
+msgstr ""
+
+#: src/window.rs:798
+msgid "_Choose…"
+msgstr ""
+
+#: src/window.rs:825
+msgid "Open Library at Start"
+msgstr ""
+
+#: src/window.rs:826
+msgid "When Ryuon starts with an empty playlist"
+msgstr ""
+
+#: src/window.rs:833
+msgid "By Name"
+msgstr ""
+
+#: src/window.rs:834
+msgid "Newest First"
+msgstr ""
+
+#: src/window.rs:835
+msgid "Most Songs First"
+msgstr ""
+
+#: src/window.rs:836
+msgid "Recently Played First"
+msgstr ""
+
+#: src/window.rs:837
+msgid "Manual Order"
+msgstr ""
+
+#: src/window.rs:841
+msgid "Folder Order"
+msgstr ""
+
+#: src/window.rs:858
+msgid "Tidy Names"
+msgstr ""
+
+#: src/window.rs:859
+msgid ""
+"Hide download-site tags, bitrates and underscores on screen; files are not "
+"renamed"
+msgstr ""
+
+#: src/window.rs:865
+msgid "Rename Files on Disk…"
+msgstr ""
+
+#: src/window.rs:871
+#, fuzzy
+msgid "Playback"
+msgstr "Reprodukcija"
+
+#: src/window.rs:873
+msgid "Background Playback"
+msgstr ""
+
+#: src/window.rs:874
+msgid "Keep playing after the window is closed"
+msgstr ""
+
+#: src/window.rs:879
+#, fuzzy
+msgid "Match Cover Art"
+msgstr "_Uskladi omot albuma"
+
+#: src/window.rs:880
+msgid "Color the window from the cover of the playing song"
+msgstr ""
+
+#: src/window.rs:914
+msgid "Ryuon Cannot Rename Files Here"
+msgstr ""
+
+#: src/window.rs:916
+msgid ""
+"The music library is read-only for Ryuon. To allow renaming, run this "
+"command in a terminal, then restart Ryuon:"
+msgstr ""
+
+#: src/window.rs:926
+msgid "_Copy Command"
+msgstr ""
+
+#: src/window.rs:926
+msgid "_Close"
+msgstr ""
+
+#: src/window.rs:934
+msgid "Command copied"
+msgstr ""
+
+#: src/window.rs:952
+#, rust-format
+msgid "Unable to read the music library: {}"
+msgstr ""
+
+#: src/window.rs:957
+msgid "All names in the music library are already tidy"
+msgstr ""
+
+#. Translators: the `{}` are the number of folders, the number of songs and the
+#. music library location
+#: src/window.rs:969
+#, rust-format
+msgid ""
+"{} folders and {} songs in {} get their tidy names. Nothing is deleted, and "
+"Undo Rename puts every name back."
+msgstr ""
+
+#: src/window.rs:975
+#, rust-format
+msgid "One tidy name is already taken, so it gets a number added."
+msgid_plural "{} tidy names are already taken, so they get a number added."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/window.rs:981
+msgid "Rename Files on Disk?"
+msgstr ""
+
+#: src/window.rs:1001
+msgid "Changes"
+msgstr ""
+
+#: src/window.rs:1009
+#, rust-format
+msgid "Type {} to confirm"
+msgstr ""
+
+#: src/window.rs:1013
+#, rust-format
+msgid "Type the number of changes, {}, to confirm"
+msgstr ""
+
+#: src/window.rs:1021
+msgid "_Cancel"
+msgstr "_Odustani"
+
+#: src/window.rs:1021
+msgid "_Rename"
+msgstr ""
+
+#: src/window.rs:1073
+#, rust-format
+msgid "Renamed one folder or song"
+msgid_plural "Renamed {} folders and songs"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/window.rs:1078 src/window.rs:1247
+msgid "Undo"
+msgstr ""
+
+#: src/window.rs:1084
+#, rust-format
+msgid "Nothing was renamed: {}"
+msgstr ""
+
+#: src/window.rs:1091
+#, rust-format
+msgid "Renamed {} of {}, then stopped: {}. Undo Rename puts them back."
+msgstr ""
+
+#: src/window.rs:1109
+#, rust-format
+msgid "Unable to read the rename record: {}"
+msgstr ""
+
+#: src/window.rs:1119
+#, rust-format
+msgid "Put back one name"
+msgid_plural "Put back {} names"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/window.rs:1124
+#, rust-format
+msgid "Undo stopped: {}"
+msgstr ""
+
+#: src/window.rs:1232
+msgid "Turn off shuffle to change the order"
+msgstr ""
+
+#: src/window.rs:1365
+msgid ""
+"The new folder order applies when shuffle is off and the library opens again"
+msgstr ""
+
+#: src/window.rs:1413
+#, fuzzy, rust-format
+msgid "One song"
+msgid_plural "{} songs"
+msgstr[0] "Sljedeća pjesma"
+msgstr[1] "Sljedeća pjesma"
+msgstr[2] "Sljedeća pjesma"
+
+#: src/window.rs:1420
+#, fuzzy
+msgid "Playing"
+msgstr "Reproduciraj"
+
+#: src/window.rs:1430 src/window.rs:1584
+#, fuzzy
+msgid "Play This Folder Next"
+msgstr "Reproduciraj sljedeću pjesmu"
+
+#: src/window.rs:1431 src/window.rs:1585
+#, fuzzy
+msgid "Move Folder Up"
+msgstr "Otvori mapu"
+
+#: src/window.rs:1432 src/window.rs:1586
+msgid "Move Folder Down"
+msgstr ""
+
+#: src/window.rs:1437
+msgid "Folder Options"
+msgstr ""
+
+#: src/window.rs:1490 src/window.rs:1492 src/window.rs:1520
+#, rust-format
+msgid "“{}” plays next"
+msgstr ""
+
+#: src/window.rs:1495 src/window.rs:1524
+#, rust-format
+msgid "Moved “{}” up"
+msgstr ""
+
+#: src/window.rs:1498 src/window.rs:1529
+#, rust-format
+msgid "Moved “{}” down"
+msgstr ""
+
+#: src/window.rs:1515
+msgid "This folder is already playing"
+msgstr ""
+
+#: src/window.rs:1559
+#, rust-format
+msgid "Moved “{}”"
+msgstr ""
+
+#: src/window.rs:1577
+#, fuzzy
+msgid "Play Next"
+msgstr "Reproduciraj sljedeću pjesmu"
+
+#: src/window.rs:1578
+msgid "Move Up"
+msgstr ""
+
+#: src/window.rs:1579
+msgid "Move Down"
+msgstr ""
+
+#: src/window.rs:1590
+#, fuzzy
+msgid "Remove from Playlist"
+msgstr "Zatvori popis izvođenja"
+
+#. Translators: the `{}` placeholders are, in order: folder number, number
+#. of folders, song number in the folder, number of songs in the folder
+#: src/window.rs:1645
+#, rust-format
+msgid "Folder {} of {} · Song {} of {}"
+msgstr ""
+
+#: src/window.rs:1657
+#, rust-format
+msgid "Up next: {} · one song"
+msgid_plural "Up next: {} · {} songs"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/window.rs:1676
 msgid "No available song found"
 msgstr "Nema pronađenih dostupnih pjesama"
 
-#: src/window.rs:532
+#: src/window.rs:1750
 msgid "No songs found"
 msgstr "Nema pronađenih pjesama"
 
-#: src/window.rs:559
+#: src/window.rs:1800
 msgid "Added a new song"
 msgstr "Dodana je nova pjesma"
 
-#: src/window.rs:560
+#: src/window.rs:1801
 msgid "Play"
 msgstr "Reproduciraj"
 
 #. Translators: the `{}` must be left unmodified;
 #. it will be expanded to the number of songs added
 #. to the playlist
-#: src/window.rs:569
+#: src/window.rs:1810
+#, rust-format
 msgid "Added one song"
 msgid_plural "Added {} songs"
 msgstr[0] "Dodana je {} pjesma"
 msgstr[1] "Dodane su {} pjesme"
 msgstr[2] "Dodano je {} pjesama"
 
-#: src/window.rs:1029
+#: src/window.rs:1818
+#, rust-format
+msgid "Skipped one duplicate"
+msgid_plural "Skipped {} duplicates"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: src/window.rs:2552
 msgid "Unable to access dropped files"
 msgstr "Nemoguć pristup ispuštenim datotekama"
 
-#: src/window.rs:1123
+#: src/window.rs:2649
+#, rust-format
 msgid "{} minute"
 msgid_plural "{} minutes"
 msgstr[0] "{} minuta"
 msgstr[1] "{} minute"
 msgstr[2] "{} minuta"
 
-#: src/window.rs:1134
+#: src/window.rs:2660
+#, rust-format
 msgid "{hours} hour {minutes} remaining"
 msgid_plural "{hours} hours {minutes} remaining"
 msgstr[0] "{hours} sat {minutes} preostalo"
@@ -437,20 +979,22 @@ msgstr[2] "{hours} sati {minutes} preostalo"
 #. Translators: the '{}' must be left unmodified, and
 #. it will be replaced by the number of minutes remaining
 #. in the playlist
-#: src/window.rs:1144
+#: src/window.rs:2670
+#, rust-format
 msgid "{} minute remaining"
 msgid_plural "{} minutes remaining"
 msgstr[0] "{} minuta preostala"
 msgstr[1] "{} minute preostale"
 msgstr[2] "{} minuta preostalo"
 
-#: src/window.rs:1273
+#: src/window.rs:2788
 msgid "No song selected"
 msgstr "Nema odabranih pjesama"
 
 #. Translators: The '{}' must be left unmodified, and
 #. it is expanded to the number of songs selected
-#: src/window.rs:1278
+#: src/window.rs:2793
+#, rust-format
 msgid "{} song selected"
 msgid_plural "{} songs selected"
 msgstr[0] "{} pjesma odabrana"
@@ -460,14 +1004,42 @@ msgstr[2] "{} pjesama odabrano"
 #. Translators: `{title}` and `{artist}` must be left
 #. untranslated; they will expand to the title and
 #. artist of the currently playing song, respectively
-#: src/window.rs:1331
+#: src/window.rs:2849
+#, rust-format
 msgid "Currently playing “{title}” by “{artist}”"
 msgstr "Trenutno slušate “{title}” od “{artist}”"
 
-#: src/window.rs:1377
-msgid "Amberol needs to run in the background to play music"
-msgstr ""
-"Amberol treba biti pokrenut u pozadini kako bi mogao reproducirati glazbu"
+#: src/window.rs:2886
+#, fuzzy
+msgid "Unable to open folder"
+msgstr "Nemoguć pristup mapama"
+
+#~ msgid "Amberol"
+#~ msgstr "Amberol"
+
+#~ msgid "Plays music, and nothing else"
+#~ msgstr "Slušajte glazbu i ništa više od toga"
+
+#~ msgid ""
+#~ "Amberol is a music player with no delusions of grandeur. If you just want "
+#~ "to play music available on your local system then Amberol is the music "
+#~ "player you are looking for."
+#~ msgstr ""
+#~ "Amberol je glazbeni reproduktor bez obzira na njegovu jednostavnost. Ako "
+#~ "samo želite slušati glazbu dostupnu na vašem lokalnom sustavu, tada je "
+#~ "Amberol glazbeni reproduktro koji tražite."
+
+#~ msgid "Emmanuele Bassi"
+#~ msgstr "Emmanuele Bassi"
+
+#~ msgid "_Track"
+#~ msgstr "_Pjesma"
+
+#~ msgid "_Off"
+#~ msgstr "_Isključi"
+
+#~ msgid "Repeat All Tracks"
+#~ msgstr "Ponovni sve pjesme"
 
 #~ msgid "Add File"
 #~ msgstr "Dodaj datoteku"

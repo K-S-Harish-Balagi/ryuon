@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: amberol main\n"
-"Report-Msgid-Bugs-To: https://gitlab.gnome.org/World/amberol/-/issues/\n"
-"POT-Creation-Date: 2025-08-15 11:36+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-11 00:09+0530\n"
 "PO-Revision-Date: 2025-08-18 17:49+0200\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -18,338 +18,475 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.4.2\n"
 
-#: data/io.bassi.Amberol.desktop.in.in:2
-#: data/io.bassi.Amberol.metainfo.xml.in.in:6
-msgid "Amberol"
-msgstr "Amberol"
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:2
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:6
+msgid "Ryuon"
+msgstr ""
 
-#: data/io.bassi.Amberol.desktop.in.in:3
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:3
 msgid "Music Player"
 msgstr "Musikafspiller"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/io.bassi.Amberol.desktop.in.in:11
+#: data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in:11
 msgid "music;player;media;audio;playlist;"
 msgstr "musik;afspiller;medie;lyd;afspilningsliste;playliste;"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:7
-msgid "Plays music, and nothing else"
-msgstr "Afspiller musik og ikke andet"
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:26
+#, fuzzy
+msgid "Music library folder"
+msgstr "Musikafspiller"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:9
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:27
 msgid ""
-"Amberol is a music player with no delusions of grandeur. If you just want to "
-"play music available on your local system then Amberol is the music player "
-"you are looking for."
+"The folder that holds your music, one subfolder per album. Empty when no "
+"library is set."
 msgstr ""
-"Amberol er en musikafspiller uden storhedsvanvid. Vil du bare afspille musik "
-"fra dit lokale system, er Amberol den musikafspiller, du har ledt efter."
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:14
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:31
+msgid "Song to resume"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:32
+msgid ""
+"The song that was playing from the music library when the application last "
+"ran."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:36
+msgid "Position to resume"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:37
+msgid "How far into the song to resume, in seconds."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:48
+msgid "Folder order"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:49
+msgid ""
+"The order folders play in: by name, newest first, most songs first, recently "
+"played first, or the manual order kept after moving songs or folders."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:53
+msgid "Open the library at start"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:54
+msgid ""
+"Open the music library automatically when the application starts with an "
+"empty queue."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:58
+msgid "Tidy names on screen"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.gschema.xml:59
+msgid ""
+"Show song, artist, album and folder names without download-site tags, "
+"bitrate labels and underscores. Files are never renamed."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:7
+msgid "Plays your music, folder by folder"
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:9
+msgid ""
+"Ryuon is a local music player. Point it at your music folder once and it "
+"plays one folder after another. It is a fork of Amberol by Emmanuele Bassi."
+msgstr ""
+
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:13
 msgid "Current features:"
 msgstr "Nuværende funktioner:"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:16
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:15
 msgid "adaptive UI"
 msgstr "tilpassende brugergrænseflade"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:17
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:16
 msgid "UI recoloring using the album art"
 msgstr "farvelægning af brugergrænsefladen med brug af pladeomslaget"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:18
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:17
 msgid "drag and drop support to queue songs"
 msgstr "sæt sange i kø med træk-og-slip"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:19
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:18
 msgid "shuffle and repeat"
 msgstr "bland og gentag"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:20
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:19
 msgid "MPRIS integration"
 msgstr "MPRIS-integration"
 
-#: data/io.bassi.Amberol.metainfo.xml.in.in:48
-msgid "Emmanuele Bassi"
-msgstr "Emmanuele Bassi"
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:27
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:29
+msgid "Harish"
+msgstr ""
 
-#: src/audio/inhibit_controller.rs:40
-msgid "Playback in progress"
-msgstr "Afspilning i gang"
+#: data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in:47
+msgid "First release of Ryuon, a rebranded fork of Amberol 2026.1"
+msgstr ""
 
-#: src/audio/song.rs:317
-msgid "Unknown artist"
-msgstr "Ukendt kunstner"
-
-#: src/audio/song.rs:324
-msgid "Unknown title"
-msgstr "Ukendt titel"
-
-#: src/audio/song.rs:331
-msgid "Unknown album"
-msgstr "Ukendt album"
-
-#: src/gtk/help-overlay.ui:11
-msgctxt "shortcut window"
-msgid "General"
-msgstr "Generelt"
-
-#: src/gtk/help-overlay.ui:14
-msgctxt "shortcut window"
-msgid "Toggle primary menu"
-msgstr "Slå primær menu til/fra"
-
-#: src/gtk/help-overlay.ui:20
-msgctxt "shortcut window"
-msgid "Copy song details to the clipboard"
-msgstr "Kopiér detaljer om sangen til udklipsholderen"
-
-#: src/gtk/help-overlay.ui:26
-msgctxt "shortcut window"
-msgid "Show shortcuts"
-msgstr "Vis genveje"
-
-#: src/gtk/help-overlay.ui:32
-msgctxt "shortcut window"
-msgid "Quit"
-msgstr "Afslut"
-
-#: src/gtk/help-overlay.ui:40
-msgctxt "shortcut window"
-msgid "Playlist"
-msgstr "Afspilningsliste"
-
-#: src/gtk/help-overlay.ui:43
-msgctxt "shortcut window"
-msgid "Add a song to the playlist"
-msgstr "Tilføj en sang til afspilningslisten"
-
-#: src/gtk/help-overlay.ui:49
-msgctxt "shortcut window"
-msgid "Add a folder to the playlist"
-msgstr "Tilføj en mappe til afspilningslisten"
-
-#: src/gtk/help-overlay.ui:55
-msgctxt "shortcut window"
-msgid "Clear the playlist"
-msgstr "Ryd afspilningslisten"
-
-#: src/gtk/help-overlay.ui:61
-msgctxt "shortcut window"
-msgid "Toggle the playlist pane"
-msgstr "Slå afspilningslisteruden til/fra"
-
-#: src/gtk/help-overlay.ui:67
-msgctxt "shortcut window"
-msgid "Toggle shuffling songs"
-msgstr "Slå tilfældig rækkefølge til/fra"
-
-#: src/gtk/help-overlay.ui:75
-msgctxt "shortcut window"
-msgid "Playback"
-msgstr "Afspilning"
-
-#: src/gtk/help-overlay.ui:78
-msgctxt "shortcut window"
-msgid "Toggle play/pause"
-msgstr "Afspil/pause"
-
-#: src/gtk/help-overlay.ui:84
-msgctxt "shortcut window"
-msgid "Previous song"
-msgstr "Forrige sang"
-
-#: src/gtk/help-overlay.ui:90
-msgctxt "shortcut window"
-msgid "Next song"
-msgstr "Næste sang"
-
-#: src/gtk/help-overlay.ui:96
-msgctxt "shortcut window"
-msgid "Seek backwards in the current song"
-msgstr "Søg baglæns i nuværende sang"
-
-#: src/gtk/help-overlay.ui:102
-msgctxt "shortcut window"
-msgid "Seek forward in the current song"
-msgstr "Søg fremad i nuværende sang"
-
-#: src/gtk/playback-control.ui:21
+#: src/gtk/playback-control.blp:21
 msgid "Play the Previous Song"
 msgstr "Afspil forrige sang"
 
-#: src/gtk/playback-control.ui:26
+#: src/gtk/playback-control.blp:28
 msgctxt "a11y"
 msgid "Skip backwards"
 msgstr "Spring baglæns"
 
-#: src/gtk/playback-control.ui:35
+#: src/gtk/playback-control.blp:36
 msgid "Toggle Play"
 msgstr "Slå afspilning til/fra"
 
-#: src/gtk/playback-control.ui:41
+#: src/gtk/playback-control.blp:44
 msgctxt "a11y"
 msgid "Toggle play"
 msgstr "Slå afspilning til/fra"
 
-#: src/gtk/playback-control.ui:50
+#: src/gtk/playback-control.blp:52
 msgid "Play the Next Song"
 msgstr "Afspil næste sang"
 
-#: src/gtk/playback-control.ui:55
+#: src/gtk/playback-control.blp:59
 msgctxt "a11y"
 msgid "Skip forward"
 msgstr "Spring frem"
 
-#: src/gtk/playback-control.ui:78
+#: src/gtk/playback-control.blp:79
 msgid "Toggle Playlist"
 msgstr "Slå afspilningsliste til/fra"
 
-#: src/gtk/playback-control.ui:83
+#: src/gtk/playback-control.blp:86
 msgctxt "a11y"
 msgid "Toggle playlist"
 msgstr "Slå afspilningsliste til/fra"
 
-#: src/gtk/playback-control.ui:92
+#: src/gtk/playback-control.blp:94
 msgid "Shuffle the Playlist"
 msgstr "Bland afspilningslisten"
 
-#: src/gtk/playback-control.ui:94
+#: src/gtk/playback-control.blp:97
 msgctxt "a11y"
 msgid "Shuffle"
 msgstr "Bland"
 
-#: src/gtk/playback-control.ui:113 src/playback_control.rs:114
+#: src/gtk/playback-control.blp:116
 msgid "Enable Repeat"
 msgstr "Aktivér gentagelse"
 
-#: src/gtk/playback-control.ui:118
+#: src/gtk/playback-control.blp:123
 msgctxt "a11y"
 msgid "Repeat"
 msgstr "Gentag"
 
-#: src/gtk/playback-control.ui:129
+#: src/gtk/playback-control.blp:133
 msgid "Main Menu"
 msgstr "Hovedmenu"
 
-#: src/gtk/playback-control.ui:135
+#: src/gtk/playback-control.blp:141
 msgctxt "a11y"
 msgid "Primary menu"
 msgstr "Primær menu"
 
-#: src/gtk/playback-control.ui:151
+#: src/gtk/playback-control.blp:152
 msgid "Copy"
 msgstr "Kopiér"
 
-#: src/gtk/playback-control.ui:155
+#: src/gtk/playback-control.blp:157
 msgid "Open Directory"
 msgstr "Åbn mappe"
 
-#: src/gtk/playback-control.ui:161
+#: src/gtk/playback-control.blp:164
+#, fuzzy
+msgid "Open _Library"
+msgstr "Åbn mappe"
+
+#: src/gtk/playback-control.blp:169
+msgid "C_hoose Music Library…"
+msgstr ""
+
+#: src/gtk/playback-control.blp:174
+msgid "Reset to Folder _Order"
+msgstr ""
+
+#: src/gtk/playback-control.blp:179
+#, fuzzy
+msgid "Sort Fol_ders"
+msgstr "Tilføj mappe"
+
+#: src/gtk/playback-control.blp:182
+msgid "By _Name"
+msgstr ""
+
+#: src/gtk/playback-control.blp:188
+msgid "Ne_west First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:194
+msgid "_Most Songs First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:200
+msgid "_Recently Played First"
+msgstr ""
+
+#: src/gtk/playback-control.blp:206
+msgid "M_anual Order"
+msgstr ""
+
+#: src/gtk/playback-control.blp:213
+msgid "R_ename Files on Disk…"
+msgstr ""
+
+#: src/gtk/playback-control.blp:218
+msgid "_Undo Rename"
+msgstr ""
+
+#: src/gtk/playback-control.blp:223
 msgid "Add _Song"
 msgstr "Tilføj _sang"
 
-#: src/gtk/playback-control.ui:165
+#: src/gtk/playback-control.blp:228
 msgid "Add _Folder"
 msgstr "Tilføj _mappe"
 
-#: src/gtk/playback-control.ui:169
+#: src/gtk/playback-control.blp:233
 msgid "Clear"
 msgstr "Ryd"
 
-#: src/gtk/playback-control.ui:175
+#: src/gtk/playback-control.blp:240
 msgid "_Match Cover Art"
 msgstr "_Tilpas til pladeomslag"
 
-#: src/gtk/playback-control.ui:179
+#: src/gtk/playback-control.blp:245
 msgid "_Background Playback"
 msgstr "_Afspilning i baggrunden"
 
+#: src/gtk/playback-control.blp:250
+msgid "Open Library at S_tart"
+msgstr ""
+
+#: src/gtk/playback-control.blp:255
+msgid "T_idy Names"
+msgstr ""
+
 # https://en.wikipedia.org/wiki/ReplayGain
-#: src/gtk/playback-control.ui:185
+#: src/gtk/playback-control.blp:262
 msgid "_ReplayGain"
 msgstr "_ReplayGain"
 
-#: src/gtk/playback-control.ui:187
+#: src/gtk/playback-control.blp:265
 msgctxt "replaygain-menu"
 msgid "_Album"
 msgstr "_Album"
 
-#: src/gtk/playback-control.ui:192
+#: src/gtk/playback-control.blp:271
 msgctxt "replaygain-menu"
 msgid "_Song"
 msgstr "_Sang"
 
-#: src/gtk/playback-control.ui:197
+#: src/gtk/playback-control.blp:277
 msgctxt "replaygain-menu"
 msgid "_Disabled"
 msgstr "_Deaktiveret"
 
-#: src/gtk/playback-control.ui:205
+#: src/gtk/playback-control.blp:286
+msgid "_Preferences"
+msgstr ""
+
+#: src/gtk/playback-control.blp:291
 msgid "_Keyboard Shortcuts"
 msgstr "_Tastaturgenveje"
 
-#: src/gtk/playback-control.ui:209
-msgid "_About Amberol"
+#: src/gtk/playback-control.blp:296
+#, fuzzy
+msgid "_About Ryuon"
 msgstr "_Om Amberol"
 
-#: src/gtk/playback-control.ui:213
+#: src/gtk/playback-control.blp:301
 msgid "_Quit"
 msgstr "Af_slut"
 
-#: src/gtk/playlist-view.ui:14
+#: src/gtk/playlist-view.blp:16
 msgid "Search Songs in the Playlist"
 msgstr "Søg sange i afspilningslisten"
 
-#: src/gtk/playlist-view.ui:24
+#: src/gtk/playlist-view.blp:24
+#, fuzzy
+msgid "Show Folders"
+msgstr "Tilføj mappe"
+
+#: src/gtk/playlist-view.blp:33
 msgid "Playlist"
 msgstr "Afspilningsliste"
 
-#: src/gtk/playlist-view.ui:46
+#: src/gtk/playlist-view.blp:55
 msgid "Close the Playlist"
 msgstr "Luk afspilningslisten"
 
-#: src/gtk/playlist-view.ui:54
+#: src/gtk/playlist-view.blp:63
 msgid "Select Songs in the Playlist"
 msgstr "Vælg sange i afspilningslisten"
 
-#: src/gtk/playlist-view.ui:63
+#: src/gtk/playlist-view.blp:70
 msgid "Search songs"
 msgstr "Søg efter sange"
 
-#: src/gtk/playlist-view.ui:66
+#: src/gtk/playlist-view.blp:74
 msgctxt "a11y"
 msgid "Search"
 msgstr "Søg"
 
-#: src/gtk/playlist-view.ui:67
+#: src/gtk/playlist-view.blp:75
 msgctxt "a11y"
 msgid "Type to search songs"
 msgstr "Skrive for at søge efter sange"
 
-#: src/gtk/playlist-view.ui:113
+#: src/gtk/playlist-view.blp:126
+#, fuzzy
+msgctxt "a11y"
+msgid "Folders"
+msgstr "Tilføj mappe"
+
+#: src/gtk/playlist-view.blp:148
 msgid "Select All Songs"
 msgstr "Vælg alle sange"
 
-#: src/gtk/playlist-view.ui:126
+#: src/gtk/playlist-view.blp:161
 msgid "Remove Selected Songs"
 msgstr "Fjern valgte sange"
 
-#: src/gtk/queue-row.ui:27
+#: src/gtk/queue-row.blp:27
 msgctxt "a11y"
 msgid "No cover available"
 msgstr "Intet pladeomslag tilgængeligt"
 
-#: src/gtk/queue-row.ui:84
+#: src/gtk/queue-row.blp:81
 msgctxt "a11y"
 msgid "Currently playing"
 msgstr "Afspiller lige nu"
 
-#: src/gtk/window.ui:13
+#: src/gtk/shortcuts-dialog.blp:10
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Generelt"
+
+#: src/gtk/shortcuts-dialog.blp:13
+msgctxt "shortcut window"
+msgid "Toggle primary menu"
+msgstr "Slå primær menu til/fra"
+
+#: src/gtk/shortcuts-dialog.blp:18
+msgctxt "shortcut window"
+msgid "Copy song details to the clipboard"
+msgstr "Kopiér detaljer om sangen til udklipsholderen"
+
+#: src/gtk/shortcuts-dialog.blp:23
+msgctxt "shortcut window"
+msgid "Show shortcuts"
+msgstr "Vis genveje"
+
+#: src/gtk/shortcuts-dialog.blp:28
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Afslut"
+
+#: src/gtk/shortcuts-dialog.blp:34
+msgctxt "shortcut window"
+msgid "Playlist"
+msgstr "Afspilningsliste"
+
+#: src/gtk/shortcuts-dialog.blp:37
+msgctxt "shortcut window"
+msgid "Add a song to the playlist"
+msgstr "Tilføj en sang til afspilningslisten"
+
+#: src/gtk/shortcuts-dialog.blp:42
+msgctxt "shortcut window"
+msgid "Add a folder to the playlist"
+msgstr "Tilføj en mappe til afspilningslisten"
+
+#: src/gtk/shortcuts-dialog.blp:47
+msgctxt "shortcut window"
+msgid "Open the music library"
+msgstr ""
+
+#: src/gtk/shortcuts-dialog.blp:52
+msgctxt "shortcut window"
+msgid "Preferences"
+msgstr ""
+
+#: src/gtk/shortcuts-dialog.blp:57
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Show folders or songs in the playlist"
+msgstr "Søg sange i afspilningslisten"
+
+#: src/gtk/shortcuts-dialog.blp:62
+msgctxt "shortcut window"
+msgid "Clear the playlist"
+msgstr "Ryd afspilningslisten"
+
+#: src/gtk/shortcuts-dialog.blp:67
+msgctxt "shortcut window"
+msgid "Toggle the playlist pane"
+msgstr "Slå afspilningslisteruden til/fra"
+
+#: src/gtk/shortcuts-dialog.blp:72
+#, fuzzy
+msgctxt "shortcut window"
+msgid "Search the playlist"
+msgstr "Ryd afspilningslisten"
+
+#: src/gtk/shortcuts-dialog.blp:77
+msgctxt "shortcut window"
+msgid "Toggle shuffling songs"
+msgstr "Slå tilfældig rækkefølge til/fra"
+
+#: src/gtk/shortcuts-dialog.blp:83
+msgctxt "shortcut window"
+msgid "Playback"
+msgstr "Afspilning"
+
+#: src/gtk/shortcuts-dialog.blp:86
+msgctxt "shortcut window"
+msgid "Toggle play/pause"
+msgstr "Afspil/pause"
+
+#: src/gtk/shortcuts-dialog.blp:91
+msgctxt "shortcut window"
+msgid "Previous song"
+msgstr "Forrige sang"
+
+#: src/gtk/shortcuts-dialog.blp:96
+msgctxt "shortcut window"
+msgid "Next song"
+msgstr "Næste sang"
+
+#: src/gtk/shortcuts-dialog.blp:101
+msgctxt "shortcut window"
+msgid "Seek backwards in the current song"
+msgstr "Søg baglæns i nuværende sang"
+
+#: src/gtk/shortcuts-dialog.blp:106
+msgctxt "shortcut window"
+msgid "Seek forward in the current song"
+msgstr "Søg fremad i nuværende sang"
+
+#: src/gtk/window.blp:15
 msgid "Drop a song to add it to the playlist"
 msgstr "Slip en sang for at tilføje den til afspilningslisten"
 
-#: src/gtk/window.ui:43
+#: src/gtk/window.blp:39
 msgid ""
 "Select a file or a folder, or drag files from your file manager to the "
 "application window to add songs to the playlist"
@@ -357,30 +494,39 @@ msgstr ""
 "Vælg en fil eller mappe, eller træk filer fra filhåndteringen til "
 "programvinduet for at tilføje sange til afspilningslisten"
 
-#: src/gtk/window.ui:52
+#: src/gtk/window.blp:48
+#, fuzzy
+msgid "Open Library"
+msgstr "Åbn mappe"
+
+#: src/gtk/window.blp:58
 msgid "Restore Playlist"
 msgstr "Gendan afspilningsliste"
 
-#: src/gtk/window.ui:62
+#: src/gtk/window.blp:68
 msgid "Add Folder"
 msgstr "Tilføj mappe"
 
-#: src/gtk/window.ui:71
+#: src/gtk/window.blp:77
 msgid "Add Song"
 msgstr "Tilføj sang"
 
-#: src/gtk/window.ui:148
+#: src/gtk/window.blp:138
 msgctxt "a11y"
 msgid "Elapsed time"
 msgstr "Forløbet tid"
 
-#: src/gtk/window.ui:160
+#: src/gtk/window.blp:152
 msgctxt "a11y"
 msgid "Remaining time"
 msgstr "Resterende tid"
 
+#: src/application.rs:308
+msgid "Ryuon is a fork of Amberol by Emmanuele Bassi."
+msgstr ""
+
 #. Translators: Replace "translator-credits" with your names, one name per line
-#: src/application.rs:243
+#: src/application.rs:311
 msgid "translator-credits"
 msgstr ""
 "Alan Mortensen <alanmortensen.am@gmail.com>\n"
@@ -389,82 +535,427 @@ msgstr ""
 "Websted http://dansk-gruppen.dk\n"
 "E-mail <dansk@dansk-gruppen.dk>"
 
-#: src/application.rs:255
-msgid "Amberol needs to run in the background to play music"
+#: src/application.rs:323
+#, fuzzy
+msgid "Ryuon needs to run in the background to play music"
 msgstr "Amberol skal køre i baggrunden for at kunne afspille musik"
 
-#: src/cover_picture.rs:75
+#: src/audio/inhibit_controller.rs:40
+msgid "Playback in progress"
+msgstr "Afspilning i gang"
+
+#: src/audio/song.rs:362
+msgid "Unknown artist"
+msgstr "Ukendt kunstner"
+
+#: src/audio/song.rs:369
+msgid "Unknown title"
+msgstr "Ukendt titel"
+
+#: src/audio/song.rs:377
+msgid "Unknown album"
+msgstr "Ukendt album"
+
+#: src/cover_picture.rs:79
 msgid "Cover image"
 msgstr "Pladeomslagsbillede"
 
-#: src/playback_control.rs:118
+#: src/playback_control.rs:115
+#, fuzzy
+msgid "Do Not Repeat"
+msgstr "Gentag"
+
+#: src/playback_control.rs:119
 msgid "Repeat All Songs"
 msgstr "Gentag alle sange"
 
-#: src/playback_control.rs:122
+#: src/playback_control.rs:123
 msgid "Repeat the Current Song"
 msgstr "Gentag den nuværende sang"
 
-#: src/window.rs:149
+#: src/window.rs:191
 msgid "Audio files"
 msgstr "Lydfiler"
 
-#: src/window.rs:159
+#: src/window.rs:201
 msgid "_Add Song"
 msgstr "_Tilføj sang"
 
-#: src/window.rs:163
+#: src/window.rs:205
 msgid "Open File"
 msgstr "Åbn fil"
 
-#: src/window.rs:168 src/window.rs:190 src/window.rs:1482
+#: src/window.rs:210 src/window.rs:232 src/window.rs:277 src/window.rs:2809
 msgid "Unable to access files"
 msgstr "Kan ikke tilgå filer"
 
-#: src/window.rs:182
+#: src/window.rs:224
 msgid "_Add Folder"
 msgstr "_Tilføj mappe"
 
-#: src/window.rs:185
+#: src/window.rs:227
 msgid "Open Folder"
 msgstr "Åbn mappe"
 
-#: src/window.rs:508
+#: src/window.rs:262
+msgid "_Use as Library"
+msgstr ""
+
+#: src/window.rs:265
+msgid "Choose Music Library"
+msgstr ""
+
+#: src/window.rs:710 src/window.rs:946
+msgid "Choose a music library first"
+msgstr ""
+
+#: src/window.rs:716
+#, rust-format
+msgid "Music library not found: {}"
+msgstr ""
+
+#: src/window.rs:748
+msgid "No songs found in the music library"
+msgstr ""
+
+#: src/window.rs:789
+msgid "Library"
+msgstr ""
+
+#: src/window.rs:792
+#, fuzzy
+msgid "Music Library"
+msgstr "Musikafspiller"
+
+#: src/window.rs:793
+msgid "Not chosen"
+msgstr ""
+
+#: src/window.rs:798
+msgid "_Choose…"
+msgstr ""
+
+#: src/window.rs:825
+msgid "Open Library at Start"
+msgstr ""
+
+#: src/window.rs:826
+msgid "When Ryuon starts with an empty playlist"
+msgstr ""
+
+#: src/window.rs:833
+msgid "By Name"
+msgstr ""
+
+#: src/window.rs:834
+msgid "Newest First"
+msgstr ""
+
+#: src/window.rs:835
+msgid "Most Songs First"
+msgstr ""
+
+#: src/window.rs:836
+msgid "Recently Played First"
+msgstr ""
+
+#: src/window.rs:837
+msgid "Manual Order"
+msgstr ""
+
+#: src/window.rs:841
+msgid "Folder Order"
+msgstr ""
+
+#: src/window.rs:858
+msgid "Tidy Names"
+msgstr ""
+
+#: src/window.rs:859
+msgid ""
+"Hide download-site tags, bitrates and underscores on screen; files are not "
+"renamed"
+msgstr ""
+
+#: src/window.rs:865
+msgid "Rename Files on Disk…"
+msgstr ""
+
+#: src/window.rs:871
+#, fuzzy
+msgid "Playback"
+msgstr "Afspilning"
+
+#: src/window.rs:873
+#, fuzzy
+msgid "Background Playback"
+msgstr "_Afspilning i baggrunden"
+
+#: src/window.rs:874
+msgid "Keep playing after the window is closed"
+msgstr ""
+
+#: src/window.rs:879
+#, fuzzy
+msgid "Match Cover Art"
+msgstr "_Tilpas til pladeomslag"
+
+#: src/window.rs:880
+msgid "Color the window from the cover of the playing song"
+msgstr ""
+
+#: src/window.rs:914
+msgid "Ryuon Cannot Rename Files Here"
+msgstr ""
+
+#: src/window.rs:916
+msgid ""
+"The music library is read-only for Ryuon. To allow renaming, run this "
+"command in a terminal, then restart Ryuon:"
+msgstr ""
+
+#: src/window.rs:926
+msgid "_Copy Command"
+msgstr ""
+
+#: src/window.rs:926
+msgid "_Close"
+msgstr ""
+
+#: src/window.rs:934
+msgid "Command copied"
+msgstr ""
+
+#: src/window.rs:952
+#, rust-format
+msgid "Unable to read the music library: {}"
+msgstr ""
+
+#: src/window.rs:957
+msgid "All names in the music library are already tidy"
+msgstr ""
+
+#. Translators: the `{}` are the number of folders, the number of songs and the
+#. music library location
+#: src/window.rs:969
+#, rust-format
+msgid ""
+"{} folders and {} songs in {} get their tidy names. Nothing is deleted, and "
+"Undo Rename puts every name back."
+msgstr ""
+
+#: src/window.rs:975
+#, rust-format
+msgid "One tidy name is already taken, so it gets a number added."
+msgid_plural "{} tidy names are already taken, so they get a number added."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:981
+msgid "Rename Files on Disk?"
+msgstr ""
+
+#: src/window.rs:1001
+msgid "Changes"
+msgstr ""
+
+#: src/window.rs:1009
+#, rust-format
+msgid "Type {} to confirm"
+msgstr ""
+
+#: src/window.rs:1013
+#, rust-format
+msgid "Type the number of changes, {}, to confirm"
+msgstr ""
+
+#: src/window.rs:1021
+msgid "_Cancel"
+msgstr "_Annullér"
+
+#: src/window.rs:1021
+msgid "_Rename"
+msgstr ""
+
+#: src/window.rs:1073
+#, rust-format
+msgid "Renamed one folder or song"
+msgid_plural "Renamed {} folders and songs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:1078 src/window.rs:1247
+msgid "Undo"
+msgstr ""
+
+#: src/window.rs:1084
+#, rust-format
+msgid "Nothing was renamed: {}"
+msgstr ""
+
+#: src/window.rs:1091
+#, rust-format
+msgid "Renamed {} of {}, then stopped: {}. Undo Rename puts them back."
+msgstr ""
+
+#: src/window.rs:1109
+#, rust-format
+msgid "Unable to read the rename record: {}"
+msgstr ""
+
+#: src/window.rs:1119
+#, rust-format
+msgid "Put back one name"
+msgid_plural "Put back {} names"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:1124
+#, rust-format
+msgid "Undo stopped: {}"
+msgstr ""
+
+#: src/window.rs:1232
+msgid "Turn off shuffle to change the order"
+msgstr ""
+
+#: src/window.rs:1365
+msgid ""
+"The new folder order applies when shuffle is off and the library opens again"
+msgstr ""
+
+#: src/window.rs:1413
+#, fuzzy, rust-format
+msgid "One song"
+msgid_plural "{} songs"
+msgstr[0] "Næste sang"
+msgstr[1] "Næste sang"
+
+#: src/window.rs:1420
+#, fuzzy
+msgid "Playing"
+msgstr "Afspil"
+
+#: src/window.rs:1430 src/window.rs:1584
+#, fuzzy
+msgid "Play This Folder Next"
+msgstr "Afspil næste sang"
+
+#: src/window.rs:1431 src/window.rs:1585
+#, fuzzy
+msgid "Move Folder Up"
+msgstr "Åbn mappe"
+
+#: src/window.rs:1432 src/window.rs:1586
+msgid "Move Folder Down"
+msgstr ""
+
+#: src/window.rs:1437
+msgid "Folder Options"
+msgstr ""
+
+#: src/window.rs:1490 src/window.rs:1492 src/window.rs:1520
+#, rust-format
+msgid "“{}” plays next"
+msgstr ""
+
+#: src/window.rs:1495 src/window.rs:1524
+#, rust-format
+msgid "Moved “{}” up"
+msgstr ""
+
+#: src/window.rs:1498 src/window.rs:1529
+#, rust-format
+msgid "Moved “{}” down"
+msgstr ""
+
+#: src/window.rs:1515
+msgid "This folder is already playing"
+msgstr ""
+
+#: src/window.rs:1559
+#, rust-format
+msgid "Moved “{}”"
+msgstr ""
+
+#: src/window.rs:1577
+#, fuzzy
+msgid "Play Next"
+msgstr "Afspil næste sang"
+
+#: src/window.rs:1578
+msgid "Move Up"
+msgstr ""
+
+#: src/window.rs:1579
+msgid "Move Down"
+msgstr ""
+
+#: src/window.rs:1590
+#, fuzzy
+msgid "Remove from Playlist"
+msgstr "Gendan afspilningsliste"
+
+#. Translators: the `{}` placeholders are, in order: folder number, number
+#. of folders, song number in the folder, number of songs in the folder
+#: src/window.rs:1645
+#, rust-format
+msgid "Folder {} of {} · Song {} of {}"
+msgstr ""
+
+#: src/window.rs:1657
+#, rust-format
+msgid "Up next: {} · one song"
+msgid_plural "Up next: {} · {} songs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:1676
 msgid "No available song found"
 msgstr "Ingen tilgængelige sange fundet"
 
-#: src/window.rs:569
+#: src/window.rs:1750
 msgid "No songs found"
 msgstr "Ingen sange fundet"
 
-#: src/window.rs:602
+#: src/window.rs:1800
 msgid "Added a new song"
 msgstr "Tilføjede en ny sang"
 
-#: src/window.rs:603
+#: src/window.rs:1801
 msgid "Play"
 msgstr "Afspil"
 
 #. Translators: the `{}` must be left unmodified;
 #. it will be expanded to the number of songs added
 #. to the playlist
-#: src/window.rs:612
+#: src/window.rs:1810
+#, rust-format
 msgid "Added one song"
 msgid_plural "Added {} songs"
 msgstr[0] "Tilføjede en sang"
 msgstr[1] "Tilføjede {} sange"
 
-#: src/window.rs:1242
+#: src/window.rs:1818
+#, rust-format
+msgid "Skipped one duplicate"
+msgid_plural "Skipped {} duplicates"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/window.rs:2552
 msgid "Unable to access dropped files"
 msgstr "Kan ikke tilgå droppede filer"
 
-#: src/window.rs:1336
+#: src/window.rs:2649
+#, rust-format
 msgid "{} minute"
 msgid_plural "{} minutes"
 msgstr[0] "{} minut"
 msgstr[1] "{} minutter"
 
-#: src/window.rs:1347
+#: src/window.rs:2660
+#, rust-format
 msgid "{hours} hour {minutes} remaining"
 msgid_plural "{hours} hours {minutes} remaining"
 msgstr[0] "{hours} time {minutes} tilbage"
@@ -473,19 +964,21 @@ msgstr[1] "{hours} timer {minutes} tilbage"
 #. Translators: the '{}' must be left unmodified, and
 #. it will be replaced by the number of minutes remaining
 #. in the playlist
-#: src/window.rs:1357
+#: src/window.rs:2670
+#, rust-format
 msgid "{} minute remaining"
 msgid_plural "{} minutes remaining"
 msgstr[0] "{} minut tilbage"
 msgstr[1] "{} minutter tilbage"
 
-#: src/window.rs:1461
+#: src/window.rs:2788
 msgid "No song selected"
 msgstr "Ingen sang valgt"
 
 #. Translators: The '{}' must be left unmodified, and
 #. it is expanded to the number of songs selected
-#: src/window.rs:1466
+#: src/window.rs:2793
+#, rust-format
 msgid "{} song selected"
 msgid_plural "{} songs selected"
 msgstr[0] "{} sang valgt"
@@ -494,13 +987,32 @@ msgstr[1] "{} sange valgt"
 #. Translators: `{title}` and `{artist}` must be left
 #. untranslated; they will expand to the title and
 #. artist of the currently playing song, respectively
-#: src/window.rs:1522
+#: src/window.rs:2849
+#, rust-format
 msgid "Currently playing “{title}” by “{artist}”"
 msgstr "Afspiller nu “{title}” af “{artist}”"
 
-#: src/window.rs:1559
+#: src/window.rs:2886
 msgid "Unable to open folder"
 msgstr "Kan ikke åbne mappen"
+
+#~ msgid "Amberol"
+#~ msgstr "Amberol"
+
+#~ msgid "Plays music, and nothing else"
+#~ msgstr "Afspiller musik og ikke andet"
+
+#~ msgid ""
+#~ "Amberol is a music player with no delusions of grandeur. If you just want "
+#~ "to play music available on your local system then Amberol is the music "
+#~ "player you are looking for."
+#~ msgstr ""
+#~ "Amberol er en musikafspiller uden storhedsvanvid. Vil du bare afspille "
+#~ "musik fra dit lokale system, er Amberol den musikafspiller, du har ledt "
+#~ "efter."
+
+#~ msgid "Emmanuele Bassi"
+#~ msgstr "Emmanuele Bassi"
 
 #~ msgid "_Track"
 #~ msgstr "_Nummer"
@@ -510,9 +1022,6 @@ msgstr "Kan ikke åbne mappen"
 
 #~ msgid "Repeat All Tracks"
 #~ msgstr "Gentag alle numre"
-
-#~ msgid "_Cancel"
-#~ msgstr "_Annullér"
 
 #~ msgid "Add File"
 #~ msgstr "Tilføj fil"
