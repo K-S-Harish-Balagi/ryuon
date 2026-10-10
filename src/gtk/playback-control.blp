@@ -161,6 +161,16 @@ menu primary_menu {
 
   section {
     item {
+      label: _("Open _Library");
+      action: "queue.open-library";
+    }
+
+    item {
+      label: _("Choose Music Libr_ary…");
+      action: "queue.choose-library";
+    }
+
+    item {
       label: _("Add _Song");
       action: "queue.add-song";
     }
@@ -185,6 +195,11 @@ menu primary_menu {
     item {
       label: _("_Background Playback");
       action: "app.background-play";
+    }
+
+    item {
+      label: _("Open Library at _Start");
+      action: "app.library-autoload";
     }
   }
 

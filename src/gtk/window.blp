@@ -44,6 +44,16 @@ template $RyuonWindow: Adw.ApplicationWindow {
                     homogeneous: true;
                     spacing: 12;
 
+                    Button open_library_button {
+                      label: _("Open Library");
+                      action-name: "queue.open-library";
+
+                      styles [
+                        "suggested-action",
+                        "pill",
+                      ]
+                    }
+
                     Button restore_playlist_button {
                       label: _("Restore Playlist");
                       action-name: "queue.restore-playlist";
@@ -151,6 +161,18 @@ template $RyuonWindow: Adw.ApplicationWindow {
                   }
 
                   $RyuonSongDetails song_details {}
+
+                  Label folder_label {
+                    visible: false;
+                    justify: center;
+                    wrap: true;
+                    margin-top: 4;
+
+                    styles [
+                      "caption",
+                      "dim-label",
+                    ]
+                  }
 
                   $RyuonPlaybackControl playback_control {
                     halign: "center";

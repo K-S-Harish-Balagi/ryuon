@@ -92,6 +92,9 @@ mod imp {
             debug!("Application::activate");
 
             self.obj().present_main_window();
+            if let Some(window) = self.obj().active_window() {
+                window.downcast_ref::<Window>().unwrap().open_library_if_autoload();
+            }
         }
 
         fn open(&self, files: &[gio::File], _hint: &str) {
@@ -223,6 +226,22 @@ impl Application {
                     .settings
                     .set_boolean("background-play", background_play)
                     .expect("Unable to store background-play setting");
+            })
+            .build()]);
+
+        let library_autoload = self.imp().settings.boolean("library-autoload");
+        self.add_action_entries([gio::ActionEntry::builder("library-autoload")
+            .state(library_autoload.to_variant())
+            .activate(|this: &Application, action, _| {
+                let state = action.state().unwrap();
+                let action_state: bool = state.get().unwrap();
+                let autoload = !action_state;
+                action.set_state(&autoload.to_variant());
+
+                this.imp()
+                    .settings
+                    .set_boolean("library-autoload", autoload)
+                    .expect("Unable to store library-autoload setting");
             })
             .build()]);
     }

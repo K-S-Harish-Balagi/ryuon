@@ -21,5 +21,25 @@
 	  <key name="background-play" type="b">
 	    <default>true</default>
 	  </key>
+	  <key name="library-path" type="s">
+	    <default>''</default>
+	    <summary>Music library folder</summary>
+	    <description>The folder that holds your music, one subfolder per album. Empty when no library is set.</description>
+	  </key>
+	  <key name="resume-uri" type="s">
+	    <default>''</default>
+	    <summary>Song to resume</summary>
+	    <description>The song that was playing from the music library when the application last ran.</description>
+	  </key>
+	  <key name="resume-position" type="t">
+	    <default>0</default>
+	    <summary>Position to resume</summary>
+	    <description>How far into the song to resume, in seconds.</description>
+	  </key>
+	  <key name="library-autoload" type="b">
+	    <default>false</default>
+	    <summary>Open the library at start</summary>
+	    <description>Open the music library automatically when the application starts with an empty queue.</description>
+	  </key>
 	</schema>
 </schemalist>

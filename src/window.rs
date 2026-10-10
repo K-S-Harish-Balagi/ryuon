@@ -6,7 +6,7 @@ use std::{
     path::PathBuf,
     rc::Rc,
     str::FromStr,
-    time::Instant,
+    time::{Duration, Instant},
 };
 
 use adw::subclass::prelude::*;
@@ -18,7 +18,8 @@ use crate::{
     audio::{AudioPlayer, RepeatMode, ReplayGainMode, Song},
     config::APPLICATION_ID,
     drag_overlay::DragOverlay,
-    i18n::{i18n, i18n_k, ni18n_f, ni18n_k},
+    i18n::{i18n, i18n_f, i18n_k, ni18n_f, ni18n_k},
+    library,
     playback_control::PlaybackControl,
     playlist_view::PlaylistView,
     queue_row::QueueRow,
@@ -37,6 +38,14 @@ pub enum WindowMode {
 }
 
 const ATTRIBUTE_HOST_PATH: &str = "xattr::document-portal.host-path";
+
+fn set_suggested(button: &gtk::Button, suggested: bool) {
+    if suggested {
+        button.add_css_class("suggested-action");
+    } else {
+        button.remove_css_class("suggested-action");
+    }
+}
 
 mod imp {
     use glib::{ParamSpec, ParamSpecBoolean, ParamSpecEnum, Value};
@@ -76,6 +85,10 @@ mod imp {
         pub add_folder_button: TemplateChild<gtk::Button>,
         #[template_child]
         pub restore_playlist_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub open_library_button: TemplateChild<gtk::Button>,
+        #[template_child]
+        pub folder_label: TemplateChild<gtk::Label>,
 
         pub provider: gtk::CssProvider,
         pub settings: gio::Settings,
@@ -87,6 +100,9 @@ mod imp {
         pub replaygain_mode: Cell<ReplayGainMode>,
 
         pub playlist_filtermodel: RefCell<Option<gio::ListModel>>,
+
+        // Song and position (in seconds) to go back to once the library has loaded
+        pub pending_resume: RefCell<Option<(String, u64)>>,
 
         pub notify_playing_id: RefCell<Option<glib::SignalHandlerId>>,
         pub notify_position_id: RefCell<Option<glib::SignalHandlerId>>,
@@ -197,6 +213,36 @@ mod imp {
                 debug!("Window::queue.restore-playlist()");
                 win.restore_playlist();
             });
+            klass.install_action("queue.open-library", None, move |win, _, _| {
+                debug!("Window::queue.open-library()");
+                win.open_library();
+            });
+            klass.install_action_async("queue.choose-library", None, |win, _, _| async move {
+                debug!("Window::queue.choose-library()");
+                let start = win.library_root().unwrap_or_else(|| {
+                    glib::user_special_dir(glib::UserDirectory::Music).unwrap_or_else(glib::current_dir)
+                });
+
+                let dialog = gtk::FileDialog::builder()
+                    .accept_label(&i18n("_Use as Library"))
+                    .initial_folder(&gio::File::for_path(&start))
+                    .modal(true)
+                    .title(&i18n("Choose Music Library"))
+                    .build();
+
+                if let Ok(folder) = dialog.select_folder_future(Some(&win)).await {
+                    match folder.path() {
+                        Some(path) => {
+                            win.imp()
+                                .settings
+                                .set_string("library-path", &path.to_string_lossy())
+                                .expect("Unable to store library-path");
+                            win.open_library();
+                        }
+                        None => win.add_toast(i18n("Unable to access files")),
+                    }
+                }
+            });
             klass.install_action("win.copy", None, move |win, _, _| {
                 debug!("Window::win.copy()");
                 win.copy_song();
@@ -248,12 +294,15 @@ mod imp {
                 status_page: TemplateChild::default(),
                 add_folder_button: TemplateChild::default(),
                 restore_playlist_button: TemplateChild::default(),
+                open_library_button: TemplateChild::default(),
+                folder_label: TemplateChild::default(),
                 playlist_view: TemplateChild::default(),
                 playlist_shuffled: Cell::new(false),
                 playlist_visible: Cell::new(true),
                 playlist_selection: Cell::new(false),
                 playlist_search: Cell::new(false),
                 playlist_filtermodel: RefCell::default(),
+                pending_resume: RefCell::default(),
                 replaygain_mode: Cell::new(ReplayGainMode::default()),
                 provider: gtk::CssProvider::new(),
                 settings: utils::settings_manager(),
@@ -458,6 +507,7 @@ impl Window {
             }
 
             self.notify("playlist-shuffled");
+            self.update_folder_label();
         }
     }
 
@@ -504,6 +554,175 @@ impl Window {
     fn restore_playlist(&self) {
         if let Some(songs) = utils::load_cached_songs() {
             self.queue_songs(songs);
+        }
+    }
+
+    // The music library: a folder of albums, queued folder by folder
+    fn library_root(&self) -> Option<PathBuf> {
+        let path = self.imp().settings.string("library-path");
+        if path.is_empty() {
+            None
+        } else {
+            Some(PathBuf::from(path.as_str()))
+        }
+    }
+
+    pub fn open_library(&self) {
+        let Some(root) = self.library_root() else {
+            self.add_toast(i18n("Choose a music library first"));
+            return;
+        };
+
+        let folder = gio::File::for_path(&root);
+        if !folder.query_exists(gio::Cancellable::NONE) {
+            self.add_toast(i18n_f("Music library not found: {}", &[&root.to_string_lossy()]));
+            return;
+        }
+
+        // Opening the library replaces whatever is queued
+        if let Some(player) = self.player() {
+            if !player.queue().is_empty() {
+                self.clear_queue();
+            }
+        }
+
+        self.imp().pending_resume.replace(self.load_resume());
+
+        let files = utils::load_files_from_folder(&folder, true);
+        self.queue_songs(files);
+    }
+
+    fn load_resume(&self) -> Option<(String, u64)> {
+        let settings = &self.imp().settings;
+        let uri = settings.string("resume-uri");
+        if uri.is_empty() {
+            None
+        } else {
+            Some((uri.to_string(), settings.uint64("resume-position")))
+        }
+    }
+
+    // Remember the song and position, but only for songs that belong to the library
+    fn save_resume(&self) {
+        let Some(player) = self.player() else {
+            return;
+        };
+        let state = player.state();
+        let Some(song) = state.current_song() else {
+            return;
+        };
+        let Some(root) = self.library_root() else {
+            return;
+        };
+
+        let uri = song.uri();
+        let inside = gio::File::for_uri(&uri)
+            .path()
+            .map_or(false, |p| p.starts_with(&root));
+        if !inside {
+            return;
+        }
+
+        let settings = &self.imp().settings;
+        let _ = settings.set_string("resume-uri", &uri);
+        let _ = settings.set_uint64("resume-position", state.position());
+    }
+
+    // The length of a song is only known once the stream has loaded, so wait for it
+    fn seek_when_ready(&self, position: u64) {
+        let mut tries = 0;
+        glib::timeout_add_local(
+            Duration::from_millis(200),
+            clone!(
+                #[weak(rename_to = win)]
+                self,
+                #[upgrade_or]
+                glib::ControlFlow::Break,
+                move || {
+                    tries += 1;
+                    if let Some(player) = win.player() {
+                        let duration = player.state().duration();
+                        if duration > 0 {
+                            if position > 0 && position < duration {
+                                player.seek_position_rel(position as f64 / duration as f64);
+                                player.state().set_position(position);
+                            }
+                            return glib::ControlFlow::Break;
+                        }
+                    }
+                    if tries > 25 {
+                        glib::ControlFlow::Break
+                    } else {
+                        glib::ControlFlow::Continue
+                    }
+                }
+            ),
+        );
+    }
+
+    // Used at startup: only when nothing is queued or playing
+    pub fn open_library_if_autoload(&self) {
+        if !self.imp().settings.boolean("library-autoload") || self.library_root().is_none() {
+            return;
+        }
+        if let Some(player) = self.player() {
+            if player.queue().is_empty() && !player.state().playing() {
+                self.open_library();
+            }
+        }
+    }
+
+    // "Folder 7 of 139 · Song 4 of 10" and "Up next", shown while playing in order
+    fn update_folder_label(&self) {
+        let label = &self.imp().folder_label;
+        let Some(player) = self.player() else {
+            label.set_visible(false);
+            return;
+        };
+
+        let queue = player.queue();
+        let n = queue.n_songs();
+        if n < 2 || queue.is_shuffled() {
+            label.set_visible(false);
+            return;
+        }
+
+        let root = self.library_root();
+        let paths: Vec<PathBuf> = (0..n)
+            .filter_map(|i| queue.song_at(i))
+            .filter_map(|s| gio::File::for_uri(&s.uri()).path())
+            .collect();
+        let folders = library::group_folders(root.as_deref(), &paths);
+        let position = queue
+            .current_song_index()
+            .and_then(|i| library::position_of(&folders, i));
+
+        match position {
+            Some(pos) if pos.n_folders >= 2 => {
+                let mut text = i18n_f(
+                    // Translators: the `{}` placeholders are, in order: folder number, number
+                    // of folders, song number in the folder, number of songs in the folder
+                    "Folder {} of {} · Song {} of {}",
+                    &[
+                        &pos.folder.to_string(),
+                        &pos.n_folders.to_string(),
+                        &pos.song_in_folder.to_string(),
+                        &pos.folder_size.to_string(),
+                    ],
+                );
+                if let Some((name, count)) = pos.next {
+                    text.push('\n');
+                    text.push_str(&ni18n_f(
+                        "Up next: {} · one song",
+                        "Up next: {} · {} songs",
+                        count,
+                        &[&name, &count.to_string()],
+                    ));
+                }
+                label.set_label(&text);
+                label.set_visible(true);
+            }
+            _ => label.set_visible(false),
         }
     }
 
@@ -594,6 +813,17 @@ impl Window {
                                 player.skip_to(0);
                             }
 
+                            // Opening the library: go back to where we stopped, paused
+                            let resume = win.imp().pending_resume.take();
+                            if let Some((uri, position)) = resume {
+                                let found = (0..queue.n_songs())
+                                    .find(|&i| queue.song_at(i).map_or(false, |s| s.uri() == uri));
+                                if let Some(index) = found {
+                                    player.skip_to(index);
+                                    win.seek_when_ready(position);
+                                }
+                            }
+
                             // Allow jumping to the song we just added
                             if songs.len() == 1 {
                                 // If we added a single song, and the queue was empty, we
@@ -619,6 +849,18 @@ impl Window {
                                     songs.len() as u32,
                                     &[&songs.len().to_string()],
                                 );
+
+                                let msg = if duplicates > 0 {
+                                    let skipped = ni18n_f(
+                                        "Skipped one duplicate",
+                                        "Skipped {} duplicates",
+                                        duplicates,
+                                        &[&duplicates.to_string()],
+                                    );
+                                    format!("{} · {}", msg, skipped)
+                                } else {
+                                    msg
+                                };
 
                                 win.add_toast(msg);
                             }
@@ -800,6 +1042,7 @@ impl Window {
                         }
 
                         win.update_playlist_time();
+                        win.update_folder_label();
                     }
                 ),
             );
@@ -1021,6 +1264,8 @@ impl Window {
                 .set_int("window-height", height)
                 .expect("Unable to stop window-height");
 
+            window.save_resume();
+
             window.unbind_queue();
             window.unbind_state();
             window.unbind_waveform();
@@ -1032,6 +1277,21 @@ impl Window {
             .playlist_view
             .playlist_searchbar()
             .set_key_capture_widget(Some(self.upcast_ref::<gtk::Widget>()));
+
+        // Keep the resume position fresh while listening
+        glib::timeout_add_seconds_local(
+            10,
+            clone!(
+                #[weak(rename_to = win)]
+                self,
+                #[upgrade_or]
+                glib::ControlFlow::Break,
+                move || {
+                    win.save_resume();
+                    glib::ControlFlow::Continue
+                }
+            ),
+        );
     }
 
     // The initial state of the playback actions
@@ -1063,23 +1323,15 @@ impl Window {
             // time
             self.imp().status_page.set_icon_name(Some(APPLICATION_ID));
 
-            if utils::has_cached_playlist() {
-                self.imp().restore_playlist_button.set_visible(true);
-                self.imp()
-                    .restore_playlist_button
-                    .add_css_class("suggested-action");
-                self.imp()
-                    .add_folder_button
-                    .remove_css_class("suggested-action");
-            } else {
-                self.imp().restore_playlist_button.set_visible(false);
-                self.imp()
-                    .restore_playlist_button
-                    .remove_css_class("suggested-action");
-                self.imp()
-                    .add_folder_button
-                    .add_css_class("suggested-action");
-            }
+            // The first choice that is available is the suggested one
+            let has_library = self.library_root().is_some();
+            let has_cache = utils::has_cached_playlist();
+            let imp = self.imp();
+            imp.open_library_button.set_visible(has_library);
+            imp.restore_playlist_button.set_visible(has_cache);
+            set_suggested(&imp.open_library_button, has_library);
+            set_suggested(&imp.restore_playlist_button, !has_library && has_cache);
+            set_suggested(&imp.add_folder_button, !has_library && !has_cache);
 
             let state = player.state();
             if state.playing() || !queue.is_empty() {
@@ -1300,6 +1552,8 @@ impl Window {
             self.update_playlist_time();
             self.update_title(state.current_song().as_ref());
             self.update_style(state.current_song().as_ref());
+            self.update_folder_label();
+            self.save_resume();
         }
     }
 
