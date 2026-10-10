@@ -301,6 +301,28 @@ impl Application {
                     .expect("Unable to store library-autoload setting");
             })
             .build()]);
+
+        let tidy_names = self.imp().settings.boolean("tidy-names");
+        crate::tidy::set_enabled(tidy_names);
+        self.add_action_entries([gio::ActionEntry::builder("tidy-names")
+            .state(tidy_names.to_variant())
+            .activate(|this: &Application, action, _| {
+                let state = action.state().unwrap();
+                let tidy: bool = !state.get::<bool>().unwrap();
+                action.set_state(&tidy.to_variant());
+                crate::tidy::set_enabled(tidy);
+
+                this.imp()
+                    .settings
+                    .set_boolean("tidy-names", tidy)
+                    .expect("Unable to store tidy-names setting");
+                for window in this.windows() {
+                    if let Ok(window) = window.downcast::<crate::window::Window>() {
+                        window.refresh_names();
+                    }
+                }
+            })
+            .build()]);
     }
 
     fn show_about(&self) {

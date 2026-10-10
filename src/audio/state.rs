@@ -164,6 +164,13 @@ impl PlayerState {
         self.notify("position");
     }
 
+    /// The current song's shown names changed (tidy-names toggled)
+    pub fn notify_names(&self) {
+        self.notify("title");
+        self.notify("artist");
+        self.notify("album");
+    }
+
     pub fn position(&self) -> u64 {
         self.imp().position.get()
     }

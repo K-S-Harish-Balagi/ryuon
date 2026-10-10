@@ -27,6 +27,7 @@ use crate::{
     song_cover::SongCover,
     song_details::SongDetails,
     sort::FuzzySorter,
+    tidy,
     utils,
     volume_control::VolumeControl,
     waveform_view::WaveformView,
@@ -1015,6 +1016,7 @@ impl Window {
                     ],
                 );
                 if let Some((name, count)) = pos.next {
+                    let name = if tidy::enabled() { tidy::name(&name) } else { name };
                     text.push('\n');
                     text.push_str(&ni18n_f(
                         "Up next: {} · one song",
@@ -2114,6 +2116,20 @@ impl Window {
         imp.provider.load_from_string("");
         imp.main_stack.remove_css_class("main-window");
         self.action_set_enabled("win.enable-recoloring", false);
+    }
+
+    /// Show names again after the tidy-names setting changed
+    pub fn refresh_names(&self) {
+        if let Some(player) = self.player() {
+            let queue = player.queue();
+            for song in (0..queue.n_songs()).filter_map(|i| queue.song_at(i)) {
+                song.notify_names();
+            }
+            let state = player.state();
+            state.notify_names();
+            self.update_title(state.current_song().as_ref());
+        }
+        self.update_folder_label();
     }
 
     fn update_title(&self, song: Option<&Song>) {

@@ -16,6 +16,7 @@ mod search;
 mod song_cover;
 mod song_details;
 mod sort;
+mod tidy;
 mod utils;
 mod volume_control;
 mod waveform_view;

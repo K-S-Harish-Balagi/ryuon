@@ -25,6 +25,7 @@ use sha2::{Digest, Sha256};
 use crate::{
     audio::cover_cache::{CoverArt, CoverCache},
     i18n::i18n,
+    tidy,
 };
 
 #[derive(Debug, Clone)]
@@ -351,15 +352,19 @@ impl Song {
         self.imp().data.borrow().uri()
     }
 
+    // Names as shown: tidied when the tidy-names setting is on (display only)
     pub fn artist(&self) -> String {
-        match self.imp().data.borrow().artist() {
-            Some(artist) => artist.to_string(),
-            None => i18n("Unknown artist"),
-        }
+        let data = self.imp().data.borrow();
+        let artist = match data.artist() {
+            Some(a) if tidy::enabled() => tidy::artist(a),
+            other => other.map(str::to_string),
+        };
+        artist.unwrap_or_else(|| i18n("Unknown artist"))
     }
 
     pub fn title(&self) -> String {
         match self.imp().data.borrow().title() {
+            Some(title) if tidy::enabled() => tidy::title(title),
             Some(title) => title.to_string(),
             None => i18n("Unknown title"),
         }
@@ -367,9 +372,17 @@ impl Song {
 
     pub fn album(&self) -> String {
         match self.imp().data.borrow().album() {
+            Some(album) if tidy::enabled() => tidy::name(album),
             Some(album) => album.to_string(),
             None => i18n("Unknown album"),
         }
+    }
+
+    /// Tell views the shown names changed (after the tidy-names setting is toggled)
+    pub fn notify_names(&self) {
+        self.notify("artist");
+        self.notify("title");
+        self.notify("album");
     }
 
     pub fn cover_texture(&self) -> Option<gdk::Texture> {

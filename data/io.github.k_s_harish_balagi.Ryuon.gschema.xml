@@ -46,5 +46,10 @@
 	    <summary>Open the library at start</summary>
 	    <description>Open the music library automatically when the application starts with an empty queue.</description>
 	  </key>
+	  <key name="tidy-names" type="b">
+	    <default>true</default>
+	    <summary>Tidy names on screen</summary>
+	    <description>Show song, artist, album and folder names without download-site tags, bitrate labels and underscores. Files are never renamed.</description>
+	  </key>
 	</schema>
 </schemalist>
