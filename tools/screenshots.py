@@ -44,16 +44,7 @@ def shot(path):
     os.remove(raw)
 
 
-def main(library, out):
-    if owned():
-        sys.exit('Close Ryuon first.')
-    os.makedirs(out, exist_ok=True)
-    tmp = tempfile.mkdtemp(prefix='ryuon-shots-')
-    cfg = os.path.join(tmp, 'config', 'glib-2.0', 'settings')
-    os.makedirs(cfg)
-    with open(os.path.join(cfg, 'keyfile'), 'w') as f:
-        f.write(f"[io/github/k_s_harish_balagi/Ryuon]\nlibrary-path='{SHOWN}'\nlibrary-autoload=true\n"
-                "window-width=900\nwindow-height=640\n")
+def launch(library, tmp):
     # `flatpak run` would force the user's own config folders; run the release build folder
     # instead, where the throwaway folders apply
     build = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '_flatpak-build')
@@ -68,14 +59,37 @@ def main(library, out):
             break
         time.sleep(0.5)
     time.sleep(5)
+
+
+def main(library, out):
+    if owned():
+        sys.exit('Close Ryuon first.')
+    os.makedirs(out, exist_ok=True)
+    tmp = tempfile.mkdtemp(prefix='ryuon-shots-')
+    cfg = os.path.join(tmp, 'config', 'glib-2.0', 'settings')
+    os.makedirs(cfg)
+    with open(os.path.join(cfg, 'keyfile'), 'w') as f:
+        f.write(f"[io/github/k_s_harish_balagi/Ryuon]\nlibrary-path='{SHOWN}'\nlibrary-autoload=true\n"
+                "window-width=900\nwindow-height=640\n")
+    launch(library, tmp)
     sh('wmctrl', '-ir', window(), '-e', '0,-1,-1,900,640')
     time.sleep(2)
     shot(os.path.join(out, 'playing.png'))
-    act('show-folders', wait=2)
+    act('show-folders', wait=4)
     shot(os.path.join(out, 'folders.png'))
-    act('show-folders')
-    act('test-preferences', wait=2)
+    act('show-folders', wait=3)
+    act('test-preferences', wait=4)
     shot(os.path.join(out, 'preferences.png'))
+    # phone-sized layout: close the dialog by restarting the view at 360 px wide
+    act('quit', path='/io/github/k_s_harish_balagi/Ryuon', wait=1)
+    for _ in range(40):
+        if not owned():
+            break
+        time.sleep(0.25)
+    launch(library, tmp)
+    sh('wmctrl', '-ir', window(), '-e', '0,-1,-1,360,720')
+    time.sleep(3)
+    shot(os.path.join(out, 'phone.png'))
     act('quit', path='/io/github/k_s_harish_balagi/Ryuon')
     print('screenshots in', out)
 

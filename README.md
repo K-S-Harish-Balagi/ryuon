@@ -10,8 +10,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
 **A music player for people who keep their music in folders.** Choose your music folder once,
 and Ryuon plays it one folder after another, picking up where you stopped the next time.
 
-![Ryuon playing a library folder by folder](data/screenshots/playing.png)
-
 - **Folder by folder:** "Folder 7 of 139 · Song 4 of 10", and what plays next
 - **Resume:** reopens on the song and second where you stopped
 - **Reorder:** play next, move songs or whole folders, undo
@@ -22,8 +20,20 @@ and Ryuon plays it one folder after another, picking up where you stopped the ne
 - **Rename on disk (optional):** gives the files those tidy names, with a preview and full undo
 - Album-art colours, media keys and desktop media controls, phone-sized layout
 
-Ryuon runs on Linux as a Flatpak. It is a fork of [Amberol](https://gitlab.gnome.org/World/amberol)
-by Emmanuele Bassi.
+Ryuon runs on Linux (desktop and phone) as a Flatpak.
+
+## Screenshots
+
+| Playing, folder by folder | Folders view |
+|---|---|
+| ![Playing a library folder by folder](data/screenshots/playing.png) | ![The Folders view lists every album with its song count](data/screenshots/folders.png) |
+
+| Preferences | On a phone |
+|---|---|
+| ![Preferences: library, folder order, tidy names, playback](data/screenshots/preferences.png) | <img src="data/screenshots/phone.png" width="240" alt="The same player at phone width"> |
+
+The window takes its colours from the album art. The screenshots use a generated demo library
+(`tools/make_demo_library.py`), not real albums.
 
 ## Install
 
@@ -89,9 +99,16 @@ flatpak override --user --filesystem=/path/to/Music io.github.k_s_harish_balagi.
 Before renaming, check that nothing else depends on the current names, for example playlists
 in other players or a media server that tracks files by path.
 
-## Build from source
+## Reporting problems
 
-You need `flatpak` and `flatpak-builder`, and the Flathub remote.
+Open an [issue](https://github.com/K-S-Harish-Balagi/ryuon/issues) with what you did, what you
+expected and what happened. Output from `flatpak run io.github.k_s_harish_balagi.Ryuon` in a
+terminal helps.
+
+## Build from source (developers only)
+
+You do **not** need this to use Ryuon: the release file above is all a user needs. Building is
+for changing the code. You need `flatpak`, `flatpak-builder` and the Flathub remote.
 
 ```sh
 git clone https://github.com/K-S-Harish-Balagi/ryuon.git
@@ -107,24 +124,14 @@ after changing dependencies). Development tools and tests are described in
 [`tools/README.md`](tools/README.md); `tools/make_demo_library.py` makes a small copyright-free
 library to try things with.
 
-## Reporting problems
-
-Open an [issue](https://github.com/K-S-Harish-Balagi/ryuon/issues) with what you did, what you
-expected and what happened. Output from `flatpak run io.github.k_s_harish_balagi.Ryuon` in a
-terminal helps.
-
-## How this fork was made
+## How it was made
 
 Ryuon's own features (library, reordering, tidy names, renaming, sorting, Folders view and
 Preferences, about 3,000 lines of Rust and the tests in `tools/`) were written with the help of
-an AI coding assistant, Claude by Anthropic, under the direction of and reviewed by the
-maintainer. Amberol's original code is unchanged apart from the renaming and the hooks these
-features need.
+an AI coding assistant, Claude by Anthropic, directed and reviewed by the maintainer.
 
-## Credit and licence
+## Licence and credit
 
-Ryuon is built on Amberol by Emmanuele Bassi and its contributors; their code keeps its original
-copyright. Upstream's history is in `CHANGES.md`. Translations come from Amberol's translators.
-
-GPL-3.0-or-later, see `LICENSES/`. The Ryuon name, logo and icons are original artwork made for
-this project. The screenshots use the generated demo library, not real albums.
+GPL-3.0-or-later, see `LICENSES/`. The name, logo and icons are original artwork for this
+project. Ryuon is a modified version of [Amberol](https://gitlab.gnome.org/World/amberol) by
+Emmanuele Bassi and contributors, whose code keeps its copyright (history in `CHANGES.md`).
