@@ -236,7 +236,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for Song {
-        const NAME: &'static str = "AmberolSong";
+        const NAME: &'static str = "RyuonSong";
         type Type = super::Song;
     }
 

@@ -10,7 +10,7 @@ mod imp {
     use super::*;
 
     #[derive(Debug, Default, CompositeTemplate)]
-    #[template(resource = "/io/bassi/Amberol/song-cover.ui")]
+    #[template(resource = "/io/github/k_s_harish_balagi/Ryuon/song-cover.ui")]
     pub struct SongCover {
         // Template widgets
         #[template_child]
@@ -21,7 +21,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for SongCover {
-        const NAME: &'static str = "AmberolSongCover";
+        const NAME: &'static str = "RyuonSongCover";
         type Type = super::SongCover;
         type ParentType = gtk::Widget;
 

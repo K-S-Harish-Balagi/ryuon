@@ -24,7 +24,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for Queue {
-        const NAME: &'static str = "AmberolQueue";
+        const NAME: &'static str = "RyuonQueue";
         type Type = super::Queue;
 
         fn new() -> Self {

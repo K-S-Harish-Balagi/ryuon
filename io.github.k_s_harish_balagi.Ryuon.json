@@ -1,72 +1,79 @@
 {
-    "app-id" : "io.bassi.Amberol.Devel",
-    "runtime" : "org.gnome.Platform",
-    "runtime-version" : "master",
-    "sdk" : "org.gnome.Sdk",
-    "command" : "amberol",
-    "finish-args" : [
-        "--share=ipc",
-        "--socket=fallback-x11",
-        "--device=dri",
-        "--socket=wayland",
-        "--socket=pulseaudio",
-        "--filesystem=xdg-music:ro"
+  "app-id": "io.github.k_s_harish_balagi.Ryuon",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "master",
+  "sdk": "org.gnome.Sdk",
+  "command": "ryuon",
+  "finish-args": [
+    "--share=ipc",
+    "--socket=fallback-x11",
+    "--device=dri",
+    "--socket=wayland",
+    "--socket=pulseaudio",
+    "--filesystem=xdg-music:ro"
+  ],
+  "build-options": {
+    "append-path": "/app/rust-toolchain/bin",
+    "build-args": [
+      "--share=network"
     ],
-    "build-options" : {
-        "append-path" : "/app/rust-toolchain/bin",
-        "build-args" : [
-            "--share=network"
-        ],
-        "env" : {
-            "G_MESSAGES_DEBUG" : "none",
-            "RUST_BACKTRACE" : "1",
-            "RUST_LOG" : "amberol=debug,glib=debug"
+    "env": {
+      "G_MESSAGES_DEBUG": "none",
+      "RUST_BACKTRACE": "1",
+      "RUST_LOG": "ryuon=debug,glib=debug",
+      "CARGO_BUILD_JOBS": "2"
+    }
+  },
+  "cleanup": [
+    "/include",
+    "/lib/pkgconfig",
+    "/man",
+    "/share/doc",
+    "/share/gtk-doc",
+    "/share/man",
+    "/share/pkgconfig",
+    "/rust-toolchain",
+    "*.la",
+    "*.a"
+  ],
+  "modules": [
+    {
+      "name": "rust-bootstrap",
+      "buildsystem": "simple",
+      "build-options": {
+        "no-debuginfo": true,
+        "strip": false
+      },
+      "build-commands": [
+        "./install.sh --prefix=/app/rust-toolchain --without=rust-docs,rust-docs-json-preview --disable-ldconfig"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://static.rust-lang.org/dist/rust-1.98.0-x86_64-unknown-linux-gnu.tar.gz",
+          "sha256": "aa30409afa67bd1ada244cefd82c7980e6a65bc113bb978e934b2413c75e3900"
         }
+      ]
     },
-    "cleanup" : [
-        "/include",
-        "/lib/pkgconfig",
-        "/man",
-        "/share/doc",
-        "/share/gtk-doc",
-        "/share/man",
-        "/share/pkgconfig",
-        "/rust-toolchain",
-        "*.la",
-        "*.a"
-    ],
-    "modules" : [
+    {
+      "name": "ryuon",
+      "builddir": true,
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dprofile=default"
+      ],
+      "sources": [
         {
-            "name" : "rust-bootstrap",
-            "buildsystem" : "simple",
-            "build-options" : {
-                "no-debuginfo" : true,
-                "strip" : false
-            },
-            "build-commands" : [
-                "./install.sh --prefix=/app/rust-toolchain --without=rust-docs,rust-docs-json-preview --disable-ldconfig"
-            ],
-            "sources" : [
-                {
-                    "type" : "archive",
-                    "url" : "https://static.rust-lang.org/dist/rust-1.98.0-x86_64-unknown-linux-gnu.tar.gz",
-                    "sha256" : "aa30409afa67bd1ada244cefd82c7980e6a65bc113bb978e934b2413c75e3900"
-                }
-            ]
-        },
-        {
-            "name" : "amberol",
-            "builddir" : true,
-            "buildsystem" : "meson",
-            "config-opts": [
-                "-Dprofile=development"
-            ],
-            "sources" : [
-                {
-                    "type" : "dir",
-                    "path" : "/mnt/shared/claude/amberol-src/amberol"
-                }
-            ]
+          "type": "dir",
+          "path": ".",
+          "skip": [
+            ".flatpak-builder",
+            "_build",
+            "_flatpak-build",
+            ".git"
+          ]
         }
-    ]
+      ]
+    }
+  ]
 }

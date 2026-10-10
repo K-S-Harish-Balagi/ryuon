@@ -15,7 +15,7 @@ mod imp {
     use super::*;
 
     #[derive(Debug, Default, CompositeTemplate)]
-    #[template(resource = "/io/bassi/Amberol/volume-control.ui")]
+    #[template(resource = "/io/github/k_s_harish_balagi/Ryuon/volume-control.ui")]
     pub struct VolumeControl {
         // Template widgets
         #[template_child]
@@ -31,7 +31,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for VolumeControl {
-        const NAME: &'static str = "AmberolVolumeControl";
+        const NAME: &'static str = "RyuonVolumeControl";
         type Type = super::VolumeControl;
         type ParentType = gtk::Widget;
 

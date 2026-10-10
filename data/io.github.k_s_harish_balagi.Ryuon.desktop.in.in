@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=Amberol
+Name=Ryuon
 GenericName=Music Player
-TryExec=amberol
-Exec=amberol %U
+TryExec=ryuon
+Exec=ryuon %U
 Icon=@APPLICATION_ID@
 Terminal=false
 Type=Application

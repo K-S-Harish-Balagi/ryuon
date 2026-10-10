@@ -1,5 +1,5 @@
 version = 1
-SPDX-PackageName = "amberol"
+SPDX-PackageName = "ryuon"
 SPDX-PackageSupplier = "Emmanuele Bassi"
 SPDX-PackageDownloadLocation = "https://gitlab.gnome.org/ebassi/amberol"
 
@@ -34,37 +34,37 @@ SPDX-FileCopyrightText = "2022  Emmanuele Bassi"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "io.bassi.Amberol.json"
+path = "io.github.k_s_harish_balagi.Ryuon.json"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2022  Emmanuele Bassi"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "io.bassi.Amberol.Devel.json"
+path = "io.github.k_s_harish_balagi.Ryuon.Devel.json"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2022  Emmanuele Bassi"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "data/io.bassi.Amberol.metainfo.xml.in.in"
+path = "data/io.github.k_s_harish_balagi.Ryuon.metainfo.xml.in.in"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2022  Emmanuele Bassi"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "data/io.bassi.Amberol.desktop.in.in"
+path = "data/io.github.k_s_harish_balagi.Ryuon.desktop.in.in"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2022  Emmanuele Bassi"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "data/io.bassi.Amberol.gschema.xml"
+path = "data/io.github.k_s_harish_balagi.Ryuon.gschema.xml"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2022  Emmanuele Bassi"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "data/io.bassi.Amberol.service.in"
+path = "data/io.github.k_s_harish_balagi.Ryuon.service.in"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2022  Emmanuele Bassi"
 SPDX-License-Identifier = "CC0-1.0"
@@ -76,13 +76,13 @@ SPDX-FileCopyrightText = "2022  Emmanuele Bassi"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "data/icons/hicolor/scalable/apps/io.bassi.Amberol.**"
+path = "data/icons/hicolor/scalable/apps/io.github.k_s_harish_balagi.Ryuon.**"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2022  Jakub Steiner"
 SPDX-License-Identifier = "CC-BY-SA-3.0"
 
 [[annotations]]
-path = "data/icons/hicolor/symbolic/apps/io.bassi.Amberol.**"
+path = "data/icons/hicolor/symbolic/apps/io.github.k_s_harish_balagi.Ryuon.**"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2022  Jakub Steiner"
 SPDX-License-Identifier = "CC-BY-SA-3.0"
@@ -106,7 +106,7 @@ SPDX-FileCopyrightText = "2022  Translation authors"
 SPDX-License-Identifier = "GPL-3.0-or-later"
 
 [[annotations]]
-path = "src/amberol.gresource.xml"
+path = "src/ryuon.gresource.xml"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2022  Emmanuele Bassi"
 SPDX-License-Identifier = "GPL-3.0-or-later"

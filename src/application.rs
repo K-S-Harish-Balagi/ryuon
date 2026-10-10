@@ -37,7 +37,7 @@ mod imp {
 
     #[glib::object_subclass]
     impl ObjectSubclass for Application {
-        const NAME: &'static str = "AmberolApplication";
+        const NAME: &'static str = "RyuonApplication";
         type Type = super::Application;
         type ParentType = adw::Application;
 
@@ -120,7 +120,7 @@ impl Default for Application {
         glib::Object::builder::<Application>()
             .property("application-id", APPLICATION_ID)
             .property("flags", gio::ApplicationFlags::HANDLES_OPEN)
-            .property("resource-base-path", "/io/bassi/Amberol")
+            .property("resource-base-path", "/io/github/k_s_harish_balagi/Ryuon")
             .build()
     }
 }
@@ -231,13 +231,12 @@ impl Application {
         let window = self.active_window().unwrap();
         let dialog = adw::AboutDialog::builder()
             .application_icon(APPLICATION_ID)
-            .application_name("Amberol")
-            .developer_name("Emmanuele Bassi")
+            .application_name("Ryuon")
+            .developer_name("Harish")
             .version(VERSION)
-            .developers(vec!["Emmanuele Bassi"])
-            .copyright("© 2022 Emmanuele Bassi")
-            .website("https://apps.gnome.org/Amberol/")
-            .issue_url("https://gitlab.gnome.org/World/amberol/-/issues/new")
+            .developers(vec!["Harish", "Emmanuele Bassi (Amberol)"])
+            .copyright("© 2026 Harish. © 2022 Emmanuele Bassi.")
+            .comments(i18n("Ryuon is a fork of Amberol by Emmanuele Bassi."))
             .license_type(gtk::License::Gpl30)
             // Translators: Replace "translator-credits" with your names, one name per line
             .translator_credits(i18n("translator-credits"))
@@ -252,7 +251,7 @@ impl Application {
             let root = window.native().unwrap();
             let identifier = WindowIdentifier::from_native(&root).await;
             let request = Background::request().identifier(identifier).reason(&*i18n(
-                "Amberol needs to run in the background to play music",
+                "Ryuon needs to run in the background to play music",
             ));
 
             match request.send().await.and_then(

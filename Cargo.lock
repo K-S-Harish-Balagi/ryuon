@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "amberol"
+name = "ryuon"
 version = "0.1.0"
 dependencies = [
  "ashpd",
