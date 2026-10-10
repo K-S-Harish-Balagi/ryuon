@@ -7,17 +7,21 @@
   <summary>Plays your music, folder by folder</summary>
   <description>
     <p>
-      Ryuon is a local music player. Point it at your music folder once and it plays one
-      folder after another. It is a fork of Amberol by Emmanuele Bassi.
+      Ryuon is a local music player for people who keep their music in folders. Choose your
+      music folder once and Ryuon plays it one folder after another, picking up where you
+      stopped the next time you open it.
     </p>
-    <p>Current features:</p>
     <ul>
-      <li>adaptive UI</li>
-      <li>UI recoloring using the album art</li>
-      <li>drag and drop support to queue songs</li>
-      <li>shuffle and repeat</li>
-      <li>MPRIS integration</li>
+      <li>Shows where you are: folder 7 of 139, song 4 of 10, and what plays next</li>
+      <li>Play next, move songs and whole folders, with undo</li>
+      <li>Sort folders by name, newest, most songs or recently played, or keep your own order</li>
+      <li>Folders view to jump to any album</li>
+      <li>Tidies messy names on screen: no site tags, bitrates or underscores</li>
+      <li>Optionally renames the files themselves, with a preview and full undo</li>
+      <li>Colors the window from the album art, works on phones and desktops</li>
+      <li>Media keys and desktop media controls</li>
     </ul>
+    <p>Ryuon is a fork of Amberol by Emmanuele Bassi.</p>
   </description>
   <branding>
     <color type="primary" scheme_preference="light">#90c0ff</color>
@@ -43,7 +47,32 @@
     <control>pointing</control>
     <control>touch</control>
   </recommends>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/K-S-Harish-Balagi/ryuon/main/data/screenshots/playing.png</image>
+      <caption>Playing a library folder by folder</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/K-S-Harish-Balagi/ryuon/main/data/screenshots/folders.png</image>
+      <caption>The Folders view</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/K-S-Harish-Balagi/ryuon/main/data/screenshots/preferences.png</image>
+      <caption>Library preferences</caption>
+    </screenshot>
+  </screenshots>
   <releases>
+    <release version="0.2.0" date="2026-10-11">
+      <description>
+        <ul>
+          <li>Music library: choose it once, play folder by folder, resume where you stopped</li>
+          <li>Reorder: play next, move songs and folders, undo</li>
+          <li>Sort folders and a Folders view</li>
+          <li>Tidy names on screen, and optional renaming on disk with undo</li>
+          <li>Preferences window</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.0" date="2026-10-10">
       <description>
         <ul>

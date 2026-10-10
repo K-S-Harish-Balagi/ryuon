@@ -47,7 +47,13 @@ else
   message('Building in debug mode')
 endif
 
-cargo_env = [ 'CARGO_HOME=' + meson.project_build_root() / 'cargo-home' ]
+# Respect a CARGO_HOME set by the caller (the Flatpak manifest points it at the vendored
+# crates for an offline build); otherwise keep downloads inside the build directory
+cargo_home = run_command('sh', '-c', 'printf %s "$CARGO_HOME"', check: false).stdout()
+if cargo_home == ''
+  cargo_home = meson.project_build_root() / 'cargo-home'
+endif
+cargo_env = [ 'CARGO_HOME=' + cargo_home ]
 
 cargo_release = custom_target(
   'cargo-build',

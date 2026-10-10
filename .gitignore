@@ -6,3 +6,5 @@ target
 
 subprojects/blueprint-compiler
 __pycache__/
+dist/
+_repo/

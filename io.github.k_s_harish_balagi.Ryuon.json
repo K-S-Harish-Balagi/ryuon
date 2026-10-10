@@ -1,7 +1,7 @@
 {
   "app-id": "io.github.k_s_harish_balagi.Ryuon",
   "runtime": "org.gnome.Platform",
-  "runtime-version": "master",
+  "runtime-version": "51",
   "sdk": "org.gnome.Sdk",
   "command": "ryuon",
   "finish-args": [
@@ -13,15 +13,11 @@
     "--filesystem=xdg-music:ro"
   ],
   "build-options": {
-    "append-path": "/app/rust-toolchain/bin",
-    "build-args": [
-      "--share=network"
-    ],
+    "append-path": "/usr/lib/sdk/rust-stable/bin",
     "env": {
-      "G_MESSAGES_DEBUG": "none",
-      "RUST_BACKTRACE": "1",
-      "RUST_LOG": "ryuon=debug,glib=debug",
-      "CARGO_BUILD_JOBS": "2"
+      "CARGO_HOME": "/run/build/ryuon/cargo",
+      "CARGO_NET_OFFLINE": "true",
+      "RUST_BACKTRACE": "1"
     }
   },
   "cleanup": [
@@ -32,29 +28,10 @@
     "/share/gtk-doc",
     "/share/man",
     "/share/pkgconfig",
-    "/rust-toolchain",
     "*.la",
     "*.a"
   ],
   "modules": [
-    {
-      "name": "rust-bootstrap",
-      "buildsystem": "simple",
-      "build-options": {
-        "no-debuginfo": true,
-        "strip": false
-      },
-      "build-commands": [
-        "./install.sh --prefix=/app/rust-toolchain --without=rust-docs,rust-docs-json-preview --disable-ldconfig"
-      ],
-      "sources": [
-        {
-          "type": "archive",
-          "url": "https://static.rust-lang.org/dist/rust-1.98.0-x86_64-unknown-linux-gnu.tar.gz",
-          "sha256": "aa30409afa67bd1ada244cefd82c7980e6a65bc113bb978e934b2413c75e3900"
-        }
-      ]
-    },
     {
       "name": "ryuon",
       "builddir": true,
@@ -72,10 +49,17 @@
             "_flatpak-build",
             "_dev-build",
             ".devbuild",
-            ".git"
+            ".git",
+            "_repo",
+            "build-dir",
+            "tools/__pycache__"
           ]
-        }
+        },
+        "cargo-sources.json"
       ]
     }
+  ],
+  "sdk-extensions": [
+    "org.freedesktop.Sdk.Extension.rust-stable"
   ]
 }
