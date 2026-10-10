@@ -20,7 +20,8 @@ and Ryuon plays it one folder after another, picking up where you stopped the ne
 - **Rename on disk (optional):** gives the files those tidy names, with a preview and full undo
 - Album-art colours, media keys and desktop media controls, phone-sized layout
 
-Ryuon runs on Linux (desktop and phone) as a Flatpak.
+Ryuon runs on Linux (64-bit PCs, desktop and phone layouts) as a Flatpak. A Windows beta is
+planned: see [windows/ROADMAP.md](windows/ROADMAP.md).
 
 ## Screenshots
 
