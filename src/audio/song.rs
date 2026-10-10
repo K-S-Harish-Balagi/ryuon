@@ -4,7 +4,7 @@
 use std::{
     cell::{Cell, RefCell},
     fmt::{self, Display, Formatter},
-    path::PathBuf,
+    path::{Path, PathBuf},
     time::Instant,
 };
 
@@ -12,6 +12,8 @@ use glib::{ParamSpec, ParamSpecBoolean, ParamSpecObject, ParamSpecString, ParamS
 use gtk::{gdk, gio, glib, prelude::*, subclass::prelude::*};
 use itertools::Itertools;
 use lofty::{
+    config::{ParseOptions, ParsingMode},
+    file::TaggedFile,
     prelude::{Accessor, TaggedFileExt},
     probe::Probe,
     tag::ItemKey,
@@ -97,26 +99,8 @@ impl SongData {
             return SongData::default();
         }
 
-        let file_probe = match Probe::open(&path) {
-            Ok(p) => p,
-            Err(e) => {
-                warn!("Unable to open file {:?}: {}", path, e);
-                return SongData::default();
-            }
-        };
-
-        let tagged_file = match file_probe.guess_file_type() {
-            Ok(t) => match t.read() {
-                Ok(f) => f,
-                Err(e) => {
-                    warn!("Unable to read parsed file {:?}: {}", path, e);
-                    return SongData::default();
-                }
-            },
-            Err(e) => {
-                warn!("Unable to parse file type {:?}: {}", path, e);
-                return SongData::default();
-            }
+        let Some(tagged_file) = Self::read_tagged_file(&path) else {
+            return SongData::default();
         };
 
         let mut cover_cache = CoverCache::global().lock().unwrap();
@@ -152,6 +136,13 @@ impl SongData {
                 }
             }
         };
+
+        // No title tag (or tags we could not read): show the file name, not "Unknown title"
+        if title.as_deref().map_or(true, |t| t.trim().is_empty()) {
+            title = path
+                .file_stem()
+                .map(|stem| stem.to_string_lossy().into_owned());
+        }
 
         let uuid = match file.query_info(
             "standard::display-name",
@@ -198,6 +189,31 @@ impl SongData {
             duration,
             file,
         }
+    }
+
+    // Downloaded MP3s often carry damaged tags. Try a normal parse, then a relaxed one,
+    // then the audio properties alone, so the song still loads instead of being dropped.
+    fn read_tagged_file(path: &Path) -> Option<TaggedFile> {
+        let attempts = [
+            ("normal", ParseOptions::new()),
+            ("relaxed", ParseOptions::new().parsing_mode(ParsingMode::Relaxed)),
+            ("without tags", ParseOptions::new().read_tags(false)),
+        ];
+        for (name, options) in attempts {
+            let result = (|| -> lofty::error::Result<TaggedFile> {
+                Probe::open(path)?.options(options).guess_file_type()?.read()
+            })();
+            match result {
+                Ok(f) => {
+                    if name != "normal" {
+                        warn!("Read {:?} with a {} parse", path, name);
+                    }
+                    return Some(f);
+                }
+                Err(e) => warn!("Unable to read {:?} ({} parse): {}", path, name, e),
+            }
+        }
+        None
     }
 
     pub fn uri(&self) -> String {
