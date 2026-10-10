@@ -67,6 +67,7 @@ mod imp {
 
             obj.set_accels_for_action("queue.add-song", &["<primary>s"]);
             obj.set_accels_for_action("queue.add-folder", &["<primary>a"]);
+            obj.set_accels_for_action("queue.open-library", &["<primary>o"]);
             obj.set_accels_for_action("queue.clear", &["<primary>L"]);
             obj.set_accels_for_action("queue.toggle", &["F9"]);
             obj.set_accels_for_action("queue.search", &["<primary>F"]);
@@ -86,13 +87,29 @@ mod imp {
             self.parent_startup();
 
             gtk::Window::set_default_icon_name(APPLICATION_ID);
+
+            // Keep the resume point fresh. On the application, not the window, so it keeps
+            // working with background playback after the window is closed.
+            let app = self.obj().clone();
+            glib::timeout_add_seconds_local(
+                10,
+                clone!(
+                    #[weak]
+                    app,
+                    #[upgrade_or]
+                    glib::ControlFlow::Break,
+                    move || {
+                        app.save_resume();
+                        glib::ControlFlow::Continue
+                    }
+                ),
+            );
         }
 
         fn shutdown(&self) {
-            // Quitting (Ctrl+Q) does not emit close-request on the window
-            if let Some(window) = self.obj().active_window() {
-                window.downcast_ref::<Window>().unwrap().save_resume();
-            }
+            // Quitting (Ctrl+Q) does not emit close-request on the window, and with background
+            // playback there may be no window at all
+            self.obj().save_resume();
             gio::Settings::sync();
 
             self.parent_shutdown();
@@ -145,6 +162,36 @@ impl Application {
 
     pub fn player(&self) -> Rc<AudioPlayer> {
         self.imp().player.clone()
+    }
+
+    // Remember the song and position, only for songs inside the music library, and only
+    // write when something changed (no settings write every ten seconds while paused)
+    pub fn save_resume(&self) {
+        let imp = self.imp();
+        let state = imp.player.state();
+        let Some(song) = state.current_song() else {
+            return;
+        };
+        let root = imp.settings.string("library-path");
+        if root.is_empty() {
+            return;
+        }
+
+        let uri = song.uri();
+        let inside = gio::File::for_uri(&uri)
+            .path()
+            .map_or(false, |p| p.starts_with(root.as_str()));
+        if !inside {
+            return;
+        }
+
+        let position = state.position();
+        if imp.settings.string("resume-uri").as_str() != uri {
+            let _ = imp.settings.set_string("resume-uri", &uri);
+        }
+        if imp.settings.uint64("resume-position") != position {
+            let _ = imp.settings.set_uint64("resume-position", position);
+        }
     }
 
     fn setup_settings(&self) {

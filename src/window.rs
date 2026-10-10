@@ -103,6 +103,8 @@ mod imp {
 
         // Song and position (in seconds) to go back to once the library has loaded
         pub pending_resume: RefCell<Option<(String, u64)>>,
+        // Last folder announced to screen readers, so they hear folder changes, not every song
+        pub announced_folder: Cell<usize>,
         // Songs are being added to the queue
         pub loading: Cell<bool>,
 
@@ -233,7 +235,7 @@ mod imp {
                     .build();
 
                 if let Ok(folder) = dialog.select_folder_future(Some(&win)).await {
-                    match folder.path() {
+                    match win.library_folder_path(&folder) {
                         Some(path) => {
                             win.imp()
                                 .settings
@@ -305,6 +307,7 @@ mod imp {
                 playlist_search: Cell::new(false),
                 playlist_filtermodel: RefCell::default(),
                 pending_resume: RefCell::default(),
+                announced_folder: Cell::new(0),
                 loading: Cell::new(false),
                 replaygain_mode: Cell::new(ReplayGainMode::default()),
                 provider: gtk::CssProvider::new(),
@@ -587,6 +590,13 @@ impl Window {
             return;
         }
 
+        // Look for songs before touching the queue, so an empty library keeps what is queued
+        let files = utils::load_files_from_folder(&folder, true);
+        if files.is_empty() {
+            self.add_toast(i18n("No songs found in the music library"));
+            return;
+        }
+
         // Opening the library replaces whatever is queued
         if let Some(player) = self.player() {
             if !player.queue().is_empty() {
@@ -595,8 +605,6 @@ impl Window {
         }
 
         self.imp().pending_resume.replace(self.load_resume());
-
-        let files = utils::load_files_from_folder(&folder, true);
         self.queue_songs(files);
     }
 
@@ -610,30 +618,33 @@ impl Window {
         }
     }
 
-    // Remember the song and position, but only for songs that belong to the library
+    // The resume point is kept by the application, so it also works without a window
     pub fn save_resume(&self) {
-        let Some(player) = self.player() else {
-            return;
-        };
-        let state = player.state();
-        let Some(song) = state.current_song() else {
-            return;
-        };
-        let Some(root) = self.library_root() else {
-            return;
-        };
-
-        let uri = song.uri();
-        let inside = gio::File::for_uri(&uri)
-            .path()
-            .map_or(false, |p| p.starts_with(&root));
-        if !inside {
-            return;
+        if let Some(app) = self.application() {
+            app.downcast::<crate::application::Application>()
+                .unwrap()
+                .save_resume();
         }
+    }
 
-        let settings = &self.imp().settings;
-        let _ = settings.set_string("resume-uri", &uri);
-        let _ = settings.set_uint64("resume-position", state.position());
+    // A folder picked through the file portal comes back as a /run/user/…/doc/… path. Prefer
+    // the real host path when this sandbox can read it, so the setting stays valid across
+    // restarts and readable in messages; otherwise keep the portal path.
+    fn library_folder_path(&self, folder: &gio::File) -> Option<PathBuf> {
+        let portal_path = folder.path()?;
+        let host_path = folder
+            .query_info(
+                ATTRIBUTE_HOST_PATH,
+                gio::FileQueryInfoFlags::NONE,
+                gio::Cancellable::NONE,
+            )
+            .ok()
+            .and_then(|info| info.attribute_as_string(ATTRIBUTE_HOST_PATH))
+            .map(|p| PathBuf::from(p.as_str()));
+        match host_path {
+            Some(host) if gio::File::for_path(&host).query_exists(gio::Cancellable::NONE) => Some(host),
+            _ => Some(portal_path),
+        }
     }
 
     // The length of a song is only known once the stream has loaded, so wait for it
@@ -653,7 +664,7 @@ impl Window {
                         if duration > 0 {
                             if position > 0 && position < duration {
                                 player.seek_position_rel(position as f64 / duration as f64);
-                                player.state().set_position(position);
+                                player.update_position(position, true);
                             }
                             return glib::ControlFlow::Break;
                         }
@@ -729,6 +740,9 @@ impl Window {
                 }
                 label.set_label(&text);
                 label.set_visible(true);
+                if self.imp().announced_folder.replace(pos.folder) != pos.folder {
+                    label.announce(&text, gtk::AccessibleAnnouncementPriority::Medium);
+                }
             }
             _ => label.set_visible(false),
         }
@@ -778,7 +792,8 @@ impl Window {
                         if let Ok(s) = Song::from_uri(f.uri().as_str()) {
                             if let Some(player) = win.player() {
                                 let queue = player.queue();
-                                if queue.contains(&s) {
+                                // A duplicate of a queued song, or of one earlier in this load
+                                if queue.contains(&s) || songs.iter().any(|q: &Song| q.equals(&s)) {
                                     duplicates += 1;
                                 } else {
                                     songs.push(s);
@@ -837,6 +852,7 @@ impl Window {
                                     .find(|&i| queue.song_at(i).map_or(false, |s| s.uri() == uri));
                                 if let Some(index) = found {
                                     player.skip_to(index);
+                                    player.pause();
                                     // Changing song saved it at 0 s; keep the old position
                                     // until the seek has happened
                                     let _ = win
@@ -1300,21 +1316,6 @@ impl Window {
             .playlist_view
             .playlist_searchbar()
             .set_key_capture_widget(Some(self.upcast_ref::<gtk::Widget>()));
-
-        // Keep the resume position fresh while listening
-        glib::timeout_add_seconds_local(
-            10,
-            clone!(
-                #[weak(rename_to = win)]
-                self,
-                #[upgrade_or]
-                glib::ControlFlow::Break,
-                move || {
-                    win.save_resume();
-                    glib::ControlFlow::Continue
-                }
-            ),
-        );
     }
 
     // The initial state of the playback actions

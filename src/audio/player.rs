@@ -469,7 +469,7 @@ impl AudioPlayer {
         self.state.set_current_song(song);
     }
 
-    fn update_position(&self, position: u64, notify: bool) {
+    pub fn update_position(&self, position: u64, notify: bool) {
         self.state.set_position(position);
 
         for c in &self.controllers {
