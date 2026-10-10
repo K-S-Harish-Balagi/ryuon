@@ -8,7 +8,10 @@
 //! folder form a group. This module answers "which folder is this song in" and "where am I in
 //! the play order", without touching GTK, so it can be unit tested.
 
-use std::path::{Path, PathBuf};
+use std::{
+    cmp::Ordering,
+    path::{Path, PathBuf},
+};
 
 /// The folder a song belongs to.
 ///
@@ -93,6 +96,22 @@ pub fn position_of(folders: &[FolderInfo], song_index: u32) -> Option<Position> 
     })
 }
 
+/// Compare two directories given as path components, one component at a time.
+///
+/// Comparing whole path strings sorts `Beast 2` between `Beast` and `Beast/CD2` (a space
+/// sorts before `/`), which splits the Beast folder in two. Comparing per component keeps a
+/// folder's own subfolders right after it. Files directly in the root have no components and
+/// sort first.
+pub fn cmp_components<F: Fn(&str, &str) -> Ordering>(a: &[String], b: &[String], cmp: F) -> Ordering {
+    for (x, y) in a.iter().zip(b.iter()) {
+        let order = cmp(x, y);
+        if order != Ordering::Equal {
+            return order;
+        }
+    }
+    a.len().cmp(&b.len())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -159,6 +178,33 @@ mod tests {
         assert_eq!(pos.next, Some(("Annaatthe".to_string(), 1)));
         let last = position_of(&f, 5).unwrap();
         assert_eq!((last.folder, last.next), (3, None));
+    }
+
+    fn comps(s: &str) -> Vec<String> {
+        s.split('/').filter(|c| !c.is_empty()).map(str::to_string).collect()
+    }
+
+    #[test]
+    fn subfolders_stay_with_their_folder() {
+        let mut dirs = vec![comps("Beast 2"), comps("Beast/CD2"), comps("Beast"), comps("")];
+        dirs.sort_by(|a, b| cmp_components(a, b, |x, y| x.cmp(y)));
+        assert_eq!(dirs, vec![comps(""), comps("Beast"), comps("Beast/CD2"), comps("Beast 2")]);
+    }
+
+    #[test]
+    fn sorted_library_groups_without_splitting() {
+        let root = p(ROOT);
+        let mut files = vec![
+            "Beast 2/1.mp3", "Beast/CD2/1.mp3", "loose.mp3", "Beast/1.mp3", "Beast/CD2/2.mp3", "Beast 2/2.mp3",
+        ];
+        files.sort_by(|a, b| {
+            let (da, fa) = a.rsplit_once('/').unwrap_or(("", a));
+            let (db, fb) = b.rsplit_once('/').unwrap_or(("", b));
+            cmp_components(&comps(da), &comps(db), |x, y| x.cmp(y)).then(fa.cmp(fb))
+        });
+        let paths: Vec<PathBuf> = files.iter().map(|f| p(&format!("{ROOT}/{f}"))).collect();
+        let names: Vec<_> = group_folders(Some(&root), &paths).iter().map(|f| (f.name.clone(), f.n_songs)).collect();
+        assert_eq!(names, vec![("Music".to_string(), 1), ("Beast".to_string(), 3), ("Beast 2".to_string(), 2)]);
     }
 
     #[test]

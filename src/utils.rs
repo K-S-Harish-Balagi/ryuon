@@ -173,33 +173,32 @@ fn load_files_from_folder_internal(
     files
 }
 
+// The parent directory of `file` as components relative to `base` (none for a file directly
+// in `base`), or just the parent's name when there is no base or the file is outside it.
+fn parent_components(base: Option<&gio::File>, file: &gio::File) -> Vec<String> {
+    let parent = file.parent().unwrap();
+    if let Some(base) = base {
+        if base.equal(&parent) {
+            return Vec::new();
+        }
+        if let Some(rel) = base.relative_path(&parent) {
+            return rel
+                .components()
+                .map(|c| c.as_os_str().to_string_lossy().into_owned())
+                .collect();
+        }
+    }
+    vec![parent.basename().unwrap().to_string_lossy().into_owned()]
+}
+
 pub fn cmp_two_files(base: Option<&gio::File>, a: &gio::File, b: &gio::File) -> Ordering {
-    let parent_a = a.parent().unwrap();
-    let parent_b = b.parent().unwrap();
-    let parent_basename_a = if let Some(base) = base {
-        if let Some(path) = base.relative_path(&parent_a) {
-            path
-        } else {
-            parent_a.basename().unwrap()
-        }
-    } else {
-        parent_a.basename().unwrap()
-    };
-    let parent_basename_b = if let Some(base) = base {
-        if let Some(path) = base.relative_path(&parent_b) {
-            path
-        } else {
-            parent_b.basename().unwrap()
-        }
-    } else {
-        parent_b.basename().unwrap()
-    };
     let basename_a = a.basename().unwrap();
     let basename_b = b.basename().unwrap();
 
-    let mut order = cmp_like_nautilus(
-        &parent_basename_a.to_string_lossy(),
-        &parent_basename_b.to_string_lossy(),
+    let mut order = crate::library::cmp_components(
+        &parent_components(base, a),
+        &parent_components(base, b),
+        cmp_like_nautilus,
     );
 
     if order.is_eq() {
