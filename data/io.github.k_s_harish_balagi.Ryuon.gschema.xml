@@ -36,6 +36,11 @@
 	    <summary>Position to resume</summary>
 	    <description>How far into the song to resume, in seconds.</description>
 	  </key>
+	  <key name="library-manual-order" type="b">
+	    <default>false</default>
+	    <summary>Keep the manual play order</summary>
+	    <description>Set when songs or folders have been moved; opening the library then keeps that order instead of folder order.</description>
+	  </key>
 	  <key name="library-autoload" type="b">
 	    <default>false</default>
 	    <summary>Open the library at start</summary>

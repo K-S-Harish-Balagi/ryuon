@@ -112,6 +112,52 @@ pub fn cmp_components<F: Fn(&str, &str) -> Ordering>(a: &[String], b: &[String],
     a.len().cmp(&b.len())
 }
 
+/// Where the song at `index` ends up after moving the block `[start, start + len)` so that
+/// it begins at `to`. `to` counts positions in the list after the block was taken out.
+pub fn moved_index(index: u32, start: u32, len: u32, to: u32) -> u32 {
+    if index >= start && index < start + len {
+        return to + (index - start);
+    }
+    let without_block = if index >= start + len { index - len } else { index };
+    if without_block >= to {
+        without_block + len
+    } else {
+        without_block
+    }
+}
+
+/// Destination (after removal) that makes the song at `from` play right after `current`.
+pub fn play_next_target(from: u32, current: u32) -> u32 {
+    let current_after_removal = if from < current { current - 1 } else { current };
+    current_after_removal + 1
+}
+
+/// Destination (after removal) for dropping the song at `from` before or after `target`.
+pub fn drop_target(from: u32, target: u32, before: bool) -> u32 {
+    let insert_at = if before { target } else { target + 1 };
+    if from < insert_at {
+        insert_at - 1
+    } else {
+        insert_at
+    }
+}
+
+/// Order the songs found on disk by a saved manual order: songs from the saved order that
+/// still exist come first, in that order; new songs follow in disk order. Returns indices
+/// into `disk`.
+pub fn apply_saved_order(disk: &[String], saved: &[String]) -> Vec<usize> {
+    use std::collections::{HashMap, HashSet};
+    let position: HashMap<&str, usize> = disk.iter().enumerate().map(|(i, u)| (u.as_str(), i)).collect();
+    let mut seen = HashSet::new();
+    let mut order: Vec<usize> = saved
+        .iter()
+        .filter_map(|u| position.get(u.as_str()).copied())
+        .filter(|i| seen.insert(*i))
+        .collect();
+    order.extend((0..disk.len()).filter(|i| !seen.contains(i)));
+    order
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -205,6 +251,68 @@ mod tests {
         let paths: Vec<PathBuf> = files.iter().map(|f| p(&format!("{ROOT}/{f}"))).collect();
         let names: Vec<_> = group_folders(Some(&root), &paths).iter().map(|f| (f.name.clone(), f.n_songs)).collect();
         assert_eq!(names, vec![("Music".to_string(), 1), ("Beast".to_string(), 3), ("Beast 2".to_string(), 2)]);
+    }
+
+    // Reference model: really move the block in a Vec and see where each element lands
+    fn simulate(n: u32, start: u32, len: u32, to: u32) -> Vec<u32> {
+        let mut v: Vec<u32> = (0..n).collect();
+        let block: Vec<u32> = v.drain(start as usize..(start + len) as usize).collect();
+        for (k, x) in block.into_iter().enumerate() {
+            v.insert(to as usize + k, x);
+        }
+        let mut where_ = vec![0; n as usize];
+        for (pos, x) in v.iter().enumerate() {
+            where_[*x as usize] = pos as u32;
+        }
+        where_
+    }
+
+    #[test]
+    fn moved_index_matches_a_real_move_for_every_case() {
+        let n = 7;
+        for len in 1..=3 {
+            for start in 0..=(n - len) {
+                for to in 0..=(n - len) {
+                    let expected = simulate(n, start, len, to);
+                    for i in 0..n {
+                        assert_eq!(moved_index(i, start, len, to), expected[i as usize], "i={i} start={start} len={len} to={to}");
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn play_next_lands_right_after_the_current_song() {
+        for current in 0..6u32 {
+            for from in 0..6u32 {
+                if from == current { continue; }
+                let to = play_next_target(from, current);
+                let where_ = simulate(6, from, 1, to);
+                assert_eq!(where_[from as usize], where_[current as usize] + 1, "from={from} current={current}");
+            }
+        }
+    }
+
+    #[test]
+    fn drop_before_and_after_a_row() {
+        for from in 0..5u32 {
+            for target in 0..5u32 {
+                if from == target { continue; }
+                let w = simulate(5, from, 1, drop_target(from, target, true));
+                assert_eq!(w[from as usize] + 1, w[target as usize], "before: from={from} target={target}");
+                let w = simulate(5, from, 1, drop_target(from, target, false));
+                assert_eq!(w[from as usize], w[target as usize] + 1, "after: from={from} target={target}");
+            }
+        }
+    }
+
+    #[test]
+    fn saved_order_first_then_new_songs_and_missing_ones_dropped() {
+        let disk: Vec<String> = ["a", "b", "c", "d"].iter().map(|s| s.to_string()).collect();
+        let saved: Vec<String> = ["c", "gone", "a", "c"].iter().map(|s| s.to_string()).collect();
+        assert_eq!(apply_saved_order(&disk, &saved), vec![2, 0, 1, 3]);
+        assert_eq!(apply_saved_order(&disk, &[]), vec![0, 1, 2, 3]);
     }
 
     #[test]

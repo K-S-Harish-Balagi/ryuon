@@ -146,6 +146,29 @@ impl Queue {
         self.notify("n-songs");
     }
 
+    /// Move the songs at `[start, start + len)` so they begin at `to`, a position counted in
+    /// the list without them. Refused while shuffled, because the shuffled order is not the
+    /// stored order. Keeps the current song current.
+    pub fn move_block(&self, start: u32, len: u32, to: u32) -> bool {
+        let store = &self.imp().store;
+        let n = store.n_items();
+        if self.is_shuffled() || len == 0 || start + len > n || to + len > n || to == start {
+            return false;
+        }
+
+        let items: Vec<glib::Object> = (start..start + len).filter_map(|i| store.item(i)).collect();
+        store.splice(start, len, &[] as &[glib::Object]);
+        store.splice(to, 0, &items);
+
+        if let Some(current) = self.imp().current_pos.get() {
+            self.imp()
+                .current_pos
+                .replace(Some(crate::library::moved_index(current, start, len, to)));
+            self.notify("current");
+        }
+        true
+    }
+
     pub fn remove_song(&self, song: &Song) {
         let was_shuffled = self.imp().model.shuffled();
         let n_songs = self.n_songs();

@@ -39,6 +39,17 @@ pub enum WindowMode {
 
 const ATTRIBUTE_HOST_PATH: &str = "xattr::document-portal.host-path";
 
+#[derive(Clone, Copy, Debug)]
+enum ReorderOp {
+    PlayNext,
+    Up,
+    Down,
+    FolderNext,
+    FolderUp,
+    FolderDown,
+    Remove,
+}
+
 fn set_suggested(button: &gtk::Button, suggested: bool) {
     if suggested {
         button.add_css_class("suggested-action");
@@ -105,6 +116,8 @@ mod imp {
         pub pending_resume: RefCell<Option<(String, u64)>>,
         // Last folder announced to screen readers, so they hear folder changes, not every song
         pub announced_folder: Cell<usize>,
+        // The move that undoes the last reorder: (start, len, to)
+        pub undo_move: Cell<Option<(u32, u32, u32)>>,
         // Songs are being added to the queue
         pub loading: Cell<bool>,
 
@@ -308,6 +321,7 @@ mod imp {
                 playlist_filtermodel: RefCell::default(),
                 pending_resume: RefCell::default(),
                 announced_folder: Cell::new(0),
+                undo_move: Cell::new(None),
                 loading: Cell::new(false),
                 replaygain_mode: Cell::new(ReplayGainMode::default()),
                 provider: gtk::CssProvider::new(),
@@ -430,7 +444,43 @@ impl Window {
                     .set_boolean("enable-recoloring", enable_recoloring)
                     .expect("Unable to store setting");
             })
-            .build()])
+            .build()]);
+
+        // Reordering, from the row menu, drag and drop and keyboard shortcuts. These live in
+        // the window's action map (not the class) so they are also reachable over D-Bus, which
+        // tools/test_reorder.py uses to test them without input.
+        let mut entries = Vec::new();
+        for (name, op) in [
+            ("play-next", ReorderOp::PlayNext),
+            ("move-up", ReorderOp::Up),
+            ("move-down", ReorderOp::Down),
+            ("folder-next", ReorderOp::FolderNext),
+            ("folder-up", ReorderOp::FolderUp),
+            ("folder-down", ReorderOp::FolderDown),
+            ("remove-at", ReorderOp::Remove),
+        ] {
+            entries.push(
+                gio::ActionEntry::builder(name)
+                    .parameter_type(Some(glib::VariantTy::UINT32))
+                    .activate(move |this: &Window, _, param| {
+                        if let Some(pos) = param.and_then(u32::from_variant) {
+                            this.reorder(op, pos);
+                        }
+                    })
+                    .build(),
+            );
+        }
+        entries.push(
+            gio::ActionEntry::builder("undo-move")
+                .activate(|this: &Window, _, _| this.undo_move())
+                .build(),
+        );
+        entries.push(
+            gio::ActionEntry::builder("reset-order")
+                .activate(|this: &Window, _, _| this.reset_order())
+                .build(),
+        );
+        self.add_action_entries(entries);
     }
 
     fn setup_waveform(&self) {
@@ -591,7 +641,19 @@ impl Window {
         }
 
         // Look for songs before touching the queue, so an empty library keeps what is queued
-        let files = utils::load_files_from_folder(&folder, true);
+        let mut files = utils::load_files_from_folder(&folder, true);
+
+        // Songs or folders were moved: keep that order, new songs go at the end
+        if self.imp().settings.boolean("library-manual-order") {
+            if let Some(saved) = utils::load_cached_songs() {
+                let disk: Vec<String> = files.iter().map(|f| f.uri().to_string()).collect();
+                let saved: Vec<String> = saved.iter().map(|f| f.uri().to_string()).collect();
+                files = library::apply_saved_order(&disk, &saved)
+                    .into_iter()
+                    .map(|i| files[i].clone())
+                    .collect();
+            }
+        }
         if files.is_empty() {
             self.add_toast(i18n("No songs found in the music library"));
             return;
@@ -689,6 +751,229 @@ impl Window {
                 self.open_library();
             }
         }
+    }
+
+    // ---- Reordering the queue -------------------------------------------------------------
+
+    fn queue_index_of(&self, uri: &str) -> Option<u32> {
+        let player = self.player()?;
+        let queue = player.queue();
+        (0..queue.n_songs()).find(|&i| queue.song_at(i).map_or(false, |s| s.uri() == uri))
+    }
+
+    fn queue_folders(&self) -> Vec<library::FolderInfo> {
+        let Some(player) = self.player() else {
+            return Vec::new();
+        };
+        let queue = player.queue();
+        let paths: Vec<PathBuf> = (0..queue.n_songs())
+            .filter_map(|i| queue.song_at(i))
+            .filter_map(|s| gio::File::for_uri(&s.uri()).path())
+            .collect();
+        library::group_folders(self.library_root().as_deref(), &paths)
+    }
+
+    fn folder_of(folders: &[library::FolderInfo], pos: u32) -> Option<usize> {
+        folders
+            .iter()
+            .position(|f| pos >= f.first_index && pos < f.first_index + f.n_songs)
+    }
+
+    fn song_title_at(&self, pos: u32) -> String {
+        self.player()
+            .and_then(|p| p.queue().song_at(pos))
+            .map(|s| s.title())
+            .unwrap_or_default()
+    }
+
+    // Move a block of songs, remember how to undo it, and keep the order across restarts
+    fn move_songs(&self, start: u32, len: u32, to: u32, msg: String) {
+        let Some(player) = self.player() else {
+            return;
+        };
+        let queue = player.queue();
+        if queue.is_shuffled() {
+            self.add_toast(i18n("Turn off shuffle to change the order"));
+            return;
+        }
+        if !queue.move_block(start, len, to) {
+            return;
+        }
+
+        self.imp().undo_move.set(Some((to, len, start)));
+        utils::store_playlist(queue);
+        if self.library_root().is_some() {
+            let _ = self.imp().settings.set_boolean("library-manual-order", true);
+        }
+        self.update_folder_label();
+
+        let toast = adw::Toast::new(&msg);
+        toast.set_button_label(Some(&i18n("Undo")));
+        toast.set_action_name(Some("win.undo-move"));
+        self.imp().toast_overlay.add_toast(toast);
+    }
+
+    fn undo_move(&self) {
+        let Some((start, len, to)) = self.imp().undo_move.take() else {
+            return;
+        };
+        if let Some(player) = self.player() {
+            let queue = player.queue();
+            if queue.move_block(start, len, to) {
+                utils::store_playlist(queue);
+                self.update_folder_label();
+            }
+        }
+    }
+
+    fn reset_order(&self) {
+        let _ = self.imp().settings.set_boolean("library-manual-order", false);
+        if self.library_root().is_some() {
+            self.save_resume();
+            self.open_library();
+        }
+    }
+
+    fn reorder(&self, op: ReorderOp, pos: u32) {
+        let Some(player) = self.player() else {
+            return;
+        };
+        let queue = player.queue();
+        let n = queue.n_songs();
+        if pos >= n {
+            return;
+        }
+        let title = self.song_title_at(pos);
+
+        match op {
+            ReorderOp::PlayNext => match queue.current_song_index() {
+                Some(current) if current == pos => {}
+                Some(current) => self.move_songs(
+                    pos,
+                    1,
+                    library::play_next_target(pos, current),
+                    i18n_f("“{}” plays next", &[&title]),
+                ),
+                None => self.move_songs(pos, 1, 0, i18n_f("“{}” plays next", &[&title])),
+            },
+            ReorderOp::Up if pos > 0 => {
+                self.move_songs(pos, 1, pos - 1, i18n_f("Moved “{}” up", &[&title]))
+            }
+            ReorderOp::Down if pos + 1 < n => {
+                self.move_songs(pos, 1, pos + 1, i18n_f("Moved “{}” down", &[&title]))
+            }
+            ReorderOp::FolderNext | ReorderOp::FolderUp | ReorderOp::FolderDown => {
+                let folders = self.queue_folders();
+                let Some(i) = Self::folder_of(&folders, pos) else {
+                    return;
+                };
+                let f = folders[i].clone();
+                match op {
+                    ReorderOp::FolderNext => {
+                        let Some(c) = queue
+                            .current_song_index()
+                            .and_then(|cur| Self::folder_of(&folders, cur))
+                        else {
+                            return;
+                        };
+                        if c == i {
+                            self.add_toast(i18n("This folder is already playing"));
+                            return;
+                        }
+                        let end = folders[c].first_index + folders[c].n_songs;
+                        let to = if f.first_index < end { end - f.n_songs } else { end };
+                        self.move_songs(f.first_index, f.n_songs, to, i18n_f("“{}” plays next", &[&f.name]));
+                    }
+                    ReorderOp::FolderUp if i > 0 => {
+                        let prev = &folders[i - 1];
+                        self.move_songs(f.first_index, f.n_songs, prev.first_index, i18n_f("Moved “{}” up", &[&f.name]));
+                    }
+                    ReorderOp::FolderDown if i + 1 < folders.len() => {
+                        let next = &folders[i + 1];
+                        let to = next.first_index - f.n_songs + next.n_songs;
+                        self.move_songs(f.first_index, f.n_songs, to, i18n_f("Moved “{}” down", &[&f.name]));
+                    }
+                    _ => {}
+                }
+            }
+            ReorderOp::Remove => {
+                // Lasts until the library is opened again: the file is still in the library,
+                // so it comes back after the saved order, like any new song
+                if let Some(song) = queue.song_at(pos) {
+                    self.remove_song(&song);
+                    utils::store_playlist(queue);
+                }
+            }
+            _ => {}
+        }
+    }
+
+    // Drop the dragged song before or after the song of the row it was dropped on
+    fn drop_song(&self, uri: &str, target_uri: &str, before: bool) -> bool {
+        if uri == target_uri {
+            return false;
+        }
+        let (Some(from), Some(target)) = (self.queue_index_of(uri), self.queue_index_of(target_uri)) else {
+            return false;
+        };
+        let to = library::drop_target(from, target, before);
+        if to == from {
+            return false;
+        }
+        let title = self.song_title_at(from);
+        self.move_songs(from, 1, to, i18n_f("Moved “{}”", &[&title]));
+        true
+    }
+
+    fn show_row_menu(&self, row: &QueueRow, x: f64, y: f64) {
+        let Some(song) = row.song() else {
+            return;
+        };
+        let Some(pos) = self.queue_index_of(&song.uri()) else {
+            return;
+        };
+
+        let item = |label: &str, action: &str| {
+            let item = gio::MenuItem::new(Some(label), None);
+            item.set_action_and_target_value(Some(action), Some(&pos.to_variant()));
+            item
+        };
+        let songs = gio::Menu::new();
+        songs.append_item(&item(&i18n("Play Next"), "win.play-next"));
+        songs.append_item(&item(&i18n("Move Up"), "win.move-up"));
+        songs.append_item(&item(&i18n("Move Down"), "win.move-down"));
+        let menu = gio::Menu::new();
+        menu.append_section(None, &songs);
+        if self.queue_folders().len() > 1 {
+            let folders = gio::Menu::new();
+            folders.append_item(&item(&i18n("Play This Folder Next"), "win.folder-next"));
+            folders.append_item(&item(&i18n("Move Folder Up"), "win.folder-up"));
+            folders.append_item(&item(&i18n("Move Folder Down"), "win.folder-down"));
+            menu.append_section(None, &folders);
+        }
+        let remove = gio::Menu::new();
+        remove.append_item(&item(&i18n("Remove from Playlist"), "win.remove-at"));
+        menu.append_section(None, &remove);
+
+        let popover = gtk::PopoverMenu::from_model(Some(&menu));
+        popover.set_parent(row);
+        popover.set_has_arrow(false);
+        popover.set_pointing_to(Some(&gdk::Rectangle::new(x as i32, y as i32, 1, 1)));
+        popover.connect_closed(|p| {
+            let p = p.clone();
+            glib::idle_add_local_once(move || p.unparent());
+        });
+        popover.popup();
+    }
+
+    // The row that has keyboard focus in the playlist, if any
+    fn focused_row(&self) -> Option<QueueRow> {
+        let view = self.imp().playlist_view.queue_view();
+        let child = view.focus_child()?;
+        child
+            .downcast_ref::<QueueRow>()
+            .cloned()
+            .or_else(|| child.first_child().and_then(|c| c.downcast::<QueueRow>().ok()))
     }
 
     // "Folder 7 of 139 · Song 4 of 10" and "Up next", shown while playing in order
@@ -1082,6 +1367,7 @@ impl Window {
 
                         win.update_playlist_time();
                         win.update_folder_label();
+                        win.imp().undo_move.set(None);
                     }
                 ),
             );
@@ -1393,6 +1679,77 @@ impl Window {
                     .sync_create()
                     .build();
 
+                // Row menu: right click and long press
+                let click = gtk::GestureClick::new();
+                click.set_button(gdk::BUTTON_SECONDARY);
+                click.connect_pressed(clone!(
+                    #[weak]
+                    win,
+                    #[weak]
+                    row,
+                    move |gesture, _, x, y| {
+                        gesture.set_state(gtk::EventSequenceState::Claimed);
+                        win.show_row_menu(&row, x, y);
+                    }
+                ));
+                row.add_controller(click);
+                let long_press = gtk::GestureLongPress::new();
+                long_press.connect_pressed(clone!(
+                    #[weak]
+                    win,
+                    #[weak]
+                    row,
+                    move |_, x, y| {
+                        win.show_row_menu(&row, x, y);
+                    }
+                ));
+                row.add_controller(long_press);
+
+                // Drag a song onto another row to move it there
+                let drag = gtk::DragSource::new();
+                drag.set_actions(gdk::DragAction::MOVE);
+                drag.connect_prepare(clone!(
+                    #[weak]
+                    win,
+                    #[weak]
+                    row,
+                    #[upgrade_or]
+                    None,
+                    move |_, _, _| {
+                        if win.playlist_selection() || win.playlist_shuffled() {
+                            return None;
+                        }
+                        row.song()
+                            .map(|s| gdk::ContentProvider::for_value(&s.uri().to_value()))
+                    }
+                ));
+                drag.connect_drag_begin(clone!(
+                    #[weak]
+                    row,
+                    move |source, _| {
+                        let icon = gtk::WidgetPaintable::new(Some(&row));
+                        source.set_icon(Some(&icon), 0, 0);
+                    }
+                ));
+                row.add_controller(drag);
+                let drop = gtk::DropTarget::new(String::static_type(), gdk::DragAction::MOVE);
+                drop.connect_drop(clone!(
+                    #[weak]
+                    win,
+                    #[weak]
+                    row,
+                    #[upgrade_or]
+                    false,
+                    move |_, value, _, y| {
+                        let (Ok(uri), Some(target)) = (value.get::<String>(), row.song()) else {
+                            return false;
+                        };
+                        let before = y < row.height() as f64 / 2.0;
+                        win.drop_song(&uri, &target.uri(), before)
+                    }
+                ));
+                row.add_controller(drop);
+
                 list_item
                     .bind_property("item", &row, "song")
                     .sync_create()
@@ -1423,6 +1780,38 @@ impl Window {
         imp.playlist_view
             .queue_view()
             .set_factory(Some(&factory.upcast::<gtk::ListItemFactory>()));
+
+        let keys = gtk::ShortcutController::new();
+        for (trigger, op) in [
+            ("Menu|<Shift>F10", None),
+            ("<Alt>Up", Some(ReorderOp::Up)),
+            ("<Alt>Down", Some(ReorderOp::Down)),
+            ("<Alt><Shift>Up", Some(ReorderOp::FolderUp)),
+            ("<Alt><Shift>Down", Some(ReorderOp::FolderDown)),
+        ] {
+            let action = gtk::CallbackAction::new(clone!(
+                #[weak(rename_to = win)]
+                self,
+                #[upgrade_or]
+                glib::Propagation::Proceed,
+                move |_, _| {
+                    let Some(row) = win.focused_row() else {
+                        return glib::Propagation::Proceed;
+                    };
+                    match op {
+                        None => win.show_row_menu(&row, row.width() as f64 / 2.0, row.height() as f64 / 2.0),
+                        Some(op) => {
+                            if let Some(pos) = row.song().and_then(|s| win.queue_index_of(&s.uri())) {
+                                win.reorder(op, pos);
+                            }
+                        }
+                    }
+                    glib::Propagation::Stop
+                }
+            ));
+            keys.add_shortcut(gtk::Shortcut::new(gtk::ShortcutTrigger::parse_string(trigger), Some(action)));
+        }
+        imp.playlist_view.queue_view().add_controller(keys);
 
         if let Some(player) = self.player() {
             let queue = player.queue();
