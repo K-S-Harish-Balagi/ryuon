@@ -243,16 +243,24 @@ pub fn load_files_from_folder(folder: &gio::File, recursive: bool) -> Vec<gio::F
 }
 
 pub fn store_playlist(queue: &Queue) {
+    let model = queue.model();
+    let paths: Vec<PathBuf> = (0..model.n_items())
+        .map(|i| {
+            let item = model.item(i).unwrap();
+            let song = item.downcast_ref::<Song>().unwrap();
+            song.file().path().expect("Unknown file")
+        })
+        .collect();
+    store_playlist_paths(&paths);
+}
+
+pub fn store_playlist_paths(paths: &[PathBuf]) {
     let pls = glib::KeyFile::new();
     pls.set_string("playlist", "X-GNOME-Title", "Ryuon's current playlist");
 
-    pls.set_int64("playlist", "NumberOfEntries", queue.n_songs() as i64);
+    pls.set_int64("playlist", "NumberOfEntries", paths.len() as i64);
 
-    let model = queue.model();
-    for i in 0..model.n_items() {
-        let item = model.item(i).unwrap();
-        let song = item.downcast_ref::<Song>().unwrap();
-        let path = song.file().path().expect("Unknown file");
+    for (i, path) in paths.iter().enumerate() {
         let path_str = path.to_string_lossy();
         pls.set_value("playlist", &format!("File{i}"), &path_str);
     }

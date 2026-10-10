@@ -9,6 +9,7 @@ use std::{
     time::{Duration, Instant},
 };
 
+use adw::prelude::{AdwDialogExt, AlertDialogExt, AlertDialogExtManual};
 use adw::subclass::prelude::*;
 use glib::{clone, closure_local};
 use gtk::{gdk, gio, glib, prelude::*, CompositeTemplate};
@@ -23,6 +24,7 @@ use crate::{
     playback_control::PlaybackControl,
     playlist_view::PlaylistView,
     queue_row::QueueRow,
+    rename,
     search::FuzzyFilter,
     song_cover::SongCover,
     song_details::SongDetails,
@@ -231,6 +233,12 @@ mod imp {
                 debug!("Window::queue.restore-playlist()");
                 win.restore_playlist();
             });
+            klass.install_action("queue.rename-files", None, move |win, _, _| {
+                win.rename_files();
+            });
+            klass.install_action("queue.undo-rename", None, move |win, _, _| {
+                win.undo_rename();
+            });
             klass.install_action("queue.open-library", None, move |win, _, _| {
                 debug!("Window::queue.open-library()");
                 win.open_library();
@@ -406,6 +414,7 @@ impl Window {
 
         win.setup_waveform();
         win.setup_actions();
+        win.update_undo_rename();
         win.setup_playlist();
         win.setup_drop_target();
         win.setup_provider();
@@ -482,6 +491,30 @@ impl Window {
                 .build(),
         );
         self.add_action_entries(entries);
+
+        // For tools/test_rename.py only: these exist when started with RYUON_TEST_HOOKS=1,
+        // so a normal session exposes no way to rename files over D-Bus
+        if std::env::var_os("RYUON_TEST_HOOKS").is_some() {
+            self.add_action_entries([
+                gio::ActionEntry::builder("test-rename-preview")
+                    .activate(|this: &Window, _, _| this.rename_files())
+                    .build(),
+                // Renames only if the number of changes matches, like the typed confirmation
+                gio::ActionEntry::builder("test-rename-confirmed")
+                    .parameter_type(Some(glib::VariantTy::UINT32))
+                    .activate(|this: &Window, _, param| {
+                        let Some(root) = this.library_root() else { return };
+                        let Ok(plan) = rename::plan(&root) else { return };
+                        if param.and_then(u32::from_variant) == Some(plan.ops.len() as u32) {
+                            this.apply_rename(&plan, &root);
+                        }
+                    })
+                    .build(),
+                gio::ActionEntry::builder("test-undo-rename")
+                    .activate(|this: &Window, _, _| this.undo_rename())
+                    .build(),
+            ]);
+        }
     }
 
     fn setup_waveform(&self) {
@@ -687,6 +720,244 @@ impl Window {
             app.downcast::<crate::application::Application>()
                 .unwrap()
                 .save_resume();
+        }
+    }
+
+    fn rename_journal_dir() -> PathBuf {
+        glib::user_data_dir().join("ryuon").join("rename-journal")
+    }
+
+    pub fn update_undo_rename(&self) {
+        let has_journal = rename::latest_journal(&Self::rename_journal_dir()).is_some();
+        self.action_set_enabled("queue.undo-rename", has_journal);
+    }
+
+    // Renaming on disk needs write access, which the Flatpak only has when granted
+    fn can_write(root: &std::path::Path) -> bool {
+        let probe = root.join(".ryuon-write-test");
+        let ok = std::fs::write(&probe, b"").is_ok();
+        let _ = std::fs::remove_file(&probe);
+        ok
+    }
+
+    fn show_write_permission_dialog(&self, root: &std::path::Path) {
+        let command = format!(
+            "flatpak override --user --filesystem={} {}",
+            glib::shell_quote(root).to_string_lossy(),
+            APPLICATION_ID
+        );
+        let dialog = adw::AlertDialog::new(
+            Some(&i18n("Ryuon Cannot Rename Files Here")),
+            Some(&i18n(
+                "The music library is read-only for Ryuon. To allow renaming, run this command in a terminal, then restart Ryuon:",
+            )),
+        );
+        let label = gtk::Label::builder()
+            .label(&command)
+            .wrap(true)
+            .wrap_mode(gtk::pango::WrapMode::WordChar)
+            .css_classes(["monospace"])
+            .build();
+        dialog.set_extra_child(Some(&label));
+        dialog.add_responses(&[("copy", &i18n("_Copy Command")), ("close", &i18n("_Close"))]);
+        dialog.set_default_response(Some("close"));
+        dialog.set_close_response("close");
+        dialog.connect_response(Some("copy"), clone!(
+            #[weak(rename_to = win)]
+            self,
+            move |_, _| {
+                win.clipboard().set_text(&command);
+                win.add_toast(i18n("Command copied"));
+            }
+        ));
+        dialog.present(Some(self));
+    }
+
+    // Preview of the tidy names on disk; renaming needs the number of changes typed in
+    fn rename_files(&self) {
+        if self.imp().loading.get() {
+            return;
+        }
+        let Some(root) = self.library_root() else {
+            self.add_toast(i18n("Choose a music library first"));
+            return;
+        };
+        let plan = match rename::plan(&root) {
+            Ok(plan) => plan,
+            Err(e) => {
+                self.add_toast(i18n_f("Unable to read the music library: {}", &[&e.to_string()]));
+                return;
+            }
+        };
+        if plan.ops.is_empty() {
+            self.add_toast(i18n("All names in the music library are already tidy"));
+            return;
+        }
+        if !Self::can_write(&root) {
+            self.show_write_permission_dialog(&root);
+            return;
+        }
+
+        let total = plan.ops.len().to_string();
+        let mut body = i18n_f(
+            // Translators: the `{}` are the number of folders, the number of songs and the
+            // music library location
+            "{} folders and {} songs in {} get their tidy names. Nothing is deleted, and Undo Rename puts every name back.",
+            &[&plan.n_folders().to_string(), &plan.n_files().to_string(), &root.to_string_lossy()],
+        );
+        if !plan.clashes.is_empty() {
+            body.push_str("\n\n");
+            body.push_str(&ni18n_f(
+                "One tidy name is already taken, so it gets a number added.",
+                "{} tidy names are already taken, so they get a number added.",
+                plan.clashes.len() as u32,
+                &[&plan.clashes.len().to_string()],
+            ));
+        }
+        let dialog = adw::AlertDialog::new(Some(&i18n("Rename Files on Disk?")), Some(&body));
+
+        let relative = |p: &std::path::Path| p.strip_prefix(&root).unwrap_or(p).to_string_lossy().into_owned();
+        let preview = plan
+            .ops
+            .iter()
+            .map(|op| format!("{}\n    → {}", relative(&op.from), relative(&op.to)))
+            .collect::<Vec<_>>()
+            .join("\n");
+        let view = gtk::TextView::builder()
+            .editable(false)
+            .cursor_visible(false)
+            .monospace(true)
+            .wrap_mode(gtk::WrapMode::WordChar)
+            .top_margin(6)
+            .bottom_margin(6)
+            .left_margin(6)
+            .right_margin(6)
+            .build();
+        view.buffer().set_text(&preview);
+        view.update_property(&[gtk::accessible::Property::Label(&i18n("Changes"))]);
+        let scroller = gtk::ScrolledWindow::builder()
+            .min_content_height(220)
+            .max_content_height(220)
+            .child(&view)
+            .css_classes(["card"])
+            .build();
+        let entry = gtk::Entry::builder()
+            .placeholder_text(i18n_f("Type {} to confirm", &[&total]))
+            .input_purpose(gtk::InputPurpose::Digits)
+            .build();
+        entry.update_property(&[gtk::accessible::Property::Label(&i18n_f(
+            "Type the number of changes, {}, to confirm",
+            &[&total],
+        ))]);
+        let content = gtk::Box::new(gtk::Orientation::Vertical, 12);
+        content.append(&scroller);
+        content.append(&entry);
+        dialog.set_extra_child(Some(&content));
+
+        dialog.add_responses(&[("cancel", &i18n("_Cancel")), ("rename", &i18n("_Rename"))]);
+        dialog.set_response_appearance("rename", adw::ResponseAppearance::Destructive);
+        dialog.set_response_enabled("rename", false);
+        dialog.set_default_response(Some("cancel"));
+        dialog.set_close_response("cancel");
+        entry.connect_changed(clone!(
+            #[weak]
+            dialog,
+            #[strong]
+            total,
+            move |entry| dialog.set_response_enabled("rename", entry.text().trim() == total)
+        ));
+
+        let plan = Rc::new(plan);
+        dialog.connect_response(Some("rename"), clone!(
+            #[weak(rename_to = win)]
+            self,
+            move |_, _| win.apply_rename(&plan, &root)
+        ));
+        dialog.present(Some(self));
+    }
+
+    // The queue, the saved order and the resume point follow renamed files
+    fn follow_renames(&self, ops: &[rename::Rename]) {
+        self.save_resume();
+        let settings = &self.imp().settings;
+        if let Some(player) = self.player() {
+            let queue = player.queue();
+            let paths: Vec<PathBuf> = (0..queue.n_songs())
+                .filter_map(|i| queue.song_at(i))
+                .filter_map(|s| s.file().path())
+                .map(|p| rename::map_path(ops, &p))
+                .collect();
+            if !paths.is_empty() {
+                utils::store_playlist_paths(&paths);
+            }
+        }
+        let resume = settings.string("resume-uri");
+        if let Some(path) = gio::File::for_uri(&resume).path().filter(|_| !resume.is_empty()) {
+            let new = gio::File::for_path(rename::map_path(ops, &path));
+            let _ = settings.set_string("resume-uri", &new.uri());
+        }
+    }
+
+    fn apply_rename(&self, plan: &rename::Plan, root: &std::path::Path) {
+        let journal = rename::new_journal_path(&Self::rename_journal_dir());
+        match rename::apply(plan, root, &journal) {
+            Ok(n) => {
+                self.follow_renames(&plan.ops);
+                self.update_undo_rename();
+                self.open_library();
+                let toast = adw::Toast::new(&ni18n_f(
+                    "Renamed one folder or song",
+                    "Renamed {} folders and songs",
+                    n as u32,
+                    &[&n.to_string()],
+                ));
+                toast.set_button_label(Some(&i18n("Undo")));
+                toast.set_action_name(Some("queue.undo-rename"));
+                self.imp().toast_overlay.add_toast(toast);
+            }
+            Err((0, e)) => {
+                let _ = std::fs::remove_file(&journal);
+                self.add_toast(i18n_f("Nothing was renamed: {}", &[&e.to_string()]));
+            }
+            Err((done, e)) => {
+                self.follow_renames(&plan.ops[..done]);
+                self.update_undo_rename();
+                self.open_library();
+                self.add_toast(i18n_f(
+                    "Renamed {} of {}, then stopped: {}. Undo Rename puts them back.",
+                    &[&done.to_string(), &plan.ops.len().to_string(), &e.to_string()],
+                ));
+            }
+        }
+    }
+
+    fn undo_rename(&self) {
+        if self.imp().loading.get() {
+            return;
+        }
+        let Some(journal) = rename::latest_journal(&Self::rename_journal_dir()) else {
+            self.update_undo_rename();
+            return;
+        };
+        let ops = match rename::journal_ops(&journal) {
+            Ok(ops) => ops,
+            Err(e) => {
+                self.add_toast(i18n_f("Unable to read the rename record: {}", &[&e.to_string()]));
+                return;
+            }
+        };
+        self.follow_renames(&ops);
+        let result = rename::undo(&journal);
+        self.update_undo_rename();
+        self.open_library();
+        match result {
+            Ok(n) => self.add_toast(ni18n_f(
+                "Put back one name",
+                "Put back {} names",
+                n as u32,
+                &[&n.to_string()],
+            )),
+            Err(e) => self.add_toast(i18n_f("Undo stopped: {}", &[&e.to_string()])),
         }
     }
 
@@ -1050,6 +1321,7 @@ impl Window {
         self.action_set_enabled("queue.clear", false);
         self.action_set_enabled("queue.open-library", false);
         self.action_set_enabled("queue.choose-library", false);
+        self.action_set_enabled("queue.rename-files", false);
         self.imp().loading.set(true);
 
         self.set_playlist_visible(true);
@@ -1103,6 +1375,7 @@ impl Window {
                         win.action_set_enabled("queue.clear", true);
                         win.action_set_enabled("queue.open-library", true);
                         win.action_set_enabled("queue.choose-library", true);
+                        win.action_set_enabled("queue.rename-files", true);
                         win.imp().loading.set(false);
 
                         // Only this load may resume; never a later one

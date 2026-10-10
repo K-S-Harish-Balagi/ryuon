@@ -12,6 +12,7 @@ mod marquee;
 mod playback_control;
 mod playlist_view;
 mod queue_row;
+mod rename;
 mod search;
 mod song_cover;
 mod song_details;
