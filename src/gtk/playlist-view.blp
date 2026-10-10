@@ -16,6 +16,14 @@ template $RyuonPlaylistView: Widget {
         tooltip-text: _("Search Songs in the Playlist");
       }
 
+      [start]
+      ToggleButton folders_button {
+        icon-name: "folder-symbolic";
+        action-name: "win.show-folders";
+        valign: center;
+        tooltip-text: _("Show Folders");
+      }
+
       title-widget: Box queue_length_box {
         orientation: vertical;
         valign: center;
@@ -81,19 +89,49 @@ template $RyuonPlaylistView: Widget {
         ]
       }
 
-      ScrolledWindow {
-        hscrollbar-policy: never;
-        vscrollbar-policy: automatic;
-        propagate-natural-height: true;
-        vexpand: true;
+      Stack playlist_stack {
+        transition-type: crossfade;
 
-        child: ListView queue_view {
-          single-click-activate: true;
+        StackPage {
+          name: "songs";
 
-          styles [
-            "navigation-sidebar",
-          ]
-        };
+          child: ScrolledWindow {
+            hscrollbar-policy: never;
+            vscrollbar-policy: automatic;
+            propagate-natural-height: true;
+            vexpand: true;
+
+            child: ListView queue_view {
+              single-click-activate: true;
+
+              styles [
+                "navigation-sidebar",
+              ]
+            };
+          };
+        }
+
+        StackPage {
+          name: "folders";
+
+          child: ScrolledWindow folder_scroller {
+            hscrollbar-policy: never;
+            vscrollbar-policy: automatic;
+            vexpand: true;
+
+            child: ListBox folder_list {
+              selection-mode: none;
+
+              accessibility {
+                label: C_("a11y", "Folders");
+              }
+
+              styles [
+                "navigation-sidebar",
+              ]
+            };
+          };
+        }
       }
     };
 

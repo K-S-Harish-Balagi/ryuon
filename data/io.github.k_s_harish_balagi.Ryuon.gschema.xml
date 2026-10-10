@@ -36,10 +36,17 @@
 	    <summary>Position to resume</summary>
 	    <description>How far into the song to resume, in seconds.</description>
 	  </key>
-	  <key name="library-manual-order" type="b">
-	    <default>false</default>
-	    <summary>Keep the manual play order</summary>
-	    <description>Set when songs or folders have been moved; opening the library then keeps that order instead of folder order.</description>
+	  <key name="library-sort" type="s">
+	    <choices>
+	      <choice value="name"/>
+	      <choice value="newest"/>
+	      <choice value="most-songs"/>
+	      <choice value="recent"/>
+	      <choice value="manual"/>
+	    </choices>
+	    <default>"name"</default>
+	    <summary>Folder order</summary>
+	    <description>The order folders play in: by name, newest first, most songs first, recently played first, or the manual order kept after moving songs or folders.</description>
 	  </key>
 	  <key name="library-autoload" type="b">
 	    <default>false</default>

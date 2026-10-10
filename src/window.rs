@@ -20,7 +20,7 @@ use crate::{
     config::APPLICATION_ID,
     drag_overlay::DragOverlay,
     i18n::{i18n, i18n_f, i18n_k, ni18n_f, ni18n_k},
-    library,
+    library::{self, FolderSort, FolderStats},
     playback_control::PlaybackControl,
     playlist_view::PlaylistView,
     queue_row::QueueRow,
@@ -121,6 +121,7 @@ mod imp {
         pub announced_folder: Cell<usize>,
         // The move that undoes the last reorder: (start, len, to)
         pub undo_move: Cell<Option<(u32, u32, u32)>>,
+        pub last_played_folder: RefCell<Option<PathBuf>>,
         // Songs are being added to the queue
         pub loading: Cell<bool>,
 
@@ -233,6 +234,9 @@ mod imp {
                 debug!("Window::queue.restore-playlist()");
                 win.restore_playlist();
             });
+            klass.install_action("win.preferences", None, move |win, _, _| {
+                win.show_preferences();
+            });
             klass.install_action("queue.rename-files", None, move |win, _, _| {
                 win.rename_files();
             });
@@ -331,6 +335,7 @@ mod imp {
                 pending_resume: RefCell::default(),
                 announced_folder: Cell::new(0),
                 undo_move: Cell::new(None),
+                last_played_folder: RefCell::new(None),
                 loading: Cell::new(false),
                 replaygain_mode: Cell::new(ReplayGainMode::default()),
                 provider: gtk::CssProvider::new(),
@@ -440,21 +445,8 @@ impl Window {
     }
 
     fn setup_actions(&self) {
-        let enable_recoloring = self.imp().settings.boolean("enable-recoloring");
-        self.add_action_entries([gio::ActionEntry::builder("enable-recoloring")
-            .state(enable_recoloring.to_variant())
-            .activate(|this: &Window, action, _| {
-                let state = action.state().unwrap();
-                let action_state: bool = state.get().unwrap();
-                let enable_recoloring = !action_state;
-                action.set_state(&enable_recoloring.to_variant());
-
-                this.imp()
-                    .settings
-                    .set_boolean("enable-recoloring", enable_recoloring)
-                    .expect("Unable to store setting");
-            })
-            .build()]);
+        // Bound to the setting, so the menu and the Preferences switch agree
+        self.add_action(&self.imp().settings.create_action("enable-recoloring"));
 
         // Reordering, from the row menu, drag and drop and keyboard shortcuts. These live in
         // the window's action map (not the class) so they are also reachable over D-Bus, which
@@ -485,12 +477,36 @@ impl Window {
                 .activate(|this: &Window, _, _| this.undo_move())
                 .build(),
         );
+        // Songs or Folders in the sidebar (the toggle in the playlist header)
+        entries.push(
+            gio::ActionEntry::builder("show-folders")
+                .state(false.to_variant())
+                .activate(|this: &Window, action, _| {
+                    let show = !action.state().and_then(|s| s.get::<bool>()).unwrap_or(false);
+                    action.set_state(&show.to_variant());
+                    this.imp().playlist_view.set_folders_visible(show);
+                    this.refresh_folder_list();
+                })
+                .build(),
+        );
         entries.push(
             gio::ActionEntry::builder("reset-order")
                 .activate(|this: &Window, _, _| this.reset_order())
                 .build(),
         );
         self.add_action_entries(entries);
+
+        // Sort Folders menu: a radio group bound to the library-sort setting
+        let settings = &self.imp().settings;
+        self.add_action(&settings.create_action("library-sort"));
+        settings.connect_changed(
+            Some("library-sort"),
+            clone!(
+                #[weak(rename_to = win)]
+                self,
+                move |_, _| win.apply_sort()
+            ),
+        );
 
         // For tools/test_rename.py only: these exist when started with RYUON_TEST_HOOKS=1,
         // so a normal session exposes no way to rename files over D-Bus
@@ -512,6 +528,9 @@ impl Window {
                     .build(),
                 gio::ActionEntry::builder("test-undo-rename")
                     .activate(|this: &Window, _, _| this.undo_rename())
+                    .build(),
+                gio::ActionEntry::builder("test-preferences")
+                    .activate(|this: &Window, _, _| this.show_preferences())
                     .build(),
             ]);
         }
@@ -677,15 +696,28 @@ impl Window {
         // Look for songs before touching the queue, so an empty library keeps what is queued
         let mut files = utils::load_files_from_folder(&folder, true);
 
-        // Songs or folders were moved: keep that order, new songs go at the end
-        if self.imp().settings.boolean("library-manual-order") {
-            if let Some(saved) = utils::load_cached_songs() {
-                let disk: Vec<String> = files.iter().map(|f| f.uri().to_string()).collect();
-                let saved: Vec<String> = saved.iter().map(|f| f.uri().to_string()).collect();
-                files = library::apply_saved_order(&disk, &saved)
-                    .into_iter()
-                    .map(|i| files[i].clone())
-                    .collect();
+        match self.folder_sort() {
+            // Songs or folders were moved: keep that order, new songs go at the end
+            FolderSort::Manual => {
+                if let Some(saved) = utils::load_cached_songs() {
+                    let disk: Vec<String> = files.iter().map(|f| f.uri().to_string()).collect();
+                    let saved: Vec<String> = saved.iter().map(|f| f.uri().to_string()).collect();
+                    files = library::apply_saved_order(&disk, &saved)
+                        .into_iter()
+                        .map(|i| files[i].clone())
+                        .collect();
+                }
+            }
+            FolderSort::Name => {}
+            sort => {
+                let paths: Vec<PathBuf> = files.iter().filter_map(|f| f.path()).collect();
+                if paths.len() == files.len() {
+                    files = self
+                        .sorted_order(&paths, sort)
+                        .into_iter()
+                        .map(|i| files[i as usize].clone())
+                        .collect();
+                }
             }
         }
         if files.is_empty() {
@@ -721,6 +753,114 @@ impl Window {
                 .unwrap()
                 .save_resume();
         }
+    }
+
+    // All library and playback options in one place; switches are bound to the settings
+    fn show_preferences(&self) {
+        use adw::prelude::{ActionRowExt, PreferencesDialogExt, PreferencesGroupExt, PreferencesPageExt};
+        let settings = &self.imp().settings;
+        let dialog = adw::PreferencesDialog::new();
+        let page = adw::PreferencesPage::new();
+
+        let library = adw::PreferencesGroup::builder().title(i18n("Library")).build();
+        let path = settings.string("library-path");
+        let location = adw::ActionRow::builder()
+            .title(i18n("Music Library"))
+            .subtitle(if path.is_empty() { i18n("Not chosen") } else { path.to_string() })
+            .subtitle_selectable(true)
+            .build();
+        location.add_css_class("property");
+        let choose = gtk::Button::builder()
+            .label(i18n("_Choose…"))
+            .use_underline(true)
+            .valign(gtk::Align::Center)
+            .action_name("queue.choose-library")
+            .build();
+        location.add_suffix(&choose);
+        library.add(&location);
+        // Choosing a library updates the row while the dialog is open
+        let handler = settings.connect_changed(
+            Some("library-path"),
+            clone!(
+                #[weak]
+                location,
+                move |settings, _| location.set_subtitle(&settings.string("library-path"))
+            ),
+        );
+        let handler = RefCell::new(Some(handler));
+        dialog.connect_closed(clone!(
+            #[weak]
+            settings,
+            move |_| {
+                if let Some(handler) = handler.take() {
+                    settings.disconnect(handler);
+                }
+            }
+        ));
+        let autoload = adw::SwitchRow::builder()
+            .title(i18n("Open Library at Start"))
+            .subtitle(i18n("When Ryuon starts with an empty playlist"))
+            .build();
+        settings.bind("library-autoload", &autoload, "active").build();
+        library.add(&autoload);
+
+        let sorts = ["name", "newest", "most-songs", "recent", "manual"];
+        let labels = [
+            i18n("By Name"),
+            i18n("Newest First"),
+            i18n("Most Songs First"),
+            i18n("Recently Played First"),
+            i18n("Manual Order"),
+        ];
+        let label_refs: Vec<&str> = labels.iter().map(String::as_str).collect();
+        let order = adw::ComboRow::builder()
+            .title(i18n("Folder Order"))
+            .model(&gtk::StringList::new(&label_refs))
+            .build();
+        settings
+            .bind("library-sort", &order, "selected")
+            .mapping(move |value, _| {
+                let s: String = value.get()?;
+                Some((sorts.iter().position(|x| *x == s).unwrap_or(0) as u32).to_value())
+            })
+            .set_mapping(move |value, _| {
+                let i: u32 = value.get().ok()?;
+                Some(sorts.get(i as usize)?.to_variant())
+            })
+            .build();
+        library.add(&order);
+
+        let tidy_row = adw::SwitchRow::builder()
+            .title(i18n("Tidy Names"))
+            .subtitle(i18n("Hide download-site tags, bitrates and underscores on screen; files are not renamed"))
+            .build();
+        settings.bind("tidy-names", &tidy_row, "active").build();
+        library.add(&tidy_row);
+
+        let rename_row = adw::ButtonRow::builder()
+            .title(i18n("Rename Files on Disk…"))
+            .action_name("queue.rename-files")
+            .build();
+        library.add(&rename_row);
+        page.add(&library);
+
+        let playback = adw::PreferencesGroup::builder().title(i18n("Playback")).build();
+        let background = adw::SwitchRow::builder()
+            .title(i18n("Background Playback"))
+            .subtitle(i18n("Keep playing after the window is closed"))
+            .build();
+        settings.bind("background-play", &background, "active").build();
+        playback.add(&background);
+        let recolor = adw::SwitchRow::builder()
+            .title(i18n("Match Cover Art"))
+            .subtitle(i18n("Color the window from the cover of the playing song"))
+            .build();
+        settings.bind("enable-recoloring", &recolor, "active").build();
+        playback.add(&recolor);
+        page.add(&playback);
+
+        dialog.add(&page);
+        dialog.present(Some(self));
     }
 
     fn rename_journal_dir() -> PathBuf {
@@ -1074,8 +1214,8 @@ impl Window {
 
         self.imp().undo_move.set(Some((to, len, start)));
         utils::store_playlist(queue);
-        if self.library_root().is_some() {
-            let _ = self.imp().settings.set_boolean("library-manual-order", true);
+        if self.library_root().is_some() && self.folder_sort() != FolderSort::Manual {
+            let _ = self.imp().settings.set_string("library-sort", "manual");
         }
         self.update_folder_label();
 
@@ -1098,11 +1238,210 @@ impl Window {
         }
     }
 
+    // Back to folder order by name, with any removed songs back in place
     fn reset_order(&self) {
-        let _ = self.imp().settings.set_boolean("library-manual-order", false);
+        let settings = &self.imp().settings;
+        if settings.string("library-sort") != "name" {
+            // the change signal reorders the queue in place
+            let _ = settings.set_string("library-sort", "name");
+        }
         if self.library_root().is_some() {
             self.save_resume();
             self.open_library();
+        }
+    }
+
+    fn folder_sort(&self) -> FolderSort {
+        FolderSort::from_setting(&self.imp().settings.string("library-sort"))
+    }
+
+    fn played_folders_path() -> PathBuf {
+        glib::user_data_dir().join("ryuon").join("recent-folders.tsv")
+    }
+
+    fn played_folders() -> std::collections::HashMap<PathBuf, u64> {
+        std::fs::read_to_string(Self::played_folders_path())
+            .map(|text| library::parse_played(&text))
+            .unwrap_or_default()
+    }
+
+    // Remember when each folder last played, for the Recently Played sort
+    fn record_played(&self) {
+        let Some(player) = self.player() else { return };
+        let Some(path) = player.state().current_song().and_then(|s| s.file().path()) else {
+            return;
+        };
+        let Some(key) = library::folder_key(self.library_root().as_deref(), &path) else {
+            return;
+        };
+        if self.imp().last_played_folder.borrow().as_ref() == Some(&key) {
+            return;
+        }
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_secs())
+            .unwrap_or(0);
+        let mut played = Self::played_folders();
+        played.insert(key.clone(), now);
+        let file = Self::played_folders_path();
+        if let Some(dir) = file.parent() {
+            let _ = std::fs::create_dir_all(dir);
+        }
+        if let Err(e) = std::fs::write(&file, library::format_played(&played)) {
+            debug!("Unable to save recently played folders: {e}");
+        }
+        self.imp().last_played_folder.replace(Some(key));
+    }
+
+    /// Play order for songs given in name order (indices into `paths`); songs outside the
+    /// library keep their place at the end
+    fn sorted_order(&self, paths: &[PathBuf], sort: FolderSort) -> Vec<u32> {
+        let root = self.library_root();
+        let folders = library::group_folders(root.as_deref(), paths);
+        let played = if sort == FolderSort::Recent { Self::played_folders() } else { Default::default() };
+        let stats: Vec<FolderStats> = folders
+            .iter()
+            .map(|f| FolderStats {
+                newest: if sort == FolderSort::Newest {
+                    paths[f.first_index as usize..(f.first_index + f.n_songs) as usize]
+                        .iter()
+                        .filter_map(|p| std::fs::metadata(p).ok()?.modified().ok())
+                        .filter_map(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
+                        .map(|d| d.as_secs())
+                        .max()
+                        .unwrap_or(0)
+                } else {
+                    0
+                },
+                last_played: played.get(&f.key).copied().unwrap_or(0),
+            })
+            .collect();
+        let mut order =
+            library::folder_order_to_songs(&folders, &library::sort_folders(&folders, sort, &stats));
+        let mut placed = vec![false; paths.len()];
+        for &i in &order {
+            placed[i as usize] = true;
+        }
+        order.extend((0..paths.len() as u32).filter(|&i| !placed[i as usize]));
+        order
+    }
+
+    // The library-sort setting changed: reorder the queue in place, so playback goes on
+    fn apply_sort(&self) {
+        let sort = self.folder_sort();
+        if sort == FolderSort::Manual || self.library_root().is_none() {
+            return;
+        }
+        let Some(player) = self.player() else { return };
+        let queue = player.queue();
+        if queue.n_songs() < 2 {
+            return;
+        }
+        if queue.is_shuffled() {
+            self.add_toast(i18n("The new folder order applies when shuffle is off and the library opens again"));
+            return;
+        }
+        let base = self.library_root().map(gio::File::for_path);
+        let mut by_name: Vec<(u32, gio::File)> =
+            (0..queue.n_songs()).filter_map(|i| Some((i, queue.song_at(i)?.file()))).collect();
+        by_name.sort_by(|a, b| utils::cmp_two_files(base.as_ref(), &a.1, &b.1));
+        let paths: Vec<PathBuf> = by_name.iter().filter_map(|(_, f)| f.path()).collect();
+        if paths.len() != by_name.len() {
+            return;
+        }
+        let order: Vec<u32> =
+            self.sorted_order(&paths, sort).into_iter().map(|i| by_name[i as usize].0).collect();
+        if queue.set_order(&order) {
+            self.imp().undo_move.set(None);
+            utils::store_playlist(queue);
+            self.update_folder_label();
+        }
+    }
+
+    // Folders view: one row per folder in play order, the playing one marked
+    fn refresh_folder_list(&self) {
+        use adw::prelude::ActionRowExt;
+        let view = &self.imp().playlist_view;
+        if !view.folders_visible() {
+            return;
+        }
+        let list = view.folder_list();
+        list.remove_all();
+        let Some(player) = self.player() else { return };
+        let queue = player.queue();
+        let paths: Vec<PathBuf> = (0..queue.n_songs())
+            .filter_map(|i| queue.song_at(i))
+            .filter_map(|s| s.file().path())
+            .collect();
+        let folders = library::group_folders(self.library_root().as_deref(), &paths);
+        let current = if queue.is_shuffled() {
+            None
+        } else {
+            queue.current_song_index().and_then(|i| library::position_of(&folders, i)).map(|p| p.folder as usize - 1)
+        };
+
+        let mut current_row = None;
+        for (i, folder) in folders.iter().enumerate() {
+            let name = if tidy::enabled() { tidy::name(&folder.name) } else { folder.name.clone() };
+            let row = adw::ActionRow::builder()
+                .title(&name)
+                .use_markup(false)
+                .subtitle(ni18n_f("One song", "{} songs", folder.n_songs, &[&folder.n_songs.to_string()]))
+                .activatable(true)
+                .build();
+            let playing = gtk::Image::from_icon_name("media-playback-start-symbolic");
+            playing.set_opacity(if current == Some(i) { 1.0 } else { 0.0 });
+            row.add_prefix(&playing);
+            if current == Some(i) {
+                playing.update_property(&[gtk::accessible::Property::Label(&i18n("Playing"))]);
+                current_row = Some(row.clone());
+            }
+
+            let menu = gio::Menu::new();
+            let item = |label: String, action: &str| {
+                let item = gio::MenuItem::new(Some(&label), None);
+                item.set_action_and_target_value(Some(action), Some(&folder.first_index.to_variant()));
+                item
+            };
+            menu.append_item(&item(i18n("Play This Folder Next"), "win.folder-next"));
+            menu.append_item(&item(i18n("Move Folder Up"), "win.folder-up"));
+            menu.append_item(&item(i18n("Move Folder Down"), "win.folder-down"));
+            let button = gtk::MenuButton::builder()
+                .icon_name("view-more-symbolic")
+                .menu_model(&menu)
+                .valign(gtk::Align::Center)
+                .tooltip_text(i18n("Folder Options"))
+                .css_classes(["flat"])
+                .build();
+            row.add_suffix(&button);
+
+            let first = folder.first_index;
+            row.connect_activated(clone!(
+                #[weak(rename_to = win)]
+                self,
+                move |_| {
+                    if let Some(player) = win.player() {
+                        player.skip_to(first);
+                        player.play();
+                    }
+                }
+            ));
+            list.append(&row);
+        }
+
+        // Keep the playing folder in view
+        if let Some(row) = current_row {
+            glib::idle_add_local_once(move || {
+                if let Some(bounds) = row.compute_bounds(&row.parent().unwrap()) {
+                    if let Some(scroller) = row.ancestor(gtk::ScrolledWindow::static_type()) {
+                        let adj = scroller.downcast::<gtk::ScrolledWindow>().unwrap().vadjustment();
+                        let y = bounds.y() as f64;
+                        if y < adj.value() || y + bounds.height() as f64 > adj.value() + adj.page_size() {
+                            adj.set_value(y - adj.page_size() / 3.0);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -1250,6 +1589,7 @@ impl Window {
 
     // "Folder 7 of 139 · Song 4 of 10" and "Up next", shown while playing in order
     fn update_folder_label(&self) {
+        self.refresh_folder_list();
         let label = &self.imp().folder_label;
         let Some(player) = self.player() else {
             label.set_visible(false);
@@ -1930,6 +2270,7 @@ impl Window {
     fn setup_playlist(&self) {
         let imp = self.imp();
 
+
         let factory = gtk::SignalListItemFactory::new();
         factory.connect_setup(clone!(
             #[weak(rename_to = win)]
@@ -2241,6 +2582,7 @@ impl Window {
             self.update_title(state.current_song().as_ref());
             self.update_style(state.current_song().as_ref());
             self.update_folder_label();
+            self.record_played();
             self.save_resume();
         }
     }

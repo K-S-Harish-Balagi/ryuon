@@ -68,6 +68,8 @@ mod imp {
             obj.set_accels_for_action("queue.add-song", &["<primary>s"]);
             obj.set_accels_for_action("queue.add-folder", &["<primary>a"]);
             obj.set_accels_for_action("queue.open-library", &["<primary>o"]);
+            obj.set_accels_for_action("win.preferences", &["<primary>comma"]);
+            obj.set_accels_for_action("win.show-folders", &["<primary>g"]);
             obj.set_accels_for_action("queue.clear", &["<primary>L"]);
             obj.set_accels_for_action("queue.toggle", &["F9"]);
             obj.set_accels_for_action("queue.search", &["<primary>F"]);
@@ -214,6 +216,23 @@ impl Application {
         );
 
         let _dummy = self.imp().settings.boolean("background-play");
+
+        crate::tidy::set_enabled(self.imp().settings.boolean("tidy-names"));
+        self.imp().settings.connect_changed(
+            Some("tidy-names"),
+            clone!(
+                #[weak(rename_to = this)]
+                self,
+                move |settings, _| {
+                    crate::tidy::set_enabled(settings.boolean("tidy-names"));
+                    for window in this.windows() {
+                        if let Ok(window) = window.downcast::<crate::window::Window>() {
+                            window.refresh_names();
+                        }
+                    }
+                }
+            ),
+        );
     }
 
     fn setup_channel(&self) {
@@ -270,59 +289,11 @@ impl Application {
                 .build(),
         ]);
 
-        let background_play = self.imp().settings.boolean("background-play");
-        self.add_action_entries([gio::ActionEntry::builder("background-play")
-            .state(background_play.to_variant())
-            .activate(|this: &Application, action, _| {
-                let state = action.state().unwrap();
-                let action_state: bool = state.get().unwrap();
-                let background_play = !action_state;
-                action.set_state(&background_play.to_variant());
-
-                this.imp()
-                    .settings
-                    .set_boolean("background-play", background_play)
-                    .expect("Unable to store background-play setting");
-            })
-            .build()]);
-
-        let library_autoload = self.imp().settings.boolean("library-autoload");
-        self.add_action_entries([gio::ActionEntry::builder("library-autoload")
-            .state(library_autoload.to_variant())
-            .activate(|this: &Application, action, _| {
-                let state = action.state().unwrap();
-                let action_state: bool = state.get().unwrap();
-                let autoload = !action_state;
-                action.set_state(&autoload.to_variant());
-
-                this.imp()
-                    .settings
-                    .set_boolean("library-autoload", autoload)
-                    .expect("Unable to store library-autoload setting");
-            })
-            .build()]);
-
-        let tidy_names = self.imp().settings.boolean("tidy-names");
-        crate::tidy::set_enabled(tidy_names);
-        self.add_action_entries([gio::ActionEntry::builder("tidy-names")
-            .state(tidy_names.to_variant())
-            .activate(|this: &Application, action, _| {
-                let state = action.state().unwrap();
-                let tidy: bool = !state.get::<bool>().unwrap();
-                action.set_state(&tidy.to_variant());
-                crate::tidy::set_enabled(tidy);
-
-                this.imp()
-                    .settings
-                    .set_boolean("tidy-names", tidy)
-                    .expect("Unable to store tidy-names setting");
-                for window in this.windows() {
-                    if let Ok(window) = window.downcast::<crate::window::Window>() {
-                        window.refresh_names();
-                    }
-                }
-            })
-            .build()]);
+        // Toggles bound to settings, so the menu and the Preferences dialog always agree
+        let settings = &self.imp().settings;
+        for key in ["background-play", "library-autoload", "tidy-names"] {
+            self.add_action(&settings.create_action(key));
+        }
     }
 
     fn show_about(&self) {

@@ -175,6 +175,40 @@ menu primary_menu {
       action: "win.reset-order";
     }
 
+    submenu {
+      label: _("Sort Fol_ders");
+
+      item {
+        label: _("By _Name");
+        action: "win.library-sort";
+        target: "name";
+      }
+
+      item {
+        label: _("Ne_west First");
+        action: "win.library-sort";
+        target: "newest";
+      }
+
+      item {
+        label: _("_Most Songs First");
+        action: "win.library-sort";
+        target: "most-songs";
+      }
+
+      item {
+        label: _("_Recently Played First");
+        action: "win.library-sort";
+        target: "recent";
+      }
+
+      item {
+        label: _("M_anual Order");
+        action: "win.library-sort";
+        target: "manual";
+      }
+    }
+
     item {
       label: _("R_ename Files on Disk…");
       action: "queue.rename-files";
@@ -248,6 +282,11 @@ menu primary_menu {
   }
 
   section {
+    item {
+      label: _("_Preferences");
+      action: "win.preferences";
+    }
+
     item {
       label: _("_Keyboard Shortcuts");
       action: "app.shortcuts";

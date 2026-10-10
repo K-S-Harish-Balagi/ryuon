@@ -158,6 +158,75 @@ pub fn apply_saved_order(disk: &[String], saved: &[String]) -> Vec<usize> {
     order
 }
 
+/// The recently played folders file: one `seconds<TAB>folder path` per line
+pub fn parse_played(text: &str) -> std::collections::HashMap<PathBuf, u64> {
+    text.lines()
+        .filter_map(|line| {
+            let (secs, path) = line.split_once('\t')?;
+            Some((PathBuf::from(path), secs.parse().ok()?))
+        })
+        .collect()
+}
+
+pub fn format_played(played: &std::collections::HashMap<PathBuf, u64>) -> String {
+    let mut lines: Vec<String> =
+        played.iter().map(|(path, secs)| format!("{secs}\t{}\n", path.display())).collect();
+    lines.sort();
+    lines.concat()
+}
+
+/// Folder order (the `library-sort` setting). `Manual` keeps the saved order of moved songs.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FolderSort {
+    Name,
+    Newest,
+    MostSongs,
+    Recent,
+    Manual,
+}
+
+impl FolderSort {
+    pub fn from_setting(s: &str) -> Self {
+        match s {
+            "newest" => Self::Newest,
+            "most-songs" => Self::MostSongs,
+            "recent" => Self::Recent,
+            "manual" => Self::Manual,
+            _ => Self::Name,
+        }
+    }
+}
+
+/// What the sorts look at, per folder (seconds since 1970; 0 = unknown or never)
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct FolderStats {
+    pub newest: u64,
+    pub last_played: u64,
+}
+
+/// The order of `folders` (given in name order) for a sort, as indices into `folders`.
+/// Ties, and never-played folders for `Recent`, stay in name order.
+pub fn sort_folders(folders: &[FolderInfo], sort: FolderSort, stats: &[FolderStats]) -> Vec<usize> {
+    let mut order: Vec<usize> = (0..folders.len()).collect();
+    let stat = |i: usize| stats.get(i).copied().unwrap_or_default();
+    match sort {
+        FolderSort::Name | FolderSort::Manual => {}
+        FolderSort::Newest => order.sort_by_key(|&i| std::cmp::Reverse(stat(i).newest)),
+        FolderSort::MostSongs => order.sort_by_key(|&i| std::cmp::Reverse(folders[i].n_songs)),
+        FolderSort::Recent => order.sort_by_key(|&i| std::cmp::Reverse(stat(i).last_played)),
+    }
+    order
+}
+
+/// Song indices in the new play order, folder by folder (`folders` must cover the songs
+/// contiguously, as `group_folders` gives them for a list in name order)
+pub fn folder_order_to_songs(folders: &[FolderInfo], order: &[usize]) -> Vec<u32> {
+    order
+        .iter()
+        .flat_map(|&f| folders[f].first_index..folders[f].first_index + folders[f].n_songs)
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -321,5 +390,56 @@ mod tests {
         let f = group_folders(Some(&root), &sample());
         assert_eq!(position_of(&f, 6), None);
         assert_eq!(position_of(&[], 0), None);
+    }
+
+    fn folders(counts: &[u32]) -> Vec<FolderInfo> {
+        let mut first = 0;
+        counts
+            .iter()
+            .enumerate()
+            .map(|(i, &n)| {
+                let f = FolderInfo { key: p(&format!("/m/{i}")), name: format!("F{i}"), n_songs: n, first_index: first };
+                first += n;
+                f
+            })
+            .collect()
+    }
+
+    #[test]
+    fn folder_sorts() {
+        let f = folders(&[2, 5, 1, 5]);
+        let stats = [
+            FolderStats { newest: 10, last_played: 0 },
+            FolderStats { newest: 30, last_played: 100 },
+            FolderStats { newest: 20, last_played: 0 },
+            FolderStats { newest: 30, last_played: 300 },
+        ];
+        assert_eq!(sort_folders(&f, FolderSort::Name, &stats), vec![0, 1, 2, 3]);
+        assert_eq!(sort_folders(&f, FolderSort::Manual, &stats), vec![0, 1, 2, 3]);
+        // ties keep name order
+        assert_eq!(sort_folders(&f, FolderSort::Newest, &stats), vec![1, 3, 2, 0]);
+        assert_eq!(sort_folders(&f, FolderSort::MostSongs, &stats), vec![1, 3, 0, 2]);
+        // never played folders follow, in name order
+        assert_eq!(sort_folders(&f, FolderSort::Recent, &stats), vec![3, 1, 0, 2]);
+        assert_eq!(folder_order_to_songs(&f, &[2, 0]), vec![7, 0, 1]);
+        let all = folder_order_to_songs(&f, &sort_folders(&f, FolderSort::Recent, &stats));
+        let mut sorted = all.clone();
+        sorted.sort();
+        assert_eq!(sorted, (0..13).collect::<Vec<u32>>());
+    }
+
+    #[test]
+    fn played_file_round_trip() {
+        let mut played = std::collections::HashMap::new();
+        played.insert(p("/m/Leo - MassTamilan.dev"), 1791600000);
+        played.insert(p("/m/[weird] = name"), 5);
+        assert_eq!(parse_played(&format_played(&played)), played);
+        assert!(parse_played("garbage\n\n12\n").is_empty());
+    }
+
+    #[test]
+    fn sort_setting_names() {
+        assert_eq!(FolderSort::from_setting("most-songs"), FolderSort::MostSongs);
+        assert_eq!(FolderSort::from_setting("bogus"), FolderSort::Name);
     }
 }

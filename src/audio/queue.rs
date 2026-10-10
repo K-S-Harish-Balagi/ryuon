@@ -169,6 +169,35 @@ impl Queue {
         true
     }
 
+    /// Puts the songs in a new order: `order[i]` is the current index of the song that goes
+    /// to position `i`. Refused while shuffled or if `order` is not a permutation. Keeps the
+    /// current song current.
+    pub fn set_order(&self, order: &[u32]) -> bool {
+        let store = &self.imp().store;
+        let n = store.n_items();
+        let mut seen = vec![false; n as usize];
+        if self.is_shuffled()
+            || order.len() != n as usize
+            || !order.iter().all(|&i| i < n && !std::mem::replace(&mut seen[i as usize], true))
+        {
+            return false;
+        }
+        if order.iter().enumerate().all(|(i, &j)| i as u32 == j) {
+            return true;
+        }
+
+        let items: Vec<glib::Object> = order.iter().filter_map(|&i| store.item(i)).collect();
+        store.splice(0, n, &items);
+
+        if let Some(current) = self.imp().current_pos.get() {
+            if let Some(pos) = order.iter().position(|&i| i == current) {
+                self.imp().current_pos.replace(Some(pos as u32));
+                self.notify("current");
+            }
+        }
+        true
+    }
+
     pub fn remove_song(&self, song: &Song) {
         let was_shuffled = self.imp().model.shuffled();
         let n_songs = self.n_songs();

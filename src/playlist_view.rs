@@ -30,6 +30,14 @@ mod imp {
         pub playlist_searchbar: TemplateChild<gtk::SearchBar>,
         #[template_child]
         pub playlist_searchentry: TemplateChild<gtk::SearchEntry>,
+        #[template_child]
+        pub folders_button: TemplateChild<gtk::ToggleButton>,
+        #[template_child]
+        pub playlist_stack: TemplateChild<gtk::Stack>,
+        #[template_child]
+        pub folder_list: TemplateChild<gtk::ListBox>,
+        #[template_child]
+        pub folder_scroller: TemplateChild<gtk::ScrolledWindow>,
     }
 
     #[glib::object_subclass]
@@ -125,6 +133,29 @@ impl PlaylistView {
 
     pub fn playlist_searchentry(&self) -> gtk::SearchEntry {
         self.imp().playlist_searchentry.get()
+    }
+
+    pub fn folders_button(&self) -> gtk::ToggleButton {
+        self.imp().folders_button.get()
+    }
+
+    pub fn folder_list(&self) -> gtk::ListBox {
+        self.imp().folder_list.get()
+    }
+
+    pub fn folder_scroller(&self) -> gtk::ScrolledWindow {
+        self.imp().folder_scroller.get()
+    }
+
+    /// Songs or Folders in the sidebar
+    pub fn set_folders_visible(&self, folders: bool) {
+        self.imp()
+            .playlist_stack
+            .set_visible_child_name(if folders { "folders" } else { "songs" });
+    }
+
+    pub fn folders_visible(&self) -> bool {
+        self.imp().playlist_stack.visible_child_name().as_deref() == Some("folders")
     }
 
     pub fn begin_loading(&self) {
