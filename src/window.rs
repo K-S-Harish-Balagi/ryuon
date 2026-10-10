@@ -736,6 +736,7 @@ impl Window {
 
     fn queue_songs(&self, queue: Vec<gio::File>) {
         if queue.is_empty() {
+            self.imp().pending_resume.take();
             self.add_toast(i18n("No available song found"));
             return;
         }
@@ -802,6 +803,9 @@ impl Window {
                         win.action_set_enabled("queue.choose-library", true);
                         win.imp().loading.set(false);
 
+                        // Only this load may resume; never a later one
+                        let resume = win.imp().pending_resume.take();
+
                         if songs.is_empty() {
                             if duplicates == 0 {
                                 win.add_toast(i18n("No songs found"));
@@ -828,7 +832,6 @@ impl Window {
                             }
 
                             // Opening the library: go back to where we stopped, paused
-                            let resume = win.imp().pending_resume.take();
                             if let Some((uri, position)) = resume {
                                 let found = (0..queue.n_songs())
                                     .find(|&i| queue.song_at(i).map_or(false, |s| s.uri() == uri));
