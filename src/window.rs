@@ -103,6 +103,8 @@ mod imp {
 
         // Song and position (in seconds) to go back to once the library has loaded
         pub pending_resume: RefCell<Option<(String, u64)>>,
+        // Songs are being added to the queue
+        pub loading: Cell<bool>,
 
         pub notify_playing_id: RefCell<Option<glib::SignalHandlerId>>,
         pub notify_position_id: RefCell<Option<glib::SignalHandlerId>>,
@@ -303,6 +305,7 @@ mod imp {
                 playlist_search: Cell::new(false),
                 playlist_filtermodel: RefCell::default(),
                 pending_resume: RefCell::default(),
+                loading: Cell::new(false),
                 replaygain_mode: Cell::new(ReplayGainMode::default()),
                 provider: gtk::CssProvider::new(),
                 settings: utils::settings_manager(),
@@ -568,6 +571,11 @@ impl Window {
     }
 
     pub fn open_library(&self) {
+        // A second load would clear the queue under the first one and queue songs twice
+        if self.imp().loading.get() {
+            return;
+        }
+
         let Some(root) = self.library_root() else {
             self.add_toast(i18n("Choose a music library first"));
             return;
@@ -738,6 +746,9 @@ impl Window {
         self.action_set_enabled("queue.add-song", false);
         self.action_set_enabled("queue.add-folder", false);
         self.action_set_enabled("queue.clear", false);
+        self.action_set_enabled("queue.open-library", false);
+        self.action_set_enabled("queue.choose-library", false);
+        self.imp().loading.set(true);
 
         self.set_playlist_visible(true);
         self.imp().playlist_view.begin_loading();
@@ -787,6 +798,9 @@ impl Window {
                         win.action_set_enabled("queue.add-song", true);
                         win.action_set_enabled("queue.add-folder", true);
                         win.action_set_enabled("queue.clear", true);
+                        win.action_set_enabled("queue.open-library", true);
+                        win.action_set_enabled("queue.choose-library", true);
+                        win.imp().loading.set(false);
 
                         if songs.is_empty() {
                             if duplicates == 0 {
