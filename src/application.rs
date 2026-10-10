@@ -88,6 +88,16 @@ mod imp {
             gtk::Window::set_default_icon_name(APPLICATION_ID);
         }
 
+        fn shutdown(&self) {
+            // Quitting (Ctrl+Q) does not emit close-request on the window
+            if let Some(window) = self.obj().active_window() {
+                window.downcast_ref::<Window>().unwrap().save_resume();
+            }
+            gio::Settings::sync();
+
+            self.parent_shutdown();
+        }
+
         fn activate(&self) {
             debug!("Application::activate");
 

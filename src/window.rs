@@ -611,7 +611,7 @@ impl Window {
     }
 
     // Remember the song and position, but only for songs that belong to the library
-    fn save_resume(&self) {
+    pub fn save_resume(&self) {
         let Some(player) = self.player() else {
             return;
         };
@@ -834,6 +834,12 @@ impl Window {
                                     .find(|&i| queue.song_at(i).map_or(false, |s| s.uri() == uri));
                                 if let Some(index) = found {
                                     player.skip_to(index);
+                                    // Changing song saved it at 0 s; keep the old position
+                                    // until the seek has happened
+                                    let _ = win
+                                        .imp()
+                                        .settings
+                                        .set_uint64("resume-position", position);
                                     win.seek_when_ready(position);
                                 }
                             }
