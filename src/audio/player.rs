@@ -449,7 +449,7 @@ impl AudioPlayer {
     }
 
     pub fn seek_position_abs(&self, position: u64) {
-        let pos = u64::max(position, self.state.duration());
+        let pos = u64::min(position, self.state.duration());
         self.backend.seek_position(pos);
     }
 
