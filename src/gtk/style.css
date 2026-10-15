@@ -156,3 +156,14 @@ volume > scale trough slider { opacity: 0; }
     --scrollbar-outline-color: rgb(0 0 0 / 25%);
   }
 }
+
+/* Folders view, as on the design canvas */
+.view-tabs > button { min-height: 28px; font-weight: bold; }
+.folder-cover { border-radius: 6px; background-color: rgb(127 127 127 / 25%); }
+.folder-row.folder-played { opacity: 0.55; }
+.folder-row.folder-current { background-color: rgb(255 255 255 / 10%); border-radius: 8px; }
+.folder-track { min-height: 34px; padding-left: 40px; }
+.folder-track-now { font-weight: bold; background-color: rgb(255 255 255 / 7%); border-radius: 6px; }
+
+/* Tidy names dialog */
+.clash-badge { padding: 2px 8px; border-radius: 999px; background-color: rgb(255 184 107 / 20%); color: #ffcf99; }

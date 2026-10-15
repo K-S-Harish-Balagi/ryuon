@@ -387,6 +387,16 @@ impl Song {
         }
     }
 
+    /// The tags exactly as stored in the file, before tidying (for Song Info)
+    pub fn raw_tags(&self) -> (Option<String>, Option<String>, Option<String>) {
+        let data = self.imp().data.borrow();
+        (
+            data.title().map(str::to_string),
+            data.artist().map(str::to_string),
+            data.album().map(str::to_string),
+        )
+    }
+
     /// Tell views the shown names changed (after the tidy-names setting is toggled)
     pub fn notify_names(&self) {
         self.notify("artist");

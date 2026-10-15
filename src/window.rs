@@ -480,6 +480,26 @@ impl Window {
                     .build(),
             );
         }
+        // Song Info: from the row menu (a queue position) or for the playing song
+        entries.push(
+            gio::ActionEntry::builder("song-info")
+                .parameter_type(Some(glib::VariantTy::UINT32))
+                .activate(|this: &Window, _, param| {
+                    if let Some(pos) = param.and_then(u32::from_variant) {
+                        this.show_song_info(pos);
+                    }
+                })
+                .build(),
+        );
+        entries.push(
+            gio::ActionEntry::builder("current-song-info")
+                .activate(|this: &Window, _, _| {
+                    if let Some(pos) = this.player().and_then(|p| p.queue().current_song_index()) {
+                        this.show_song_info(pos);
+                    }
+                })
+                .build(),
+        );
         entries.push(
             gio::ActionEntry::builder("undo-move")
                 .activate(|this: &Window, _, _| this.undo_move())
@@ -493,6 +513,7 @@ impl Window {
                     let show = !action.state().and_then(|s| s.get::<bool>()).unwrap_or(false);
                     action.set_state(&show.to_variant());
                     this.imp().playlist_view.set_folders_visible(show);
+                    this.imp().playlist_view.sync_tabs(show);
                     this.refresh_folder_list();
                 })
                 .build(),
@@ -780,60 +801,93 @@ impl Window {
     }
 
     // All library and playback options in one place; switches are bound to the settings
+    // Settings, laid out like the "Music library" board on the design canvas:
+    // Location, Playback order, Names, Playback
     fn show_preferences(&self) {
-        use adw::prelude::{ActionRowExt, PreferencesDialogExt, PreferencesGroupExt, PreferencesPageExt};
+        use adw::prelude::{ActionRowExt, PreferencesDialogExt, PreferencesGroupExt, PreferencesPageExt, PreferencesRowExt};
         let settings = &self.imp().settings;
         let dialog = adw::PreferencesDialog::new();
+        dialog.set_title(&i18n("Settings"));
         let page = adw::PreferencesPage::new();
 
-        let library = adw::PreferencesGroup::builder().title(i18n("Library")).build();
+        // Folder names in the library: counted and used for the tidy-names example.
+        // One directory listing, only when Settings opens.
+        let describe = |path: &str| -> (String, Option<(String, String)>) {
+            if path.is_empty() {
+                return (i18n("No music library chosen yet"), None);
+            }
+            let mut n = 0u32;
+            let mut example = None;
+            if let Ok(entries) = std::fs::read_dir(path) {
+                let mut names: Vec<String> = entries
+                    .flatten()
+                    .filter(|e| e.file_type().map(|t| t.is_dir()).unwrap_or(false))
+                    .map(|e| e.file_name().to_string_lossy().into_owned())
+                    .filter(|n| !n.starts_with('.'))
+                    .collect();
+                names.sort();
+                n = names.len() as u32;
+                example = names
+                    .iter()
+                    .find(|f| tidy::name(f) != **f)
+                    .map(|f| (f.clone(), tidy::name(f)));
+            }
+            (ni18n_f("One folder", "{} folders", n, &[&n.to_string()]), example)
+        };
+
+        // Location
+        let library = adw::PreferencesGroup::builder().title(i18n("Location")).build();
         let path = settings.string("library-path");
+        let (count, example) = describe(&path);
         let location = adw::ActionRow::builder()
-            .title(i18n("Music Library"))
-            .subtitle(if path.is_empty() { i18n("Not chosen") } else { path.to_string() })
-            .subtitle_selectable(true)
+            .title(if path.is_empty() { i18n("Not chosen") } else { path.to_string() })
+            .subtitle(&count)
+            .use_markup(false)
+            .title_selectable(true)
             .build();
-        location.add_css_class("property");
+        location.add_prefix(&gtk::Image::from_icon_name("folder-music-symbolic"));
         let choose = gtk::Button::builder()
-            .label(i18n("_Choose…"))
+            .label(i18n("_Change…"))
             .use_underline(true)
             .valign(gtk::Align::Center)
             .action_name("queue.choose-library")
             .build();
         location.add_suffix(&choose);
         library.add(&location);
-        // Choosing a library updates the row while the dialog is open
-        let handler = settings.connect_changed(
-            Some("library-path"),
-            clone!(
-                #[weak]
-                location,
-                move |settings, _| location.set_subtitle(&settings.string("library-path"))
-            ),
-        );
-        let handler = RefCell::new(Some(handler));
-        dialog.connect_closed(clone!(
-            #[weak]
-            settings,
-            move |_| {
-                if let Some(handler) = handler.take() {
-                    settings.disconnect(handler);
-                }
-            }
-        ));
+        let play = adw::ButtonRow::builder()
+            .title(i18n("Play Library"))
+            .start_icon_name("media-playback-start-symbolic")
+            .action_name("queue.open-library")
+            .build();
+        play.add_css_class("suggested-action");
+        library.add(&play);
         let autoload = adw::SwitchRow::builder()
             .title(i18n("Open Library at Start"))
             .subtitle(i18n("When Ryuon starts with an empty playlist"))
             .build();
         settings.bind("library-autoload", &autoload, "active").build();
         library.add(&autoload);
+        page.add(&library);
 
+        // Playback order
+        let order_group = adw::PreferencesGroup::builder().title(i18n("Playback Order")).build();
+        let by_folder = adw::SwitchRow::builder()
+            .title(i18n("Play Folder by Folder"))
+            .subtitle(i18n("When one folder ends, the next one starts; songs in a folder play in file order"))
+            .build();
+        // The same thing as shuffle being off, so the shuffle button and this switch agree
+        self.bind_property("playlist-shuffled", &by_folder, "active")
+            .invert_boolean()
+            .bidirectional()
+            .sync_create()
+            .build();
+        order_group.add(&by_folder);
         let sorts = ["name", "newest", "most-songs", "recent", "manual"];
         let labels = [
-            i18n("By Name"),
+            i18n("A–Z"),
             i18n("Newest First"),
-            i18n("Most Songs First"),
-            i18n("Recently Played First"),
+            i18n("Most Songs"),
+            i18n("Recently Played"),
             i18n("Manual Order"),
         ];
         let label_refs: Vec<&str> = labels.iter().map(String::as_str).collect();
@@ -852,22 +906,59 @@ impl Window {
                 Some(sorts.get(i as usize)?.to_variant())
             })
             .build();
-        library.add(&order);
+        order_group.add(&order);
+        page.add(&order_group);
 
+        // Names
+        let names = adw::PreferencesGroup::builder().title(i18n("Names")).build();
         let tidy_row = adw::SwitchRow::builder()
-            .title(i18n("Tidy Names"))
-            .subtitle(i18n("Hide download-site tags, bitrates and underscores on screen; files are not renamed"))
+            .title(i18n("Clean Up Folder and Song Names"))
+            .subtitle(match &example {
+                Some((from, to)) => format!("{from}  →  {to}"),
+                None => i18n("Hide download-site tags, bitrates and underscores on screen"),
+            })
+            .subtitle_lines(2)
             .build();
         settings.bind("tidy-names", &tidy_row, "active").build();
-        library.add(&tidy_row);
-
+        names.add(&tidy_row);
         let rename_row = adw::ButtonRow::builder()
-            .title(i18n("Rename Files on Disk…"))
+            .title(i18n("Tidy Names…"))
             .action_name("queue.rename-files")
             .build();
-        library.add(&rename_row);
-        page.add(&library);
+        names.add(&rename_row);
+        page.add(&names);
 
+        // Choosing a library updates the rows while the dialog is open
+        let handler = settings.connect_changed(
+            Some("library-path"),
+            clone!(
+                #[weak]
+                location,
+                #[weak]
+                tidy_row,
+                move |settings, _| {
+                    let path = settings.string("library-path");
+                    let (count, example) = describe(&path);
+                    location.set_title(&path);
+                    location.set_subtitle(&count);
+                    if let Some((from, to)) = example {
+                        tidy_row.set_subtitle(&format!("{from}  →  {to}"));
+                    }
+                }
+            ),
+        );
+        let handler = RefCell::new(Some(handler));
+        dialog.connect_closed(clone!(
+            #[weak]
+            settings,
+            move |_| {
+                if let Some(handler) = handler.take() {
+                    settings.disconnect(handler);
+                }
+            }
+        ));
+
+        // Playback
         let playback = adw::PreferencesGroup::builder().title(i18n("Playback")).build();
         let background = adw::SwitchRow::builder()
             .title(i18n("Background Playback"))
@@ -938,6 +1029,9 @@ impl Window {
     }
 
     // Preview of the tidy names on disk; renaming needs the number of changes typed in
+    // The "Tidy names" dialog from the design canvas: a before → after preview of every
+    // name that changes, clashes marked, and a choice between only changing how names look
+    // (safe, nothing on disk changes) and renaming the files (typed confirmation, undo journal).
     fn rename_files(&self) {
         if self.imp().loading.get() {
             return;
@@ -953,89 +1047,207 @@ impl Window {
                 return;
             }
         };
-        if plan.ops.is_empty() {
-            self.add_toast(i18n("All names in the music library are already tidy"));
-            return;
-        }
-        if !Self::can_write(&root) {
-            self.show_write_permission_dialog(&root);
-            return;
-        }
 
+        let settings = self.imp().settings.clone();
         let total = plan.ops.len().to_string();
-        let mut body = i18n_f(
-            // Translators: the `{}` are the number of folders, the number of songs and the
-            // music library location
-            "{} folders and {} songs in {} get their tidy names. Nothing is deleted, and Undo Rename puts every name back.",
-            &[&plan.n_folders().to_string(), &plan.n_files().to_string(), &root.to_string_lossy()],
-        );
-        if !plan.clashes.is_empty() {
-            body.push_str("\n\n");
-            body.push_str(&ni18n_f(
-                "One tidy name is already taken, so it gets a number added.",
-                "{} tidy names are already taken, so they get a number added.",
-                plan.clashes.len() as u32,
-                &[&plan.clashes.len().to_string()],
-            ));
-        }
-        let dialog = adw::AlertDialog::new(Some(&i18n("Rename Files on Disk?")), Some(&body));
+        let page = gtk::Box::new(gtk::Orientation::Vertical, 10);
+        page.set_margin_start(18);
+        page.set_margin_end(18);
+        page.set_margin_bottom(18);
 
-        let relative = |p: &std::path::Path| p.strip_prefix(&root).unwrap_or(p).to_string_lossy().into_owned();
-        let preview = plan
-            .ops
-            .iter()
-            .map(|op| format!("{}\n    → {}", relative(&op.from), relative(&op.to)))
-            .collect::<Vec<_>>()
-            .join("\n");
-        let view = gtk::TextView::builder()
-            .editable(false)
-            .cursor_visible(false)
-            .monospace(true)
-            .wrap_mode(gtk::WrapMode::WordChar)
-            .top_margin(6)
-            .bottom_margin(6)
-            .left_margin(6)
-            .right_margin(6)
+        // Summary
+        let summary = gtk::Label::builder().xalign(0.0).wrap(true).build();
+        if plan.ops.is_empty() {
+            summary.set_label(&i18n("Every folder and song name in the library is already tidy."));
+        } else {
+            let mut text = i18n_f(
+                "{} folders and {} songs change",
+                &[&plan.n_folders().to_string(), &plan.n_files().to_string()],
+            );
+            if !plan.clashes.is_empty() {
+                text.push_str(" · ");
+                text.push_str(&ni18n_f(
+                    "one name clashes",
+                    "{} names clash",
+                    plan.clashes.len() as u32,
+                    &[&plan.clashes.len().to_string()],
+                ));
+            }
+            summary.set_label(&text);
+        }
+        summary.add_css_class("heading");
+        page.append(&summary);
+
+        // Before → after, one row per change (names only; the folder is in the tooltip)
+        let list = gtk::ListBox::builder()
+            .selection_mode(gtk::SelectionMode::None)
+            .css_classes(["boxed-list"])
             .build();
-        view.buffer().set_text(&preview);
-        view.update_property(&[gtk::accessible::Property::Label(&i18n("Changes"))]);
+        list.update_property(&[gtk::accessible::Property::Label(&i18n("Changes"))]);
+        for op in plan.ops.iter().take(400) {
+            let name = |p: &std::path::Path| p.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
+            let row = gtk::Box::new(gtk::Orientation::Horizontal, 8);
+            row.set_margin_top(6);
+            row.set_margin_bottom(6);
+            row.set_margin_start(10);
+            row.set_margin_end(10);
+            let from = gtk::Label::builder()
+                .use_markup(true)
+                .label(format!("<s>{}</s>", glib::markup_escape_text(&name(&op.from))))
+                .xalign(0.0)
+                .width_chars(26)
+                .max_width_chars(26)
+                .ellipsize(gtk::pango::EllipsizeMode::Middle)
+                .css_classes(["dim-label"])
+                .build();
+            let arrow = gtk::Image::from_icon_name("go-next-symbolic");
+            arrow.add_css_class("dim-label");
+            let to = gtk::Label::builder()
+                .label(name(&op.to))
+                .xalign(0.0)
+                .hexpand(true)
+                .width_chars(18)
+                .max_width_chars(22)
+                .ellipsize(gtk::pango::EllipsizeMode::Middle)
+                .css_classes(["heading"])
+                .build();
+            row.append(&gtk::Image::from_icon_name(if op.is_dir { "folder-symbolic" } else { "audio-x-generic-symbolic" }));
+            row.append(&from);
+            row.append(&arrow);
+            row.append(&to);
+            if plan.clashes.contains(&op.to) {
+                let badge = gtk::Label::builder().label(i18n("same as another")).css_classes(["clash-badge", "caption"]).build();
+                row.append(&badge);
+            }
+            row.set_tooltip_text(Some(&op.from.parent().unwrap_or(&root).strip_prefix(&root).unwrap_or(std::path::Path::new("")).to_string_lossy()));
+            list.append(&row);
+        }
         let scroller = gtk::ScrolledWindow::builder()
-            .min_content_height(220)
-            .max_content_height(220)
-            .child(&view)
-            .css_classes(["card"])
+            .hscrollbar_policy(gtk::PolicyType::Never)
+            .min_content_height(240)
+            .vexpand(true)
+            .child(&list)
             .build();
+        if !plan.ops.is_empty() {
+            page.append(&scroller);
+        }
+        let lock = gtk::Label::builder()
+            .label(i18n("Track numbers like “1-” always stay in the file: songs play in file name order. They are only hidden on screen."))
+            .wrap(true)
+            .xalign(0.0)
+            .css_classes(["dim-label", "caption"])
+            .build();
+        page.append(&lock);
+
+        // Mode: only how names look, or rename on disk
+        let look = gtk::ToggleButton::with_label(&i18n("Only Change How Names Look"));
+        let disk = gtk::ToggleButton::with_label(&i18n("Rename Files on Disk"));
+        disk.set_group(Some(&look));
+        look.set_active(true);
+        disk.set_sensitive(!plan.ops.is_empty());
+        let modes = gtk::Box::builder().homogeneous(true).css_classes(["linked"]).build();
+        modes.append(&look);
+        modes.append(&disk);
+        page.append(&modes);
+        let note = gtk::Label::builder().wrap(true).xalign(0.0).css_classes(["caption"]).build();
+        page.append(&note);
         let entry = gtk::Entry::builder()
             .placeholder_text(i18n_f("Type {} to confirm", &[&total]))
             .input_purpose(gtk::InputPurpose::Digits)
+            .visible(false)
             .build();
         entry.update_property(&[gtk::accessible::Property::Label(&i18n_f(
             "Type the number of changes, {}, to confirm",
             &[&total],
         ))]);
-        let content = gtk::Box::new(gtk::Orientation::Vertical, 12);
-        content.append(&scroller);
-        content.append(&entry);
-        dialog.set_extra_child(Some(&content));
+        page.append(&entry);
 
-        dialog.add_responses(&[("cancel", &i18n("_Cancel")), ("rename", &i18n("_Rename"))]);
-        dialog.set_response_appearance("rename", adw::ResponseAppearance::Destructive);
-        dialog.set_response_enabled("rename", false);
-        dialog.set_default_response(Some("cancel"));
-        dialog.set_close_response("cancel");
-        entry.connect_changed(clone!(
+        // Footer
+        let cancel = gtk::Button::with_mnemonic(&i18n("_Cancel"));
+        let apply = gtk::Button::with_mnemonic(&i18n("_Apply"));
+        apply.add_css_class("suggested-action");
+        let footer = gtk::Box::builder().spacing(10).halign(gtk::Align::End).build();
+        footer.append(&cancel);
+        footer.append(&apply);
+        page.append(&footer);
+
+        let update = clone!(
             #[weak]
-            dialog,
+            disk,
+            #[weak]
+            note,
+            #[weak]
+            entry,
+            #[weak]
+            apply,
             #[strong]
             total,
-            move |entry| dialog.set_response_enabled("rename", entry.text().trim() == total)
-        ));
+            move || {
+                if disk.is_active() {
+                    note.set_label(&i18n(
+                        "Changes the real file and folder names. Saves an undo list first, never deletes anything, and adds a number when a name is taken.",
+                    ));
+                    entry.set_visible(true);
+                    apply.set_label(&i18n("_Rename"));
+                    apply.remove_css_class("suggested-action");
+                    apply.add_css_class("destructive-action");
+                    apply.set_sensitive(entry.text().trim() == total);
+                } else {
+                    note.set_label(&i18n("Safe: your files are not touched, so clashes never matter."));
+                    entry.set_visible(false);
+                    apply.set_label(&i18n("_Apply"));
+                    apply.remove_css_class("destructive-action");
+                    apply.add_css_class("suggested-action");
+                    apply.set_sensitive(true);
+                }
+            }
+        );
+        update();
+        let u = update.clone();
+        disk.connect_toggled(move |_| u());
+        let u = update.clone();
+        entry.connect_changed(move |_| u());
 
+        let toolbar = adw::ToolbarView::new();
+        toolbar.add_top_bar(&adw::HeaderBar::new());
+        toolbar.set_content(Some(&page));
+        let dialog = adw::Dialog::builder()
+            .title(i18n("Tidy Names"))
+            .content_width(620)
+            .content_height(if plan.ops.is_empty() { 300 } else { 600 })
+            .child(&toolbar)
+            .build();
+
+        cancel.connect_clicked(clone!(
+            #[weak]
+            dialog,
+            move |_| {
+                dialog.close();
+            }
+        ));
         let plan = Rc::new(plan);
-        dialog.connect_response(Some("rename"), clone!(
+        apply.connect_clicked(clone!(
             #[weak(rename_to = win)]
             self,
-            move |_, _| win.apply_rename(&plan, &root)
+            #[weak]
+            dialog,
+            #[weak]
+            disk,
+            move |_| {
+                if disk.is_active() {
+                    if !Self::can_write(&root) {
+                        dialog.close();
+                        win.show_write_permission_dialog(&root);
+                        return;
+                    }
+                    dialog.close();
+                    win.apply_rename(&plan, &root);
+                } else {
+                    let _ = settings.set_boolean("tidy-names", true);
+                    dialog.close();
+                    win.add_toast(i18n("Names are tidied on screen; your files are unchanged"));
+                }
+            }
         ));
         dialog.present(Some(self));
     }
@@ -1405,19 +1617,56 @@ impl Window {
         };
 
         let mut current_row = None;
+        let playing_index = queue.current_song_index();
         for (i, folder) in folders.iter().enumerate() {
             let name = if tidy::enabled() { tidy::name(&folder.name) } else { folder.name.clone() };
+            let songs = ni18n_f("One song", "{} songs", folder.n_songs, &[&folder.n_songs.to_string()]);
+            let played = current.map_or(false, |c| i < c);
+            let is_current = current == Some(i);
+            let subtitle = if is_current {
+                i18n_f("{} · playing", &[&songs])
+            } else if played {
+                i18n_f("{} · played", &[&songs])
+            } else {
+                songs
+            };
             let row = adw::ActionRow::builder()
                 .title(&name)
                 .use_markup(false)
-                .subtitle(ni18n_f("One song", "{} songs", folder.n_songs, &[&folder.n_songs.to_string()]))
+                .subtitle(subtitle)
                 .activatable(true)
                 .build();
-            let playing = gtk::Image::from_icon_name("media-playback-start-symbolic");
-            playing.set_opacity(if current == Some(i) { 1.0 } else { 0.0 });
-            row.add_prefix(&playing);
-            if current == Some(i) {
-                playing.update_property(&[gtk::accessible::Property::Label(&i18n("Playing"))]);
+            row.add_css_class("folder-row");
+
+            // Number, then the cover of the folder's first song
+            let number = gtk::Label::builder()
+                .label((i + 1).to_string())
+                .width_chars(3)
+                .xalign(1.0)
+                .css_classes(["dim-label", "numeric", "caption"])
+                .build();
+            // A fixed 40 px square: an Image scales the cover down, a Picture would grow to it
+            let cover = gtk::Image::builder()
+                .pixel_size(40)
+                .icon_name("folder-music-symbolic")
+                .css_classes(["folder-cover"])
+                .build();
+            cover.set_overflow(gtk::Overflow::Hidden);
+            if let Some(texture) = queue.song_at(folder.first_index).and_then(|s| s.cover_texture()) {
+                cover.set_paintable(Some(&texture));
+            }
+            row.add_prefix(&cover);
+            row.add_prefix(&number);
+            row.set_title_lines(1);
+
+            if played {
+                row.add_css_class("folder-played");
+                let tick = gtk::Image::from_icon_name("object-select-symbolic");
+                tick.update_property(&[gtk::accessible::Property::Label(&i18n("Played"))]);
+                row.add_suffix(&tick);
+            }
+            if is_current {
+                row.add_css_class("folder-current");
                 current_row = Some(row.clone());
             }
 
@@ -1451,6 +1700,45 @@ impl Window {
                 }
             ));
             list.append(&row);
+
+            // The playing folder opens up to show its songs
+            if is_current {
+                for k in 0..folder.n_songs {
+                    let index = folder.first_index + k;
+                    let Some(song) = queue.song_at(index) else { continue };
+                    let track = adw::ActionRow::builder()
+                        .title(song.title())
+                        .use_markup(false)
+                        .activatable(true)
+                        .build();
+                    track.add_css_class("folder-track");
+                    track.add_prefix(
+                        &gtk::Label::builder()
+                            .label((k + 1).to_string())
+                            .width_chars(2)
+                            .xalign(1.0)
+                            .css_classes(["dim-label", "numeric", "caption"])
+                            .build(),
+                    );
+                    if playing_index == Some(index) {
+                        track.add_css_class("folder-track-now");
+                        let spk = gtk::Image::from_icon_name("audio-volume-high-symbolic");
+                        spk.update_property(&[gtk::accessible::Property::Label(&i18n("Now playing"))]);
+                        track.add_suffix(&spk);
+                    }
+                    track.connect_activated(clone!(
+                        #[weak(rename_to = win)]
+                        self,
+                        move |_| {
+                            if let Some(player) = win.player() {
+                                player.skip_to(index);
+                                player.play();
+                            }
+                        }
+                    ));
+                    list.append(&track);
+                }
+            }
         }
 
         // Keep the playing folder in view
@@ -1573,11 +1861,14 @@ impl Window {
             item.set_action_and_target_value(Some(action), Some(&pos.to_variant()));
             item
         };
+        let info = gio::Menu::new();
+        info.append_item(&item(&i18n("Song Info"), "win.song-info"));
         let songs = gio::Menu::new();
         songs.append_item(&item(&i18n("Play Next"), "win.play-next"));
         songs.append_item(&item(&i18n("Move Up"), "win.move-up"));
         songs.append_item(&item(&i18n("Move Down"), "win.move-down"));
         let menu = gio::Menu::new();
+        menu.append_section(None, &info);
         menu.append_section(None, &songs);
         if self.queue_folders().len() > 1 {
             let folders = gio::Menu::new();
@@ -1599,6 +1890,128 @@ impl Window {
             glib::idle_add_local_once(move || p.unparent());
         });
         popover.popup();
+    }
+
+    // Everything about one song: what it is, which folder it came from, and the file itself.
+    // Reads the audio properties only when the dialog opens.
+    fn show_song_info(&self, pos: u32) {
+        use adw::prelude::{ActionRowExt, PreferencesGroupExt, PreferencesPageExt};
+        let Some(player) = self.player() else { return };
+        let queue = player.queue();
+        let Some(song) = queue.song_at(pos) else { return };
+        let file = song.file();
+        let path = file.path();
+
+        let row = |title: String, value: &str| {
+            let r = adw::ActionRow::builder()
+                .title(title)
+                .subtitle(value)
+                .use_markup(false)
+                .subtitle_selectable(true)
+                .build();
+            r.add_css_class("property");
+            r
+        };
+        let mmss = |secs: u64| format!("{}:{:02}", secs / 60, secs % 60);
+
+        // What it is
+        let what = adw::PreferencesGroup::builder().title(i18n("Song")).build();
+        what.add(&row(i18n("Title"), &song.title()));
+        what.add(&row(i18n("Artist"), &song.artist()));
+        what.add(&row(i18n("Album"), &song.album()));
+        what.add(&row(i18n("Length"), &mmss(song.duration())));
+        let (raw_title, raw_artist, raw_album) = song.raw_tags();
+        let raw = [raw_title, raw_artist, raw_album].iter().flatten().cloned().collect::<Vec<String>>().join(" · ");
+        let shown = format!("{} · {} · {}", song.title(), song.artist(), song.album());
+        if tidy::enabled() && !raw.is_empty() && raw != shown {
+            what.add(&row(i18n("Tags in the File"), &raw));
+        }
+
+        // Where it is
+        let wher = adw::PreferencesGroup::builder().title(i18n("Where It Is")).build();
+        let folders = self.queue_folders();
+        if let Some(fi) = Self::folder_of(&folders, pos) {
+            let f = &folders[fi];
+            let name = if tidy::enabled() { tidy::name(&f.name) } else { f.name.clone() };
+            wher.add(&row(i18n("Folder"), &name));
+            let place = i18n_f(
+                "Folder {} of {} · song {} of {}",
+                &[
+                    &(fi + 1).to_string(),
+                    &folders.len().to_string(),
+                    &(pos - f.first_index + 1).to_string(),
+                    &f.n_songs.to_string(),
+                ],
+            );
+            wher.add(&row(i18n("Position"), &place));
+        }
+        if let Some(ref p) = path {
+            let fname = p.file_name().map(|n| n.to_string_lossy().into_owned()).unwrap_or_default();
+            wher.add(&row(i18n("File Name"), &fname));
+            let dir = p.parent().map(|d| d.to_string_lossy().into_owned()).unwrap_or_default();
+            let location = row(i18n("Location"), &dir);
+            let open = gtk::Button::builder()
+                .icon_name("folder-open-symbolic")
+                .tooltip_text(i18n("Open the Folder"))
+                .valign(gtk::Align::Center)
+                .css_classes(["flat"])
+                .build();
+            open.update_property(&[gtk::accessible::Property::Label(&i18n("Open the Folder"))]);
+            let target = file.clone();
+            open.connect_clicked(clone!(
+                #[weak(rename_to = win)]
+                self,
+                move |_| {
+                    let launcher = gtk::FileLauncher::new(Some(&target));
+                    launcher.open_containing_folder(Some(win.upcast_ref::<gtk::Window>()), gio::Cancellable::NONE, |_| {});
+                }
+            ));
+            location.add_suffix(&open);
+            wher.add(&location);
+        } else {
+            wher.add(&row(i18n("Location"), &song.uri()));
+        }
+
+        // The file
+        let filegrp = adw::PreferencesGroup::builder().title(i18n("File")).build();
+        if let Some(ref p) = path {
+            let ext = p.extension().map(|e| e.to_string_lossy().to_uppercase()).unwrap_or_default();
+            let mut fmt = vec![ext];
+            if let Ok(tagged) = lofty::read_from_path(p) {
+                let props = lofty::prelude::AudioFile::properties(&tagged);
+                if let Some(kbps) = props.audio_bitrate() {
+                    fmt.push(format!("{kbps} kbps"));
+                }
+                if let Some(hz) = props.sample_rate() {
+                    fmt.push(format!("{:.1} kHz", hz as f64 / 1000.0));
+                }
+                match props.channels() {
+                    Some(1) => fmt.push(i18n("mono")),
+                    Some(2) => fmt.push(i18n("stereo")),
+                    Some(n) => fmt.push(format!("{n} ch")),
+                    None => {}
+                }
+            }
+            filegrp.add(&row(i18n("Format"), &fmt.into_iter().filter(|s| !s.is_empty()).collect::<Vec<_>>().join(" · ")));
+            if let Ok(meta) = std::fs::metadata(p) {
+                filegrp.add(&row(i18n("Size"), &format!("{:.1} MB", meta.len() as f64 / 1_048_576.0)));
+            }
+        }
+
+        let page = adw::PreferencesPage::new();
+        page.add(&what);
+        page.add(&wher);
+        page.add(&filegrp);
+        let toolbar = adw::ToolbarView::new();
+        toolbar.add_top_bar(&adw::HeaderBar::new());
+        toolbar.set_content(Some(&page));
+        let dialog = adw::Dialog::builder()
+            .title(i18n("Song Info"))
+            .content_width(440)
+            .content_height(600)
+            .child(&toolbar)
+            .build();
+        dialog.present(Some(self));
     }
 
     // The row that has keyboard focus in the playlist, if any

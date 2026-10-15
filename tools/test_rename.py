@@ -31,13 +31,20 @@ def snapshot(root):
     return sorted(out)
 
 
+# Where each fixture folder's songs come from now: the developer's real library was itself
+# renamed to tidy names on 2026-10-11, so the messy names exist only in the fixture
+SOURCES = {'Leo - MassTamilan.dev': 'Leo', 'Darbar 64Kbps': 'Darbar', 'Coolie-320kbps-MassTamilan': 'Coolie',
+           'Beast - MassTamilan.so': 'Beast (2)'}
+
+
 def build_fixture():
     shutil.rmtree(os.path.dirname(t.LIB), ignore_errors=True)
     for folder in FOLDERS:
-        songs = sorted(f for f in os.listdir(os.path.join(SRC_LIB, folder)) if f.endswith('.mp3'))[:3]
+        src = folder if os.path.isdir(os.path.join(SRC_LIB, folder)) else SOURCES.get(folder, folder)
+        songs = sorted(f for f in os.listdir(os.path.join(SRC_LIB, src)) if f.endswith('.mp3'))[:3]
         os.makedirs(os.path.join(t.LIB, folder))
         for s in songs:
-            shutil.copy(os.path.join(SRC_LIB, folder, s), os.path.join(t.LIB, folder, s))
+            shutil.copy(os.path.join(SRC_LIB, src, s), os.path.join(t.LIB, folder, s))
     open(os.path.join(t.LIB, 'Coolie-320kbps-MassTamilan', 'cover.jpg'), 'w').write('not audio')
 
 

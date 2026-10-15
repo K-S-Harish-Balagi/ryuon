@@ -31,7 +31,9 @@ mod imp {
         #[template_child]
         pub playlist_searchentry: TemplateChild<gtk::SearchEntry>,
         #[template_child]
-        pub folders_button: TemplateChild<gtk::ToggleButton>,
+        pub songs_tab: TemplateChild<gtk::ToggleButton>,
+        #[template_child]
+        pub folders_tab: TemplateChild<gtk::ToggleButton>,
         #[template_child]
         pub playlist_stack: TemplateChild<gtk::Stack>,
         #[template_child]
@@ -70,6 +72,14 @@ mod imp {
             self.parent_constructed();
 
             self.obj().setup_searchbar();
+
+            // Songs | Folders tabs drive the window's show-folders toggle
+            let view = self.obj().clone();
+            self.folders_tab.connect_toggled(move |tab| {
+                if tab.is_active() != view.folders_visible() {
+                    let _ = WidgetExt::activate_action(&view, "win.show-folders", None);
+                }
+            });
         }
     }
 
@@ -135,8 +145,14 @@ impl PlaylistView {
         self.imp().playlist_searchentry.get()
     }
 
-    pub fn folders_button(&self) -> gtk::ToggleButton {
-        self.imp().folders_button.get()
+    /// Keep the Songs | Folders tabs in step when the view changes from elsewhere
+    pub fn sync_tabs(&self, folders: bool) {
+        let imp = self.imp();
+        if folders {
+            imp.folders_tab.set_active(true);
+        } else {
+            imp.songs_tab.set_active(true);
+        }
     }
 
     pub fn folder_list(&self) -> gtk::ListBox {

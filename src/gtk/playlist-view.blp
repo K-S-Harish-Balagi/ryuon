@@ -16,14 +16,6 @@ template $RyuonPlaylistView: Widget {
         tooltip-text: _("Search Songs in the Playlist");
       }
 
-      [start]
-      ToggleButton folders_button {
-        icon-name: "folder-symbolic";
-        action-name: "win.show-folders";
-        valign: center;
-        tooltip-text: _("Show Folders");
-      }
-
       title-widget: Box queue_length_box {
         orientation: vertical;
         valign: center;
@@ -56,12 +48,49 @@ template $RyuonPlaylistView: Widget {
       }
 
       [end]
+      MenuButton view_button {
+        icon-name: "view-sort-ascending-symbolic";
+        menu-model: view_menu;
+        valign: center;
+        tooltip-text: _("View and Sort");
+
+        accessibility {
+          label: C_("a11y", "View and sort");
+        }
+      }
+
+      [end]
       ToggleButton select_button {
         icon-name: "selection-mode-symbolic";
         action-name: "queue.select";
         valign: center;
         tooltip-text: _("Select Songs in the Playlist");
       }
+    }
+
+    [top]
+    Box view_tabs {
+      homogeneous: true;
+      margin-start: 12;
+      margin-end: 12;
+      margin-bottom: 6;
+
+      ToggleButton songs_tab {
+        label: _("Songs");
+        active: true;
+        tooltip-text: _("Show Every Song");
+      }
+
+      ToggleButton folders_tab {
+        label: _("Folders");
+        group: songs_tab;
+        tooltip-text: _("Show Folders, One Row Each");
+      }
+
+      styles [
+        "linked",
+        "view-tabs",
+      ]
     }
 
     [top]
@@ -165,5 +194,60 @@ template $RyuonPlaylistView: Widget {
     styles [
       "playlist-background",
     ]
+  }
+}
+
+menu view_menu {
+  section {
+    label: _("Sort Folders By");
+
+    item {
+      label: _("_A–Z");
+      action: "win.library-sort";
+      target: "name";
+    }
+
+    item {
+      label: _("_Newest First");
+      action: "win.library-sort";
+      target: "newest";
+    }
+
+    item {
+      label: _("_Most Songs");
+      action: "win.library-sort";
+      target: "most-songs";
+    }
+
+    item {
+      label: _("_Recently Played");
+      action: "win.library-sort";
+      target: "recent";
+    }
+
+    item {
+      label: _("M_anual Order");
+      action: "win.library-sort";
+      target: "manual";
+    }
+  }
+
+  section {
+    item {
+      label: _("Reset to Folder _Order");
+      action: "win.reset-order";
+    }
+  }
+
+  section {
+    item {
+      label: _("_Clean Up Names");
+      action: "app.tidy-names";
+    }
+
+    item {
+      label: _("Music _Library…");
+      action: "win.preferences";
+    }
   }
 }

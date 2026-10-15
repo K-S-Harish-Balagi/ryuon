@@ -124,6 +124,21 @@ template $RyuonPlaybackControl: Widget {
           }
         }
 
+        Button settings_button {
+          icon-name: "emblem-system-symbolic";
+          action-name: "win.preferences";
+          valign: center;
+          tooltip-text: _("Settings");
+
+          styles [
+            "circular",
+          ]
+
+          accessibility {
+            label: C_("a11y", "Settings");
+          }
+        }
+
         MenuButton menu_button {
           menu-model: primary_menu;
           icon-name: "open-menu-symbolic";
@@ -157,6 +172,11 @@ menu primary_menu {
       label: _("Open Directory");
       action: "win.open-directory";
     }
+
+    item {
+      label: _("Song _Info");
+      action: "win.current-song-info";
+    }
   }
 
   section {
@@ -171,46 +191,7 @@ menu primary_menu {
     }
 
     item {
-      label: _("Reset to Folder _Order");
-      action: "win.reset-order";
-    }
-
-    submenu {
-      label: _("Sort Fol_ders");
-
-      item {
-        label: _("By _Name");
-        action: "win.library-sort";
-        target: "name";
-      }
-
-      item {
-        label: _("Ne_west First");
-        action: "win.library-sort";
-        target: "newest";
-      }
-
-      item {
-        label: _("_Most Songs First");
-        action: "win.library-sort";
-        target: "most-songs";
-      }
-
-      item {
-        label: _("_Recently Played First");
-        action: "win.library-sort";
-        target: "recent";
-      }
-
-      item {
-        label: _("M_anual Order");
-        action: "win.library-sort";
-        target: "manual";
-      }
-    }
-
-    item {
-      label: _("R_ename Files on Disk…");
+      label: _("Tidy _Names…");
       action: "queue.rename-files";
     }
 
@@ -232,28 +213,6 @@ menu primary_menu {
     item {
       label: _("Clear");
       action: "queue.clear";
-    }
-  }
-
-  section {
-    item {
-      label: _("_Match Cover Art");
-      action: "win.enable-recoloring";
-    }
-
-    item {
-      label: _("_Background Playback");
-      action: "app.background-play";
-    }
-
-    item {
-      label: _("Open Library at S_tart");
-      action: "app.library-autoload";
-    }
-
-    item {
-      label: _("T_idy Names");
-      action: "app.tidy-names";
     }
   }
 
@@ -283,7 +242,7 @@ menu primary_menu {
 
   section {
     item {
-      label: _("_Preferences");
+      label: _("_Settings");
       action: "win.preferences";
     }
 

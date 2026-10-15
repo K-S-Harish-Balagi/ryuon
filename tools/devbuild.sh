@@ -12,7 +12,7 @@ case "${1:-build}" in
     rm -f $R/.devbuild/src/ryuon.gresource
     nice -n 15 $FB ninja -C $R/.devbuild install ;;
   run)
-    flatpak build --socket=wayland --socket=fallback-x11 --socket=pulseaudio --device=dri --share=ipc --filesystem=${RYUON_TEST_LIBRARY:-$HOME/Music}:ro \
+    flatpak build --socket=session-bus --socket=wayland --socket=fallback-x11 --socket=pulseaudio --device=dri --share=ipc --filesystem=${RYUON_TEST_LIBRARY:-$HOME/Music}:ro \
       --env=RUST_LOG=ryuon=debug $R/_dev-build ryuon "${@:2}" ;;
   test)
     # Unit tests (library, tidy, ...), reusing the build's dependencies; extra args go to the test filter

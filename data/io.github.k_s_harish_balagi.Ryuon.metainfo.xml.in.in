@@ -58,10 +58,25 @@
     </screenshot>
     <screenshot>
       <image>https://raw.githubusercontent.com/K-S-Harish-Balagi/ryuon/main/data/screenshots/preferences.png</image>
-      <caption>Library preferences</caption>
+      <caption>Library settings</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/K-S-Harish-Balagi/ryuon/main/data/screenshots/song-info.png</image>
+      <caption>Song Info: where a song comes from</caption>
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.3.0" date="2026-10-15">
+      <description>
+        <ul>
+          <li>Song Info: right-click a song to see its folder, file, format and size</li>
+          <li>Songs and Folders tabs, and a View and Sort menu in the playlist</li>
+          <li>Folders view: numbers, covers, played folders ticked, the playing folder opens to its songs</li>
+          <li>A Settings button, and Settings arranged as Location, Playback order, Names and Playback</li>
+          <li>Tidy Names: a before and after preview with clashes marked</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.2.0" date="2026-10-11">
       <description>
         <ul>

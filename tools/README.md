@@ -11,8 +11,9 @@ and only ever read the music library (renaming runs on copies).
 | `devbuild.sh run` | Runs the dev build |
 | `smoke.sh` | Installed app starts; desktop file, metainfo and schema validate |
 | `test_reorder.py` | Play next, move songs and folders, undo, remove, order kept across restarts |
-| `test_rename.py` | Rename Files on Disk on copied songs: wrong count refused, rename, queue and resume follow, undo, read-only library |
+| `test_rename.py` | Tidy Names › rename on disk, on copied songs: wrong count refused, rename, queue and resume follow, undo, read-only library |
 | `test_sort.py` | Sort Folders (name, newest, most songs, recently played, manual) and the Folders view |
+| `screenshots.py` | README and metainfo screenshots (playing, Folders, Settings, Song Info, phone) from the demo library |
 | `test_perf.py` | Time to window and to a fully queued library, for the real library and 2000 synthetic songs |
 
 The Python tests read `RYUON_TEST_LIBRARY` (default `~/Music`). They were written against the

@@ -61,6 +61,15 @@ def launch(library, tmp):
     time.sleep(5)
 
 
+def restart(library, tmp):
+    act('quit', path='/io/github/k_s_harish_balagi/Ryuon', wait=1)
+    for _ in range(40):
+        if not owned():
+            break
+        time.sleep(0.25)
+    launch(library, tmp)
+
+
 def main(library, out):
     if owned():
         sys.exit('Close Ryuon first.')
@@ -80,13 +89,14 @@ def main(library, out):
     act('show-folders', wait=3)
     act('test-preferences', wait=4)
     shot(os.path.join(out, 'preferences.png'))
-    # phone-sized layout: close the dialog by restarting the view at 360 px wide
-    act('quit', path='/io/github/k_s_harish_balagi/Ryuon', wait=1)
-    for _ in range(40):
-        if not owned():
-            break
-        time.sleep(0.25)
-    launch(library, tmp)
+    # each dialog is closed by restarting the app
+    restart(library, tmp)
+    sh('wmctrl', '-ir', window(), '-e', '0,-1,-1,900,640')
+    time.sleep(10)  # the app is busy loading for a few seconds after the window shows
+    act('song-info', '[<uint32 1>]', wait=6)
+    shot(os.path.join(out, 'song-info.png'))
+    # phone-sized layout
+    restart(library, tmp)
     sh('wmctrl', '-ir', window(), '-e', '0,-1,-1,360,720')
     time.sleep(3)
     shot(os.path.join(out, 'phone.png'))
