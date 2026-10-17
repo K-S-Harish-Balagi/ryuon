@@ -42,8 +42,9 @@ OutputBaseFilename=Ryuon-{#AppVersion}-Setup
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
-; Closes a running Ryuon before replacing its files on upgrade
-CloseApplications=yes
+; Closes a running Ryuon (and the gdbus helper GLib starts for it) before replacing or
+; removing its files: asks it to close first, then ends it, since it may not answer
+CloseApplications=force
 RestartApplications=no
 
 [Tasks]
