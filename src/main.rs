@@ -58,6 +58,12 @@ fn main() -> glib::ExitCode {
     }
     builder.init();
 
+    // GLib looks for settings schemas next to its own DLLs; ours sit next to ryuon.exe
+    #[cfg(windows)]
+    if env::var_os("GSETTINGS_SCHEMA_DIR").is_none() {
+        env::set_var("GSETTINGS_SCHEMA_DIR", installed_dir("", "glib-2.0/schemas"));
+    }
+
     // Set up gettext translations
     debug!("Setting up locale data");
     setlocale(LocaleCategory::LcAll, "");
