@@ -80,6 +80,44 @@ jobs:
           Get-Content ryuon-stderr.txt -Tail 40
           if (-not $alive) { throw "ryuon.exe exited early with code $($p.ExitCode)" }
 
+      # Each format decodes with the bundled plugins only (no audio device needed)
+      - name: Decodes MP3, FLAC, Ogg, Opus, M4A with the bundled plugins
+        run: |
+          cp "$MINGW_PREFIX/bin/gst-launch-1.0.exe" bundle/Ryuon/bin/
+          export PATH="$PWD/bundle/Ryuon/bin:/usr/bin" GST_PLUGIN_SYSTEM_PATH="$PWD/bundle/Ryuon/lib/gstreamer-1.0"
+          export GST_REGISTRY="$PWD/gst-registry.bin"
+          fail=0
+          for f in windows/test-media/tone.*; do
+            uri="file:///$(cygpath -m "$PWD/$f")"
+            if gst-launch-1.0.exe -q uridecodebin uri="$uri" ! audioconvert ! audioresample ! fakesink sync=false; then
+              echo "decodes: $f"
+            else
+              echo "FAILS: $f"; fail=1
+            fi
+          done
+          rm bundle/Ryuon/bin/gst-launch-1.0.exe
+          exit $fail
+
+      - name: Plays the test files in Ryuon
+        shell: pwsh
+        run: |
+          $env:PATH = "C:\Windows\system32;C:\Windows"
+          $env:RUST_LOG = "ryuon=debug"
+          $env:GST_DEBUG = "2"
+          $files = Get-ChildItem windows\test-media\tone.* | ForEach-Object { $_.FullName }
+          $p = Start-Process -FilePath bundle\Ryuon\bin\ryuon.exe -ArgumentList $files -PassThru `
+                 -RedirectStandardError play-stderr.txt -RedirectStandardOutput play-stdout.txt
+          Start-Sleep -Seconds 15
+          Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+          $b = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+          $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+          [System.Drawing.Graphics]::FromImage($bmp).CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
+          $bmp.Save("$PWD\windows-playing.png")
+          $alive = -not $p.HasExited
+          if ($alive) { Stop-Process -Id $p.Id -Force }
+          Get-Content play-stderr.txt -Tail 60
+          if (-not $alive) { throw "ryuon.exe exited early with code $($p.ExitCode)" }
+
       - name: Zip
         shell: pwsh
         if: always()
@@ -97,4 +135,6 @@ jobs:
           name: windows-check
           path: |
             windows-screenshot.png
+            windows-playing.png
             ryuon-stderr.txt
+            play-stderr.txt
