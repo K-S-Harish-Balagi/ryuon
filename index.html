@@ -32,6 +32,7 @@
     display: inline-block; background: var(--accent); color: var(--accent-text);
     text-decoration: none; font-weight: 600; padding: 12px 22px; border-radius: 10px;
   }
+  .button.secondary { background: transparent; color: var(--accent); border: 2px solid var(--accent); padding: 10px 20px; }
   .button:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
   .note { color: var(--muted); font-size: 0.95rem; }
   .shot { display: block; width: 100%; max-width: 640px; height: auto; margin: 28px auto; border-radius: 14px;
@@ -59,7 +60,8 @@
 
   <div class="install">
     <a class="button" href="io.github.k_s_harish_balagi.Ryuon.flatpakref">Install Ryuon</a>
-    <span class="note">For Linux, with Flatpak. Updates arrive through your software centre.</span>
+    <a class="button secondary" href="https://github.com/K-S-Harish-Balagi/ryuon/releases/latest">Windows (beta)</a>
+    <span class="note">Linux with Flatpak (updates through your software centre), or Windows 10 and 11.</span>
   </div>
 
   <img class="shot" src="screenshot.png" alt="Ryuon playing a song, with the playlist grouped by folder" width="850" height="653">
@@ -72,6 +74,15 @@
         <pre><code>flatpak install --user https://k-s-harish-balagi.github.io/ryuon/io.github.k_s_harish_balagi.Ryuon.flatpakref</code></pre>
         The first time, Flatpak also downloads the GNOME runtime from Flathub (about 400 MB).</li>
       <li>Open Ryuon from your applications menu. If it was your first Flatpak app, log out and back in once so the menu shows it.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Windows (beta)</h2>
+    <ol>
+      <li>Download <code>Ryuon-…-Setup.exe</code> from the <a href="https://github.com/K-S-Harish-Balagi/ryuon/releases/latest">latest release</a>.</li>
+      <li>Run it. Windows may say "Windows protected your PC" because the installer is not code-signed yet: choose <strong>More info › Run anyway</strong>. It installs for your account, with no administrator password.</li>
+      <li>Open Ryuon from the Start menu. Prefer no installer? The release also has a portable zip: unzip it anywhere and run <code>bin\ryuon.exe</code>.</li>
     </ol>
   </section>
 
