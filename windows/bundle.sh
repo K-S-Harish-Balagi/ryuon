@@ -11,10 +11,24 @@ rm -rf "$OUT"
 mkdir -p "$OUT"
 cp -r "$SRC"/. "$OUT"/
 
-# GStreamer: all installed plugins for now (trimmed once playback is confirmed), and the
-# scanner that indexes them on first start
-mkdir -p "$OUT/lib" "$OUT/libexec"
-cp -r "$P/lib/gstreamer-1.0" "$OUT/lib/"
+# GStreamer: only the plugins Ryuon uses (BUNDLE_ALL_PLUGINS=1 copies every installed one),
+# and the scanner that indexes them on first start
+PLUGINS=(
+  coreelements typefindfunctions playback app gio pbtypes        # pipeline, playbin3
+  audioconvert audioresample volume level replaygain autodetect  # Ryuon's own elements
+  wasapi wasapi2 directsound                                     # Windows audio output
+  mpg123 flac ogg vorbis opus isomp4 mediafoundation wavparse    # decoders: MP3 FLAC Ogg Opus AAC WAV
+  audioparsers id3demux apetag                                   # parsing and tags
+)
+mkdir -p "$OUT/lib/gstreamer-1.0" "$OUT/libexec"
+if [ "${BUNDLE_ALL_PLUGINS:-}" = 1 ]; then
+  cp "$P"/lib/gstreamer-1.0/*.dll "$OUT/lib/gstreamer-1.0/"
+else
+  for plugin in "${PLUGINS[@]}"; do
+    cp "$P/lib/gstreamer-1.0/libgst$plugin.dll" "$OUT/lib/gstreamer-1.0/" ||
+      { echo "Missing GStreamer plugin: $plugin"; exit 1; }
+  done
+fi
 cp -r "$P/libexec/gstreamer-1.0" "$OUT/libexec/"
 # Images (cover art) through gdk-pixbuf
 cp -r "$P/lib/gdk-pixbuf-2.0" "$OUT/lib/"

@@ -58,6 +58,15 @@ fn main() -> glib::ExitCode {
     }
     builder.init();
 
+    // GLib's cache folder on Windows is INetCache, which Disk Cleanup empties: keep the saved
+    // queue, covers and waveforms in %LOCALAPPDATA%\Ryuon\cache instead
+    #[cfg(windows)]
+    if env::var_os("XDG_CACHE_HOME").is_none() {
+        if let Some(local) = env::var_os("LOCALAPPDATA") {
+            env::set_var("XDG_CACHE_HOME", std::path::Path::new(&local).join("Ryuon").join("cache"));
+        }
+    }
+
     // GLib looks for settings schemas next to its own DLLs; ours sit next to ryuon.exe
     #[cfg(windows)]
     if env::var_os("GSETTINGS_SCHEMA_DIR").is_none() {

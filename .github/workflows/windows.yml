@@ -5,8 +5,12 @@ name: Windows
 on:
   push:
     branches: [windows, main]
+    tags: ['v*']
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -94,6 +98,13 @@ jobs:
             else
               echo "FAILS: $f"; fail=1
             fi
+            # The player's own path: playbin3 with Ryuon's ReplayGain filter, silent output
+            if gst-launch-1.0.exe -q playbin3 uri="$uri" audio-sink="fakesink sync=false" video-sink=fakesink \
+                 audio-filter="rgvolume ! rglimiter"; then
+              echo "plays (playbin3): $f"
+            else
+              echo "FAILS (playbin3): $f"; fail=1
+            fi
           done
           rm bundle/Ryuon/bin/gst-launch-1.0.exe
           exit $fail
@@ -118,16 +129,33 @@ jobs:
           Get-Content play-stderr.txt -Tail 60
           if (-not $alive) { throw "ryuon.exe exited early with code $($p.ExitCode)" }
 
+      - name: Version
+        id: version
+        run: |
+          echo "version=$(sed -n "s/^  version: '\(.*\)',/\1/p" meson.build)" >> "$GITHUB_OUTPUT"
+
       - name: Zip
         shell: pwsh
-        if: always()
-        run: Compress-Archive -Path bundle\Ryuon -DestinationPath Ryuon-windows-portable.zip
+        run: Compress-Archive -Path bundle\Ryuon -DestinationPath Ryuon-${{ steps.version.outputs.version }}-windows-portable.zip
+
+      - name: Installer
+        shell: pwsh
+        run: |
+          $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) { choco install innosetup -y --no-progress | Out-Null }
+          & $iscc /Q /DAppVersion=${{ steps.version.outputs.version }} /DSourceDir=..\bundle\Ryuon windows\ryuon.iss
+          if ($LASTEXITCODE) { throw "ISCC failed: $LASTEXITCODE" }
+
+      - name: Installer, library, upgrade and uninstall checks
+        shell: pwsh
+        run: windows\ci-check.ps1 -Version ${{ steps.version.outputs.version }} -Setup dist-installer\Ryuon-${{ steps.version.outputs.version }}-Setup.exe
 
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: ryuon-windows-portable
-          path: Ryuon-windows-portable.zip
+          name: ryuon-windows
+          path: |
+            Ryuon-*-windows-portable.zip
+            dist-installer/Ryuon-*-Setup.exe
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -138,3 +166,27 @@ jobs:
             windows-playing.png
             ryuon-stderr.txt
             play-stderr.txt
+            windows-check
+
+  # A tag like v0.4.0 publishes the tested Windows files on the GitHub release
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ryuon-windows
+          path: files
+      - name: Attach to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd files
+          find . -type f \( -name '*.zip' -o -name '*.exe' \) -exec mv {} . \;
+          sha256sum *.zip *.exe > SHA256SUMS-windows.txt
+          gh release view "$GITHUB_REF_NAME" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1 ||
+            gh release create "$GITHUB_REF_NAME" -R "$GITHUB_REPOSITORY" --draft --title "Ryuon ${GITHUB_REF_NAME#v}" --notes "Release notes to follow."
+          gh release upload "$GITHUB_REF_NAME" -R "$GITHUB_REPOSITORY" --clobber *.zip *.exe SHA256SUMS-windows.txt

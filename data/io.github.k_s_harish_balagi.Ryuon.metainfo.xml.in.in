@@ -66,6 +66,15 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.4.0" date="2026-10-17">
+      <description>
+        <p>Ryuon now runs on Windows 10 and 11 (beta): an installer and a portable version.</p>
+        <ul>
+          <li>Songs are recognised by their file type on every system</li>
+          <li>The Add Song window lists audio files by extension as well</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.1" date="2026-10-17">
       <description>
         <ul>
