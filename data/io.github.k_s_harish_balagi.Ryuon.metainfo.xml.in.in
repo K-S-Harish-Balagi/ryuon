@@ -66,6 +66,15 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.3.1" date="2026-10-17">
+      <description>
+        <ul>
+          <li>Renaming files outside the Music folder asks for permission in the app: choose Allow once in the folder window, no terminal needed</li>
+          <li>Clear messages when a drive or folder is read-only, and how to fix it</li>
+          <li>The app icon shows on every desktop and dock, at the same size as other apps</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.0" date="2026-10-15">
       <description>
         <ul>
