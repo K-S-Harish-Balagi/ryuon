@@ -44,8 +44,11 @@ mod cover_cache;
 pub use cover_cache::CoverCache;
 
 mod inhibit_controller;
-mod mpris_controller;
 pub use inhibit_controller::InhibitController;
+// Media controls over D-Bus (MPRIS) exist on Linux only
+#[cfg(any(target_os = "linux", target_os = "freebsd"))]
+mod mpris_controller;
+#[cfg(any(target_os = "linux", target_os = "freebsd"))]
 pub use mpris_controller::MprisController;
 
 mod gst_backend;

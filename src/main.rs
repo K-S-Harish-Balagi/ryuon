@@ -1,6 +1,9 @@
 // SPDX-FileCopyrightText: 2022  Emmanuele Bassi
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+// A release build on Windows opens as a window only, without a console behind it
+#![cfg_attr(all(windows, not(debug_assertions)), windows_subsystem = "windows")]
+
 mod application;
 mod audio;
 mod config;
@@ -32,6 +35,20 @@ use log::{debug, error, LevelFilter};
 
 use self::application::Application;
 
+// Where the installed data lives: the configured path on Linux; on Windows the share folder
+// next to the program (bin\ryuon.exe, share\locale, share\ryuon), wherever it was installed
+fn installed_dir(configured: &str, name: &str) -> std::path::PathBuf {
+    #[cfg(windows)]
+    if let Some(share) = env::current_exe()
+        .ok()
+        .and_then(|exe| Some(exe.parent()?.parent()?.join("share")))
+    {
+        return share.join(name);
+    }
+    let _ = name;
+    std::path::PathBuf::from(configured)
+}
+
 fn main() -> glib::ExitCode {
     let mut builder = pretty_env_logger::formatted_builder();
     if APPLICATION_ID.ends_with("Devel") {
@@ -45,7 +62,7 @@ fn main() -> glib::ExitCode {
     debug!("Setting up locale data");
     setlocale(LocaleCategory::LcAll, "");
 
-    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR).expect("Unable to bind the text domain");
+    bindtextdomain(GETTEXT_PACKAGE, installed_dir(LOCALEDIR, "locale")).expect("Unable to bind the text domain");
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8")
         .expect("Unable to set the text domain encoding");
     textdomain(GETTEXT_PACKAGE).expect("Unable to switch to the text domain");
@@ -58,7 +75,7 @@ fn main() -> glib::ExitCode {
 
     debug!("Loading resources");
     let resources = match env::var("MESON_DEVENV") {
-        Err(_) => gio::Resource::load(PKGDATADIR.to_owned() + "/ryuon.gresource")
+        Err(_) => gio::Resource::load(installed_dir(PKGDATADIR, "ryuon").join("ryuon.gresource"))
             .expect("Unable to find ryuon.gresource"),
         Ok(_) => match env::current_exe() {
             Ok(path) => {

@@ -477,6 +477,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn renames_through_another_path_and_undo_reports_library_paths() {
         // A symlink stands in for the document portal's path to the same folder
         let t = TempDir::new("portal");

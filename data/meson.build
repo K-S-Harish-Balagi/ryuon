@@ -64,6 +64,7 @@ if compile_schemas.found()
   )
 endif
 
+if host_machine.system() != 'windows'
 service_conf = configuration_data()
 service_conf.set('application_id', application_id)
 service_conf.set('bindir', get_option('prefix') / get_option('bindir'))
@@ -74,5 +75,6 @@ configure_file(
   install: true,
   install_dir: get_option('datadir') / 'dbus-1/services',
 )
+endif
 
 subdir('icons')

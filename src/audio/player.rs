@@ -15,8 +15,8 @@ use log::{debug, error};
 use crate::{
     application::ApplicationAction,
     audio::{
-        Controller, CoverCache, GstBackend, InhibitController, MprisController, PlayerState, Queue,
-        Song, WaveformGenerator,
+        Controller, CoverCache, GstBackend, InhibitController, PlayerState, Queue, Song,
+        WaveformGenerator,
     },
 };
 
@@ -131,8 +131,8 @@ impl AudioPlayer {
 
         let mut controllers: Vec<Box<dyn Controller>> = Vec::new();
 
-        let mpris_controller = MprisController::new(sender.clone());
-        controllers.push(Box::new(mpris_controller));
+        #[cfg(any(target_os = "linux", target_os = "freebsd"))]
+        controllers.push(Box::new(crate::audio::MprisController::new(sender.clone())));
 
         let inhibit_controller = InhibitController::new();
         controllers.push(Box::new(inhibit_controller));

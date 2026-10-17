@@ -1,0 +1,64 @@
+# Windows build (phase W0 of windows/ROADMAP.md): compiles Ryuon with the MSYS2 UCRT64
+# toolchain, runs the unit tests, and keeps the installed tree as a build artifact.
+name: Windows
+
+on:
+  push:
+    branches: [windows, main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    env:
+      CARGO_HOME: ${{ github.workspace }}\.cargo-home
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          pacboy: >-
+            toolchain:p rust:p meson:p ninja:p pkgconf:p blueprint-compiler:p
+            gettext-tools:p glib2:p gtk4:p libadwaita:p
+            gstreamer:p gst-plugins-base:p gst-plugins-good:p gst-plugins-bad:p
+
+      - name: Cache Rust crates and build
+        uses: actions/cache@v4
+        with:
+          path: |
+            .cargo-home/registry
+            .cargo-home/git
+            _build/src/release
+          key: windows-cargo-${{ hashFiles('Cargo.lock') }}
+          restore-keys: windows-cargo-
+
+      - name: Versions
+        run: |
+          rustc --version
+          pkg-config --modversion gtk4 libadwaita-1 gstreamer-1.0
+
+      - name: Configure
+        run: meson setup _build --prefix="$PWD/dist/Ryuon" -Dprofile=default
+
+      - name: Build
+        run: ninja -C _build
+
+      - name: Unit tests
+        run: cargo test --release --manifest-path Cargo.toml --target-dir _build/src
+
+      - name: Install
+        run: ninja -C _build install
+
+      - name: Starts
+        run: ./dist/Ryuon/bin/ryuon.exe --help
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ryuon-windows-build
+          path: dist/Ryuon

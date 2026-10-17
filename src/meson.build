@@ -55,11 +55,16 @@ if cargo_home == ''
 endif
 cargo_env = [ 'CARGO_HOME=' + cargo_home ]
 
+exe_name = meson.project_name()
+if host_machine.system() == 'windows'
+  exe_name += '.exe'
+endif
+
 cargo_release = custom_target(
   'cargo-build',
   build_by_default: true,
   build_always_stale: true,
-  output: meson.project_name(),
+  output: exe_name,
   console: true,
   install: true,
   install_dir: get_option('bindir'),
@@ -69,6 +74,6 @@ cargo_release = custom_target(
     cargo, 'build',
     cargo_options,
     '&&',
-    'cp', 'src' / rust_target / meson.project_name(), '@OUTPUT@',
+    'cp', 'src' / rust_target / exe_name, '@OUTPUT@',
   ],
 )
