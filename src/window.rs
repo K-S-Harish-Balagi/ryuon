@@ -3,7 +3,7 @@
 
 use std::{
     cell::{Cell, RefCell},
-    path::PathBuf,
+    path::{Path, PathBuf},
     rc::Rc,
     str::FromStr,
     time::{Duration, Instant},
@@ -551,7 +551,32 @@ impl Window {
                         let Some(root) = this.library_root() else { return };
                         let Ok(plan) = rename::plan(&root) else { return };
                         if param.and_then(u32::from_variant) == Some(plan.ops.len() as u32) {
-                            this.apply_rename(&plan, &root);
+                            match this.writable_root(&root) {
+                                Some(target) => this.apply_rename(&plan, &root, &target),
+                                None => this.add_toast(i18n("Renaming is not allowed yet")),
+                            }
+                        }
+                    })
+                    .build(),
+                // The real path from the Tidy Names dialog's Rename button, Allow dialog included
+                gio::ActionEntry::builder("test-rename-flow")
+                    .activate(|this: &Window, _, _| {
+                        let Some(root) = this.library_root() else { return };
+                        let Ok(plan) = rename::plan(&root) else { return };
+                        glib::spawn_future_local(clone!(
+                            #[weak]
+                            this,
+                            async move { this.rename_with_access(&plan, &root).await }
+                        ));
+                    })
+                    .build(),
+                // Stands in for the folder the user picks in "Allow Renaming"
+                gio::ActionEntry::builder("test-allow-folder")
+                    .parameter_type(Some(glib::VariantTy::STRING))
+                    .activate(|this: &Window, _, param| {
+                        let Some(root) = this.library_root() else { return };
+                        if let Some(folder) = param.and_then(String::from_variant) {
+                            this.accept_write_folder(Path::new(&folder), &root);
                         }
                     })
                     .build(),
@@ -987,45 +1012,128 @@ impl Window {
         self.action_set_enabled("queue.undo-rename", has_journal);
     }
 
-    // Renaming on disk needs write access, which the Flatpak only has when granted
-    fn can_write(root: &std::path::Path) -> bool {
-        let probe = root.join(".ryuon-write-test");
-        let ok = std::fs::write(&probe, b"").is_ok();
-        let _ = std::fs::remove_file(&probe);
-        ok
+    // Renaming on disk needs write access. A write is tried rather than guessed from the
+    // permission bits: inside the Flatpak the library may be mounted read-only for us alone.
+    fn write_probe(dir: &Path) -> std::io::Result<()> {
+        let probe = dir.join(".ryuon-write-test");
+        std::fs::write(&probe, b"")?;
+        std::fs::remove_file(&probe)
     }
 
-    fn show_write_permission_dialog(&self, root: &std::path::Path) {
-        let command = format!(
-            "flatpak override --user --filesystem={} {}",
-            glib::shell_quote(root).to_string_lossy(),
-            APPLICATION_ID
-        );
+    // The real path behind a document portal path (the path itself otherwise)
+    fn host_path(path: &Path) -> PathBuf {
+        gio::File::for_path(path)
+            .query_info(ATTRIBUTE_HOST_PATH, gio::FileQueryInfoFlags::NONE, gio::Cancellable::NONE)
+            .ok()
+            .and_then(|info| info.attribute_as_string(ATTRIBUTE_HOST_PATH))
+            .map(|p| PathBuf::from(p.as_str()))
+            .unwrap_or_else(|| path.to_path_buf())
+    }
+
+    fn is_same_folder(a: &Path, b: &Path) -> bool {
+        let real = |p: &Path| std::fs::canonicalize(p).unwrap_or_else(|_| p.to_path_buf());
+        let (a, b) = (Self::host_path(a), Self::host_path(b));
+        a == b || real(&a) == real(&b)
+    }
+
+    // A writable way into the library: the library itself, or the document portal path the
+    // user granted earlier with "Allow Renaming"
+    fn writable_root(&self, root: &Path) -> Option<PathBuf> {
+        if Self::write_probe(root).is_ok() {
+            return Some(root.to_path_buf());
+        }
+        let granted = PathBuf::from(self.imp().settings.string("library-write-path").as_str());
+        (!granted.as_os_str().is_empty()
+            && Self::is_same_folder(&granted, root)
+            && Self::write_probe(&granted).is_ok())
+        .then_some(granted)
+    }
+
+    // Inside the Flatpak the library is readable only. Writing is granted the standard way:
+    // the user picks the folder in the system file chooser, and the document portal gives
+    // Ryuon read and write access to that folder alone, remembered across restarts. No
+    // terminal, no extra permissions for the whole app, no administrator password.
+    async fn allow_renaming(&self, root: &Path) -> Option<PathBuf> {
+        let name = root.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
+        if !Path::new("/.flatpak-info").exists() {
+            // Not sandboxed: the chooser cannot grant anything the system does not allow
+            let error = Self::write_probe(root).err()?;
+            self.show_cannot_write(root, &error);
+            return None;
+        }
         let dialog = adw::AlertDialog::new(
-            Some(&i18n("Ryuon Cannot Rename Files Here")),
-            Some(&i18n(
-                "The music library is read-only for Ryuon. To allow renaming, run this command in a terminal, then restart Ryuon:",
+            Some(&i18n("Allow Ryuon to Rename Files?")),
+            Some(&i18n_f(
+                "Ryuon can play the music in “{}” but cannot change it yet. In the next window, open that folder and choose Allow. You only need to do this once.",
+                &[&name],
             )),
         );
-        let label = gtk::Label::builder()
-            .label(&command)
-            .wrap(true)
-            .wrap_mode(gtk::pango::WrapMode::WordChar)
-            .css_classes(["monospace"])
+        dialog.add_responses(&[("cancel", &i18n("_Cancel")), ("allow", &i18n("_Continue"))]);
+        dialog.set_response_appearance("allow", adw::ResponseAppearance::Suggested);
+        dialog.set_default_response(Some("allow"));
+        dialog.set_close_response("cancel");
+        if dialog.choose_future(Some(self)).await != "allow" {
+            return None;
+        }
+        let chooser = gtk::FileDialog::builder()
+            .title(i18n_f("Allow Renaming in “{}”", &[&name]))
+            .accept_label(i18n("_Allow"))
+            .initial_folder(&gio::File::for_path(root))
+            .modal(true)
             .build();
-        dialog.set_extra_child(Some(&label));
-        dialog.add_responses(&[("copy", &i18n("_Copy Command")), ("close", &i18n("_Close"))]);
-        dialog.set_default_response(Some("close"));
-        dialog.set_close_response("close");
-        dialog.connect_response(Some("copy"), clone!(
-            #[weak(rename_to = win)]
-            self,
-            move |_, _| {
-                win.clipboard().set_text(&command);
-                win.add_toast(i18n("Command copied"));
+        let folder = chooser.select_folder_future(Some(self)).await.ok()?;
+        self.accept_write_folder(&folder.path()?, root)
+    }
+
+    // The folder the user allowed: it must be the library, and writing must really work
+    fn accept_write_folder(&self, folder: &Path, root: &Path) -> Option<PathBuf> {
+        if !Self::is_same_folder(folder, root) {
+            let name = root.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
+            self.add_toast(i18n_f("That is a different folder. Choose “{}” to allow renaming there.", &[&name]));
+            return None;
+        }
+        match Self::write_probe(folder) {
+            Ok(()) => {
+                let _ = self.imp().settings.set_string("library-write-path", &folder.to_string_lossy());
+                Some(folder.to_path_buf())
             }
-        ));
+            Err(error) => {
+                self.show_cannot_write(root, &error);
+                None
+            }
+        }
+    }
+
+    // Writing is refused by the system itself, not by the sandbox: say why, and what fixes it
+    fn show_cannot_write(&self, root: &Path, error: &std::io::Error) {
+        const EROFS: i32 = 30;
+        let name = root.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
+        let body = if error.raw_os_error() == Some(EROFS) {
+            i18n_f(
+                "The drive that holds “{}” is mounted read-only. Mount it with write access and try again. For a Windows (NTFS) drive, shut Windows down fully: Fast Startup and hibernation keep the drive read-only.",
+                &[&name],
+            )
+        } else if error.kind() == std::io::ErrorKind::PermissionDenied {
+            i18n_f(
+                "Your user account is not allowed to change files in “{}”. Give your account write access to the folder (in Files: Properties › Permissions), or ask the person who owns it, then try again.",
+                &[&name],
+            )
+        } else {
+            i18n_f("Ryuon could not write to “{}”: {}", &[&name, &error.to_string()])
+        };
+        let dialog = adw::AlertDialog::new(Some(&i18n("Files Cannot Be Renamed")), Some(&body));
+        dialog.add_response("close", &i18n("_Close"));
         dialog.present(Some(self));
+    }
+
+    async fn rename_with_access(&self, plan: &rename::Plan, root: &Path) {
+        let target = match self.writable_root(root) {
+            Some(target) => Some(target),
+            None => self.allow_renaming(root).await,
+        };
+        if let Some(target) = target {
+            self.apply_rename(plan, root, &target);
+        }
     }
 
     // Preview of the tidy names on disk; renaming needs the number of changes typed in
@@ -1235,13 +1343,13 @@ impl Window {
             disk,
             move |_| {
                 if disk.is_active() {
-                    if !Self::can_write(&root) {
-                        dialog.close();
-                        win.show_write_permission_dialog(&root);
-                        return;
-                    }
                     dialog.close();
-                    win.apply_rename(&plan, &root);
+                    let (plan, root) = (plan.clone(), root.clone());
+                    glib::spawn_future_local(clone!(
+                        #[weak]
+                        win,
+                        async move { win.rename_with_access(&plan, &root).await }
+                    ));
                 } else {
                     let _ = settings.set_boolean("tidy-names", true);
                     dialog.close();
@@ -1274,9 +1382,12 @@ impl Window {
         }
     }
 
-    fn apply_rename(&self, plan: &rename::Plan, root: &std::path::Path) {
+    // `target` is the library itself or a writable portal path to it; the queue and the
+    // saved settings keep using the library's own path
+    fn apply_rename(&self, plan: &rename::Plan, root: &Path, target: &Path) {
         let journal = rename::new_journal_path(&Self::rename_journal_dir());
-        match rename::apply(plan, root, &journal) {
+        let through = rename::Plan { ops: rename::rebase(&plan.ops, root, target), clashes: vec![] };
+        match rename::apply(&through, target, root, &journal) {
             Ok(n) => {
                 self.follow_renames(&plan.ops);
                 self.update_undo_rename();
@@ -1342,18 +1453,10 @@ impl Window {
     // restarts and readable in messages; otherwise keep the portal path.
     fn library_folder_path(&self, folder: &gio::File) -> Option<PathBuf> {
         let portal_path = folder.path()?;
-        let host_path = folder
-            .query_info(
-                ATTRIBUTE_HOST_PATH,
-                gio::FileQueryInfoFlags::NONE,
-                gio::Cancellable::NONE,
-            )
-            .ok()
-            .and_then(|info| info.attribute_as_string(ATTRIBUTE_HOST_PATH))
-            .map(|p| PathBuf::from(p.as_str()));
-        match host_path {
-            Some(host) if gio::File::for_path(&host).query_exists(gio::Cancellable::NONE) => Some(host),
-            _ => Some(portal_path),
+        let host = Self::host_path(&portal_path);
+        match host != portal_path && gio::File::for_path(&host).query_exists(gio::Cancellable::NONE) {
+            true => Some(host),
+            false => Some(portal_path),
         }
     }
 

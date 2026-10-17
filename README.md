@@ -56,7 +56,10 @@ The window takes its colours from the album art. The screenshots use a generated
    ```
 
    Flatpak downloads the GNOME runtime from Flathub the first time (about 400 MB).
+   Ryuon asks for access to your Music folder only (to play it and, if you choose, rename files).
 4. **Open Ryuon** from your applications menu, or run `flatpak run io.github.k_s_harish_balagi.Ryuon`.
+   If this was your first Flatpak app, log out and back in once so the menu shows its name and
+   icon (the desktop only looks at Flatpak's app list after a new login).
 
 To update, download the new release and install it the same way. To remove it:
 `flatpak uninstall io.github.k_s_harish_balagi.Ryuon`.
@@ -70,12 +73,9 @@ To update, download the new release and install it the same way. To remove it:
 3. Turn on **Open Library at Start** in **Settings** (the gear button, or Ctrl+,) so it is ready
    every time.
 
-**Is your music outside your Music folder** (another drive, a NAS)? Ryuon can only see your
-Music folder until you allow more. Run this once, with your own path, then restart Ryuon:
-
-```sh
-flatpak override --user --filesystem=/path/to/Music:ro io.github.k_s_harish_balagi.Ryuon
-```
+**Is your music outside your Music folder** (another drive, a NAS)? Pick it with **Choose
+Music Library…**: choosing a folder there is what gives Ryuon access to it, so nothing else is
+needed.
 
 ## Everyday use
 
@@ -102,11 +102,12 @@ type the number of changes first. Nothing is deleted or overwritten: a name
 that is already taken gets "(2)" added. **Undo Rename** puts every name back, and a record of
 each rename is kept so this works even after a crash.
 
-Ryuon needs permission to change the folder. Run this once, then restart Ryuon:
-
-```sh
-flatpak override --user --filesystem=/path/to/Music io.github.k_s_harish_balagi.Ryuon
-```
+**Permission.** Ryuon is installed with permission to read and change your Music folder, so
+renaming there just works. For a library somewhere else, the first rename asks you to allow it:
+the system file chooser opens at the library, you choose **Allow**, and from then on Ryuon may
+change that folder (and only that folder). If renaming is still refused, the drive or the
+folder itself is read-only, and Ryuon says which and how to fix it: for example, a Windows
+(NTFS) drive stays read-only while Windows is hibernated or uses Fast Startup.
 
 Before renaming, check that nothing else depends on the current names, for example playlists
 in other players or a media server that tracks files by path.

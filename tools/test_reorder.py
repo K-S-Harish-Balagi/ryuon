@@ -87,13 +87,17 @@ def quit_app():
     # app.quit over D-Bus (the same path as Ctrl+Q); launch() made sure the name is ours
     if dev_pids() and name_owned():
         sh('gdbus', 'call', '--session', '--dest', APP, '--object-path',
-           '/io/github/k_s_harish_balagi/Ryuon', '--method', 'org.gtk.Actions.Activate', 'quit', '[]', '{}')
+           '/' + APP.replace('.', '/'), '--method', 'org.gtk.Actions.Activate', 'quit', '[]', '{}')
     for _ in range(20):
-        if not dev_pids():
+        if not dev_pids() and not name_owned():
             return
         time.sleep(0.5)
     for pid in dev_pids():
         sh('kill', pid)
+    for _ in range(10):
+        if not name_owned():
+            return
+        time.sleep(0.5)
 
 
 def act(name, pos=None):

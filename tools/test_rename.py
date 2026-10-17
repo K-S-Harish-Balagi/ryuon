@@ -4,7 +4,9 @@
 Builds a small library from COPIES of a few real songs (the real library is only read),
 starts the dev build with RYUON_TEST_HOOKS=1 and drives the test-only actions over D-Bus:
 wrong count refused, rename, queue and resume follow, undo restores everything, and a
-read-only library shows the permission dialog. Usage: python3 tools/test_rename.py
+a read-only library renames nothing and a different folder is not accepted as permission.
+The document portal grant itself is tested on the installed app by test_portal.py.
+Usage: python3 tools/test_rename.py
 """
 import os, shutil, subprocess, sys, time, urllib.parse
 
@@ -136,11 +138,13 @@ def main():
     resume = urllib.parse.unquote(t.keyfile_get('resume-uri') or '')
     t.check('resume point follows the undo', '/Leo - MassTamilan.dev/' in resume, resume)
 
+    # Read-only to the sandbox, like a library outside ~/Music in the installed app
     t.check('app starts with a read-only library', t.launch(HOOKS, lib_mode='ro'))
-    act('test-rename-preview')
-    time.sleep(1)
-    shot('rename-readonly.png')
-    t.check('read-only library: nothing renamed', snapshot(t.LIB) == before)
+    act('test-rename-confirmed', f'[<uint32 {count}>]')
+    t.check('read-only library: nothing renamed before access is allowed', snapshot(t.LIB) == before)
+    act('test-allow-folder', f"[<'{os.path.dirname(t.LIB)}'>]")
+    t.check('a different folder is refused', (t.keyfile_get('library-write-path') or "''") == "''",
+            str(t.keyfile_get('library-write-path')))
     t.quit_app()
 
     passed = sum(ok for _, ok in t.results)

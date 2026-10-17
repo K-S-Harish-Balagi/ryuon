@@ -26,6 +26,11 @@
 	    <summary>Music library folder</summary>
 	    <description>The folder that holds your music, one subfolder per album. Empty when no library is set.</description>
 	  </key>
+	  <key name="library-write-path" type="s">
+	    <default>''</default>
+	    <summary>Writable way into the music library</summary>
+	    <description>The document portal path to the music library, granted when you allowed renaming files there. Empty when the library itself is writable or access was never granted.</description>
+	  </key>
 	  <key name="resume-uri" type="s">
 	    <default>''</default>
 	    <summary>Song to resume</summary>

@@ -8,3 +8,4 @@ subprojects/blueprint-compiler
 __pycache__/
 dist/
 _repo/
+.test-devel.json

@@ -161,6 +161,19 @@ pub fn map_path(ops: &[Rename], path: &Path) -> PathBuf {
     path
 }
 
+/// The same renames under another path to the same folder: the document portal's path to the
+/// library is writable when the library's own path is only readable to the sandbox
+pub fn rebase(ops: &[Rename], from: &Path, to: &Path) -> Vec<Rename> {
+    let moved = |p: &Path| match p.strip_prefix(from) {
+        Ok(rest) if rest.as_os_str().is_empty() => to.to_path_buf(),
+        Ok(rest) => to.join(rest),
+        Err(_) => p.to_path_buf(),
+    };
+    ops.iter()
+        .map(|op| Rename { from: moved(&op.from), to: moved(&op.to), is_dir: op.is_dir })
+        .collect()
+}
+
 fn same_name_ignoring_case(a: &Path, b: &Path) -> bool {
     a.parent() == b.parent()
         && a.file_name().map(|n| n.to_string_lossy().to_lowercase())
@@ -190,7 +203,10 @@ pub fn latest_journal(dir: &Path) -> Option<PathBuf> {
 /// Renames everything in the plan. The journal is written and synced before the first
 /// rename, and each finished rename is recorded, so `undo` works even after a crash.
 /// Returns how many renames were done; on error, how many were done before it.
-pub fn apply(plan: &Plan, root: &Path, journal: &Path) -> Result<usize, (usize, io::Error)> {
+/// Renames as planned under `root`. `library` is the path the rest of the app knows the
+/// library by, when `root` is another way in (the document portal); it is kept in the journal
+/// so `journal_ops` can give the renames back in the app's terms.
+pub fn apply(plan: &Plan, root: &Path, library: &Path, journal: &Path) -> Result<usize, (usize, io::Error)> {
     let fail = |done, e| Err((done, e));
     for op in &plan.ops {
         if !op.from.exists() {
@@ -207,6 +223,7 @@ pub fn apply(plan: &Plan, root: &Path, journal: &Path) -> Result<usize, (usize, 
     let header = json!({
         "ryuon-rename": 1,
         "root": root,
+        "library": library,
         "ops": plan.ops.iter().map(|r| json!([r.from, r.to])).collect::<Vec<_>>(),
     });
     let mut file = fs::File::create(journal).map_err(|e| (0, e))?;
@@ -227,7 +244,17 @@ pub fn apply(plan: &Plan, root: &Path, journal: &Path) -> Result<usize, (usize, 
 /// to `map_path`, goes back to the original names. Renames that may not have happened are
 /// included: their tidy path does not exist, so they match nothing.
 pub fn journal_ops(journal: &Path) -> io::Result<Vec<Rename>> {
-    Ok(read_journal(journal)?.into_iter().map(|(op, _)| op).collect())
+    let ops: Vec<Rename> = read_journal(journal)?.into_iter().map(|(op, _)| op).collect();
+    let header: Value = io::BufReader::new(fs::File::open(journal)?)
+        .lines()
+        .next()
+        .and_then(|l| l.ok())
+        .and_then(|l| serde_json::from_str(&l).ok())
+        .unwrap_or_default();
+    match (header["root"].as_str(), header["library"].as_str()) {
+        (Some(root), Some(library)) if root != library => Ok(rebase(&ops, Path::new(root), Path::new(library))),
+        _ => Ok(ops),
+    }
 }
 
 // Reversed renames, each with whether it was recorded as done
@@ -410,7 +437,7 @@ mod tests {
         let before = snapshot(&library);
         let plan = plan(&library).unwrap();
         let journal = t.0.join("journal").join("rename-1.jsonl");
-        assert_eq!(apply(&plan, &library, &journal).unwrap(), plan.ops.len());
+        assert_eq!(apply(&plan, &library, &library, &journal).unwrap(), plan.ops.len());
         let after = snapshot(&library);
         assert!(after.iter().any(|(p, _)| p == "Coolie/Monica.mp3"));
         assert!(after.iter().any(|(p, _)| p == "Beast (2)/Arabic Kuthu.mp3"));
@@ -441,12 +468,49 @@ mod tests {
         let before = snapshot(&library);
         let plan = plan(&library).unwrap();
         let journal = t.0.join("rename-1.jsonl");
-        apply(&plan, &library, &journal).unwrap();
+        apply(&plan, &library, &library, &journal).unwrap();
         // Drop the "done" records, as if the app died right after renaming
         let header = fs::read_to_string(&journal).unwrap().lines().next().unwrap().to_string();
         fs::write(&journal, header + "\n").unwrap();
         undo(&journal).unwrap();
         assert_eq!(snapshot(&library), before);
+    }
+
+    #[test]
+    fn renames_through_another_path_and_undo_reports_library_paths() {
+        // A symlink stands in for the document portal's path to the same folder
+        let t = TempDir::new("portal");
+        t.touch("lib/Leo - MassTamilan.dev/Naa-Ready-MassTamilan.dev.mp3");
+        t.touch("lib/Darbar 64Kbps/Dumm Dumm.mp3");
+        let library = t.0.join("lib");
+        let portal = t.0.join("doc-1234");
+        std::os::unix::fs::symlink(&library, &portal).unwrap();
+        let before = snapshot(&library);
+        let plan = plan(&library).unwrap();
+        let through = Plan { ops: rebase(&plan.ops, &library, &portal), clashes: vec![] };
+        assert!(through.ops.iter().all(|op| op.from.starts_with(&portal) && op.to.starts_with(&portal)));
+        let journal = t.0.join("rename-1.jsonl");
+        apply(&through, &portal, &library, &journal).unwrap();
+        let original = library.join("Leo - MassTamilan.dev/Naa-Ready-MassTamilan.dev.mp3");
+        let tidy = map_path(&plan.ops, &original);
+        assert_ne!(tidy, original);
+        assert!(tidy.exists());
+        // The app's queue holds library paths: the journal gives the renames back in those terms
+        let back = journal_ops(&journal).unwrap();
+        assert!(back.iter().all(|op| op.from.starts_with(&library) && op.to.starts_with(&library)));
+        assert_eq!(map_path(&back, &tidy), original);
+        undo(&journal).unwrap();
+        assert_eq!(snapshot(&library), before);
+    }
+
+    #[test]
+    fn rebase_leaves_other_paths_alone() {
+        let ops = vec![Rename { from: "/m/a".into(), to: "/m/b".into(), is_dir: false },
+                       Rename { from: "/x/a".into(), to: "/x/b".into(), is_dir: false }];
+        let r = rebase(&ops, Path::new("/m"), Path::new("/run/user/1000/doc/1/m"));
+        assert_eq!(r[0].from, PathBuf::from("/run/user/1000/doc/1/m/a"));
+        assert_eq!(r[1].from, PathBuf::from("/x/a"));
+        assert_eq!(rebase(&[Rename { from: "/m".into(), to: "/m".into(), is_dir: true }], Path::new("/m"), Path::new("/p"))[0].to, PathBuf::from("/p"));
     }
 
     #[test]
@@ -456,7 +520,7 @@ mod tests {
         let library = t.0.join("lib");
         let plan = plan(&library).unwrap();
         t.touch("lib/Leo/b.mp3");
-        let err = apply(&plan, &library, &t.0.join("rename-1.jsonl")).unwrap_err();
+        let err = apply(&plan, &library, &library, &t.0.join("rename-1.jsonl")).unwrap_err();
         assert_eq!((err.0, err.1.kind()), (0, io::ErrorKind::AlreadyExists));
         assert!(t.0.join("lib/Leo - MassTamilan.dev/a.mp3").exists());
         assert!(t.0.join("lib/Leo/b.mp3").exists());
@@ -505,7 +569,7 @@ mod tests {
             println!("{}\t{}\t=>\t{}", if op.is_dir { "DIR" } else { "FILE" }, rel(&library, &op.from), rel(&library, &op.to));
         }
         let journal = t.0.join("rename-1.jsonl");
-        apply(&plan, &library, &journal).unwrap();
+        apply(&plan, &library, &library, &journal).unwrap();
         let after = snapshot(&library);
         assert_eq!(after.iter().filter(|(p, _)| !p.ends_with('/')).count(), before.iter().filter(|(p, _)| !p.ends_with('/')).count());
         // every file still holds its own contents, at the path the plan says
