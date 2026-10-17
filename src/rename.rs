@@ -347,11 +347,10 @@ mod tests {
             for e in fs::read_dir(dir).unwrap() {
                 let p = e.unwrap().path();
                 if p.is_dir() {
-                    out.push((p.strip_prefix(root).unwrap().display().to_string() + "/", String::new()));
+                    out.push((rel(root, &p) + "/", String::new()));
                     walk(root, &p, out);
                 } else {
-                    let rel = p.strip_prefix(root).unwrap().display().to_string();
-                    out.push((rel, fs::read_to_string(&p).unwrap()));
+                    out.push((rel(root, &p), fs::read_to_string(&p).unwrap()));
                 }
             }
         }
@@ -361,8 +360,9 @@ mod tests {
         out
     }
 
+    // Relative path with "/" on every system, so expectations read the same on Windows
     fn rel(root: &Path, p: &Path) -> String {
-        p.strip_prefix(root).unwrap().display().to_string()
+        p.strip_prefix(root).unwrap().display().to_string().replace('\\', "/")
     }
 
     #[test]
@@ -422,7 +422,8 @@ mod tests {
             "Coolie-320kbps-MassTamilan/cover.jpg",
             "Beast/Arabic Kuthu.mp3",
             "Beast - MassTamilan.so/Arabic-Kuthu-MassTamilan.so.mp3",
-            "Annaatthe/Annaatthe-SenSongsMp3.Co/Vaa Saamy :: x.mp3",
+            // A colon is legal on Linux only; Windows cannot hold such a file at all
+            if cfg!(windows) { "Annaatthe/Annaatthe-SenSongsMp3.Co/Vaa Saamy - x.mp3" } else { "Annaatthe/Annaatthe-SenSongsMp3.Co/Vaa Saamy :: x.mp3" },
         ] {
             t.touch(f);
         }

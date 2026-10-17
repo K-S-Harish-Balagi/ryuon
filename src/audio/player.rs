@@ -20,6 +20,8 @@ use crate::{
     },
 };
 
+// Sent by the media controls; Windows has none until its own controller (roadmap W4)
+#[cfg_attr(not(any(target_os = "linux", target_os = "freebsd")), allow(dead_code))]
 #[derive(Clone, Debug)]
 pub enum PlaybackAction {
     Play,
