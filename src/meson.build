@@ -60,6 +60,24 @@ if host_machine.system() == 'windows'
   exe_name += '.exe'
 endif
 
+cargo_command = [
+  'env',
+  cargo_env,
+  cargo, 'build',
+  cargo_options,
+  '&&',
+  'cp', 'src' / rust_target / exe_name, '@OUTPUT@',
+]
+# Ninja runs commands through a shell on Linux only; on Windows "&&" needs one explicitly
+# (MSYS2 provides sh)
+if host_machine.system() == 'windows'
+  quoted = []
+  foreach arg : ['env'] + cargo_env + [cargo.full_path(), 'build'] + cargo_options
+    quoted += '\'' + arg + '\''
+  endforeach
+  cargo_command = ['sh', '-c', ' '.join(quoted) + ' && cp \'' + 'src' / rust_target / exe_name + '\' "$1"', 'sh', '@OUTPUT@']
+endif
+
 cargo_release = custom_target(
   'cargo-build',
   build_by_default: true,
@@ -68,12 +86,5 @@ cargo_release = custom_target(
   console: true,
   install: true,
   install_dir: get_option('bindir'),
-  command: [
-    'env',
-    cargo_env,
-    cargo, 'build',
-    cargo_options,
-    '&&',
-    'cp', 'src' / rust_target / exe_name, '@OUTPUT@',
-  ],
+  command: cargo_command,
 )
