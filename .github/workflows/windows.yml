@@ -58,7 +58,43 @@ jobs:
       - name: Starts
         run: ./dist/Ryuon/bin/ryuon.exe --help
 
+      - name: Bundle (portable folder with every DLL and plugin)
+        run: windows/bundle.sh dist/Ryuon bundle/Ryuon
+
+      # Launch from a clean PATH, as on a PC without MSYS2: it must find everything itself
+      - name: Opens from the bundle
+        shell: pwsh
+        run: |
+          $env:PATH = "C:\Windows\system32;C:\Windows"
+          $env:RUST_LOG = "ryuon=debug"
+          $p = Start-Process -FilePath bundle\Ryuon\bin\ryuon.exe -PassThru `
+                 -RedirectStandardError ryuon-stderr.txt -RedirectStandardOutput ryuon-stdout.txt
+          Start-Sleep -Seconds 20
+          Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+          $b = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+          $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+          [System.Drawing.Graphics]::FromImage($bmp).CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
+          $bmp.Save("$PWD\windows-screenshot.png")
+          $alive = -not $p.HasExited
+          if ($alive) { Stop-Process -Id $p.Id -Force }
+          Get-Content ryuon-stderr.txt -Tail 40
+          if (-not $alive) { throw "ryuon.exe exited early with code $($p.ExitCode)" }
+
+      - name: Zip
+        shell: pwsh
+        if: always()
+        run: Compress-Archive -Path bundle\Ryuon -DestinationPath Ryuon-windows-portable.zip
+
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: ryuon-windows-build
-          path: dist/Ryuon
+          name: ryuon-windows-portable
+          path: Ryuon-windows-portable.zip
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-check
+          path: |
+            windows-screenshot.png
+            ryuon-stderr.txt
