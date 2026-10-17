@@ -20,7 +20,7 @@ use serde_json::{json, Value};
 
 use crate::tidy;
 
-const AUDIO_EXTENSIONS: &[&str] = &["mp3", "flac", "ogg", "oga", "opus", "m4a", "aac", "wav", "wma"];
+pub const AUDIO_EXTENSIONS: &[&str] = &["mp3", "flac", "ogg", "oga", "opus", "m4a", "aac", "wav", "wma"];
 // Names Windows refuses (the library may live on NTFS)
 const RESERVED: &[&str] = &[
     "con", "prn", "aux", "nul", "com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8",

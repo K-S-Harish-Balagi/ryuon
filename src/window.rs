@@ -190,6 +190,9 @@ mod imp {
                 let filter = gtk::FileFilter::new();
                 gtk::FileFilter::set_name(&filter, Some(&i18n("Audio files")));
                 filter.add_mime_type("audio/*");
+                for extension in crate::rename::AUDIO_EXTENSIONS {
+                    filter.add_suffix(extension);
+                }
                 filters.append(&filter);
 
                 let xdg_music = match glib::user_special_dir(glib::UserDirectory::Music) {
@@ -2365,7 +2368,7 @@ impl Window {
                 match info.file_type() {
                     gio::FileType::Regular => {
                         if let Some(content_type) = info.content_type() {
-                            if gio::content_type_is_mime_type(&content_type, "audio/*") {
+                            if utils::is_audio_content_type(&content_type) {
                                 debug!("Adding file '{}' to the queue", file.uri());
                                 queue.push(file);
                             }

@@ -95,8 +95,8 @@ impl SongData {
         let file = gio::File::for_uri(uri);
         let path = file.path().expect("Unable to find file");
 
-        let (mime_type, _) = gio::content_type_guess(Some(&path), None);
-        if !mime_type.starts_with("audio") || mime_type.ends_with("x-mpegurl") {
+        let (content_type, _) = gio::content_type_guess(Some(&path), None);
+        if !crate::utils::is_audio_content_type(&content_type) {
             return SongData::default();
         }
 
