@@ -45,24 +45,26 @@ The window takes its colours from the album art. The screenshots use a generated
 
 ## Install
 
+**[Install page: k-s-harish-balagi.github.io/ryuon](https://k-s-harish-balagi.github.io/ryuon/)**
+
 1. **Set up Flatpak** if you have not: see [flathub.org/setup](https://flathub.org/setup) for your
    distribution. Linux Mint, Fedora and Pop!_OS already have it.
-2. **Download** `Ryuon-0.2.0.flatpak` from the
-   [latest release](https://github.com/K-S-Harish-Balagi/ryuon/releases/latest).
-3. **Install** it: double-click the file to open it in your software centre, or run
+2. **Install**: click **Install Ryuon** on the install page and open the file with your software
+   centre, or run
 
    ```sh
-   flatpak install --user Ryuon-0.2.0.flatpak
+   flatpak install --user https://k-s-harish-balagi.github.io/ryuon/io.github.k_s_harish_balagi.Ryuon.flatpakref
    ```
 
    Flatpak downloads the GNOME runtime from Flathub the first time (about 400 MB).
    Ryuon asks for access to your Music folder only (to play it and, if you choose, rename files).
-4. **Open Ryuon** from your applications menu, or run `flatpak run io.github.k_s_harish_balagi.Ryuon`.
+3. **Open Ryuon** from your applications menu, or run `flatpak run io.github.k_s_harish_balagi.Ryuon`.
    If this was your first Flatpak app, log out and back in once so the menu shows its name and
    icon (the desktop only looks at Flatpak's app list after a new login).
 
-To update, download the new release and install it the same way. To remove it:
-`flatpak uninstall io.github.k_s_harish_balagi.Ryuon`.
+**Updates are automatic:** installing adds Ryuon's signed repository to Flatpak, so new versions
+arrive with your other updates (Update Manager, Software, or `flatpak update`).
+To remove it: `flatpak uninstall io.github.k_s_harish_balagi.Ryuon`.
 
 ## First steps
 
