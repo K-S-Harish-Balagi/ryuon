@@ -75,10 +75,11 @@ meson.add_dist_script(
   meson.project_build_root() / 'meson-dist' / '@0@-@1@'.format(meson.project_name(), meson.project_version()),
 )
 
+# Schemas and the icon cache are needed everywhere; the desktop database is a Linux menu thing
 gnome.post_install(
   glib_compile_schemas: true,
   gtk_update_icon_cache: true,
-  update_desktop_database: true,
+  update_desktop_database: host_machine.system() != 'windows',
 )
 
 summary({
