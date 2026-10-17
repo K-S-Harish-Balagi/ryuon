@@ -23,8 +23,8 @@ and Ryuon plays it one folder after another, picking up where you stopped the ne
   rename the files on disk, with full undo
 - Album-art colours, media keys and desktop media controls, phone-sized layout
 
-Ryuon runs on Linux (64-bit PCs, desktop and phone layouts) as a Flatpak. A Windows beta is
-planned: see [windows/ROADMAP.md](windows/ROADMAP.md).
+Ryuon runs on Linux (64-bit PCs, desktop and phone layouts) as a Flatpak, and on Windows 10
+and 11 (64-bit, beta) with an installer or as a portable folder.
 
 ## Screenshots
 
@@ -65,6 +65,21 @@ The window takes its colours from the album art. The screenshots use a generated
 **Updates are automatic:** installing adds Ryuon's signed repository to Flatpak, so new versions
 arrive with your other updates (Update Manager, Software, or `flatpak update`).
 To remove it: `flatpak uninstall io.github.k_s_harish_balagi.Ryuon`.
+
+### Windows (beta)
+
+1. **Download** `Ryuon-<version>-Setup.exe` from the
+   [latest release](https://github.com/K-S-Harish-Balagi/ryuon/releases/latest).
+2. **Run it.** Windows may show "Windows protected your PC" because the installer is not
+   code-signed yet: choose **More info › Run anyway**. It installs for your account only, with
+   no administrator password (the first page offers all users instead).
+3. Open **Ryuon** from the Start menu.
+
+No installer wanted? The release also has `Ryuon-<version>-windows-portable.zip`: unzip it
+anywhere (a USB drive works) and run `bin\ryuon.exe`.
+
+Updates: install the new version over the old one; your settings and library stay.
+To remove it: Settings › Apps › Installed apps › Ryuon › Uninstall.
 
 ## First steps
 

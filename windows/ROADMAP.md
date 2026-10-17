@@ -1,8 +1,11 @@
 # Ryuon for Windows: roadmap to a beta
 
-Status (2026-10-11): **planned, not started.** Ryuon runs on Linux only today. This folder will
-hold the Windows packaging (build script, installer, notes); code changes go in `src/` behind
-`#[cfg(windows)]`, so Linux and Windows build from the same source.
+Status (2026-10-17): **W0-W3 done, released as a beta in 0.4.0.** Builds, unit tests, a portable
+folder and an installer come from GitHub Actions and are checked there on Windows Server 2025:
+first start without MSYS2, MP3/FLAC/Ogg/Opus/M4A through the player's own pipeline, a library
+played folder by folder, install, upgrade over a running copy, uninstall. **Not yet checked on
+a real PC:** sound through speakers (the CI machine has no sound card), folders on other drives
+and network shares, renaming on a real NTFS library, high-DPI scaling. W4 (media keys) is next.
 
 **Goal of the beta:** a Windows 10/11 (64-bit) installer that plays a music folder folder by
 folder, with the same features as Linux 0.2.0. Media keys and the Windows media overlay are
