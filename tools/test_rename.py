@@ -39,10 +39,20 @@ SOURCES = {'Leo - MassTamilan.dev': 'Leo', 'Darbar 64Kbps': 'Darbar', 'Coolie-32
            'Beast - MassTamilan.so': 'Beast (2)'}
 
 
+def find_source(name):
+    # The library keeps changing (years were added as "Leo (2023)", duplicate albums merged):
+    # take the folder itself, else one named after it with a suffix in brackets
+    base = name.removesuffix(' (2)')
+    for d in sorted(os.listdir(SRC_LIB)):
+        if d == name or d.startswith(base + ' ('):
+            return d
+    sys.exit(f'no source folder for {name} in {SRC_LIB}')
+
+
 def build_fixture():
     shutil.rmtree(os.path.dirname(t.LIB), ignore_errors=True)
     for folder in FOLDERS:
-        src = folder if os.path.isdir(os.path.join(SRC_LIB, folder)) else SOURCES.get(folder, folder)
+        src = folder if os.path.isdir(os.path.join(SRC_LIB, folder)) else find_source(SOURCES.get(folder, folder))
         songs = sorted(f for f in os.listdir(os.path.join(SRC_LIB, src)) if f.endswith('.mp3'))[:3]
         os.makedirs(os.path.join(t.LIB, folder))
         for s in songs:

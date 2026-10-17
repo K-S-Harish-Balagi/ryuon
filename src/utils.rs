@@ -20,11 +20,14 @@ pub fn is_audio_content_type(content_type: &str) -> bool {
     let mime = gio::content_type_get_mime_type(content_type)
         .map(|m| m.to_string())
         .unwrap_or_else(|| content_type.to_string());
-    if mime.ends_with("x-mpegurl") {
+    if mime.ends_with("x-mpegurl") || content_type.ends_with("x-mpegurl") {
         return false;
     }
+    // Windows answers application/octet-stream for a MIME type it has no registry entry for
     let extension = content_type.strip_prefix('.').unwrap_or("").to_ascii_lowercase();
-    mime.starts_with("audio/") || crate::rename::AUDIO_EXTENSIONS.contains(&extension.as_str())
+    mime.starts_with("audio/")
+        || content_type.starts_with("audio/")
+        || crate::rename::AUDIO_EXTENSIONS.contains(&extension.as_str())
 }
 
 pub fn settings_manager() -> gio::Settings {
@@ -336,10 +339,10 @@ mod tests {
     #[test]
     fn audio_content_types_on_linux_and_windows() {
         for yes in ["audio/mpeg", "audio/flac", ".mp3", ".FLAC", ".opus", ".m4a"] {
-            assert!(is_audio_content_type(yes), "{yes}");
+            assert!(is_audio_content_type(yes), "{}", yes);
         }
         for no in ["text/plain", "image/jpeg", ".txt", ".jpg", "audio/x-mpegurl", ""] {
-            assert!(!is_audio_content_type(no), "{no}");
+            assert!(!is_audio_content_type(no), "{}", no);
         }
     }
 }
