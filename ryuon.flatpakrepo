@@ -1,0 +1,9 @@
+[Flatpak Repo]
+Title=Ryuon
+Url=https://k-s-harish-balagi.github.io/ryuon/repo/
+Homepage=https://github.com/K-S-Harish-Balagi/ryuon
+Comment=Ryuon music player, from its author
+Description=Updates for Ryuon, a music player that plays your library folder by folder.
+Icon=https://k-s-harish-balagi.github.io/ryuon/icon-128.png
+DefaultBranch=stable
+GPGKey=mDMEatMUOhYJKwYBBAHaRw8BAQdAx2zfiTIzZnUGp9DPuHs9a31lsFK9bhytFrbdJb9M4T20TlJ5dW9uIEZsYXRwYWsgcmVwb3NpdG9yeSA8ODU0NDgyMDcrSy1TLUhhcmlzaC1CYWxhZ2lAdXNlcnMubm9yZXBseS5naXRodWIuY29tPoiTBBMWCgA7FiEEU9dqVmJjjSmtheIxcUaqXJ10V1wFAmrTFDoCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQcUaqXJ10V1zw9wEAjPewFcSRm7i6he4otQ8hbSUBIp3mhnuq1cSKpNDqWw8BAI+Jq14ZVFfCa0f4cnpVAxW9/pbSyp0NXUBE138/zZ0F

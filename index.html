@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ryuon</title>
+<meta name="description" content="Ryuon plays your music library folder by folder. Install it on any Linux with Flatpak.">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --bg: #f6f8fb; --card: #ffffff; --text: #16202c; --muted: #5a6878;
+    --line: #dfe5ec; --accent: #13467f; --accent-text: #ffffff; --code: #eef2f7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #10141b; --card: #171d26; --text: #e8edf3; --muted: #9aa8b8;
+      --line: #273140; --accent: #3d8fd8; --accent-text: #08111c; --code: #0c1016;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Cantarell, Ubuntu, sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 40px 16px 56px; }
+  header { display: flex; gap: 20px; align-items: center; }
+  header img { width: 96px; height: 96px; flex: none; }
+  h1 { margin: 0; font-size: 2.2rem; letter-spacing: -0.01em; }
+  .tagline { margin: 4px 0 0; color: var(--muted); font-size: 1.1rem; }
+  .install { margin: 28px 0 8px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .button {
+    display: inline-block; background: var(--accent); color: var(--accent-text);
+    text-decoration: none; font-weight: 600; padding: 12px 22px; border-radius: 10px;
+  }
+  .button:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+  .note { color: var(--muted); font-size: 0.95rem; }
+  .shot { display: block; width: 100%; max-width: 640px; height: auto; margin: 28px auto; border-radius: 14px;
+          box-shadow: 0 6px 24px rgba(0,0,0,0.18); }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; margin: 20px 0; }
+  h2 { font-size: 1.15rem; margin: 0 0 10px; }
+  ol, ul { margin: 0; padding-left: 1.3em; }
+  li { margin: 6px 0; }
+  pre { background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+        overflow-x: auto; font-size: 0.9rem; margin: 8px 0; }
+  code { font-family: ui-monospace, "DejaVu Sans Mono", monospace; }
+  a { color: var(--accent); }
+  footer { color: var(--muted); font-size: 0.9rem; margin-top: 28px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <img src="icon.svg" alt="">
+    <div>
+      <h1>Ryuon</h1>
+      <p class="tagline">Plays your music library folder by folder.</p>
+    </div>
+  </header>
+
+  <div class="install">
+    <a class="button" href="io.github.k_s_harish_balagi.Ryuon.flatpakref">Install Ryuon</a>
+    <span class="note">For Linux, with Flatpak. Updates arrive through your software centre.</span>
+  </div>
+
+  <img class="shot" src="screenshot.png" alt="Ryuon playing a song, with the playlist grouped by folder" width="850" height="653">
+
+  <section>
+    <h2>Install</h2>
+    <ol>
+      <li><strong>Flatpak</strong> must be set up. Linux Mint, Fedora and Pop!_OS have it already; for other systems see <a href="https://flathub.org/setup">flathub.org/setup</a>.</li>
+      <li>Click <strong>Install Ryuon</strong> above and open the file with your software centre. Or run:
+        <pre><code>flatpak install --user https://k-s-harish-balagi.github.io/ryuon/io.github.k_s_harish_balagi.Ryuon.flatpakref</code></pre>
+        The first time, Flatpak also downloads the GNOME runtime from Flathub (about 400 MB).</li>
+      <li>Open Ryuon from your applications menu. If it was your first Flatpak app, log out and back in once so the menu shows it.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Updates</h2>
+    <p>Installing adds the Ryuon source to Flatpak, so new versions come with your other updates (Update Manager or Software), or with <code>flatpak update</code>. Releases are signed; Flatpak checks the signature before installing.</p>
+  </section>
+
+  <section>
+    <h2>What it asks for</h2>
+    <ul>
+      <li>Your <strong>Music folder</strong>, to play it and, only if you choose, to rename messy file names.</li>
+      <li>A library somewhere else is reached through the folder you pick in the app; renaming there asks you to allow it once.</li>
+      <li>Sound, display and graphics. No network access.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Remove</h2>
+    <pre><code>flatpak uninstall io.github.k_s_harish_balagi.Ryuon</code></pre>
+  </section>
+
+  <footer>
+    Source, issues and release notes on <a href="https://github.com/K-S-Harish-Balagi/ryuon">GitHub</a>.
+    Free software under GPL-3.0-or-later; a fork of Amberol by Emmanuele Bassi.
+    Repository key: <a href="ryuon.gpg">ryuon.gpg</a>.
+  </footer>
+</main>
+</body>
+</html>

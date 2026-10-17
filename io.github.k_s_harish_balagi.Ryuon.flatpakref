@@ -1,0 +1,11 @@
+[Flatpak Ref]
+Name=io.github.k_s_harish_balagi.Ryuon
+Branch=stable
+Title=Ryuon
+Url=https://k-s-harish-balagi.github.io/ryuon/repo/
+SuggestRemoteName=ryuon
+Homepage=https://github.com/K-S-Harish-Balagi/ryuon
+Icon=https://k-s-harish-balagi.github.io/ryuon/icon-128.png
+RuntimeRepo=https://dl.flathub.org/repo/flathub.flatpakrepo
+IsRuntime=false
+GPGKey=mDMEatMUOhYJKwYBBAHaRw8BAQdAx2zfiTIzZnUGp9DPuHs9a31lsFK9bhytFrbdJb9M4T20TlJ5dW9uIEZsYXRwYWsgcmVwb3NpdG9yeSA8ODU0NDgyMDcrSy1TLUhhcmlzaC1CYWxhZ2lAdXNlcnMubm9yZXBseS5naXRodWIuY29tPoiTBBMWCgA7FiEEU9dqVmJjjSmtheIxcUaqXJ10V1wFAmrTFDoCGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQcUaqXJ10V1zw9wEAjPewFcSRm7i6he4otQ8hbSUBIp3mhnuq1cSKpNDqWw8BAI+Jq14ZVFfCa0f4cnpVAxW9/pbSyp0NXUBE138/zZ0F

@@ -1,0 +1,10 @@
+[core]
+repo_version=1
+mode=archive-z2
+indexed-deltas=true
+
+[flatpak]
+title=Ryuon
+comment=Ryuon music player
+homepage=https://github.com/K-S-Harish-Balagi/ryuon
+default-branch=stable
