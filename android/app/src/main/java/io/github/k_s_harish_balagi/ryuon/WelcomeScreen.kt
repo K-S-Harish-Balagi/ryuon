@@ -7,6 +7,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,19 +44,44 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun WelcomeScreen(onChooseFolder: () -> Unit = {}, onAddSongs: () -> Unit = {}) {
     val colors = MaterialTheme.colorScheme
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colors.background)
-            .safeDrawingPadding()
-            .padding(horizontal = 36.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Logo()
-        Spacer(Modifier.height(36.dp))
-        Text("Ryuon", color = colors.onBackground, fontSize = 30.sp, fontWeight = FontWeight.ExtraBold)
-        Spacer(Modifier.height(14.dp))
+    BoxWithConstraints(Modifier.fillMaxSize().background(colors.background).safeDrawingPadding()) {
+        val wide = maxWidth > maxHeight && maxWidth >= 560.dp
+        // Each layout is centred when it fits and scrolls only when it cannot (very large text)
+        val page = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
+            .heightIn(min = maxHeight)
+            .padding(horizontal = 36.dp, vertical = 24.dp)
+        if (wide) {
+            // Landscape: the logo and name on the left, the choice on the right
+            Row(page, horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Logo()
+                    Spacer(Modifier.height(24.dp))
+                    Text("Ryuon", color = colors.onBackground, fontSize = 30.sp, fontWeight = FontWeight.ExtraBold)
+                }
+                Spacer(Modifier.width(36.dp))
+                Column(Modifier.weight(1.3f), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Choices(onChooseFolder, onAddSongs, gap = 24.dp)
+                }
+            }
+        } else {
+            Column(page, horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                Logo()
+                Spacer(Modifier.height(36.dp))
+                Text("Ryuon", color = colors.onBackground, fontSize = 30.sp, fontWeight = FontWeight.ExtraBold)
+                Spacer(Modifier.height(14.dp))
+                Choices(onChooseFolder, onAddSongs, gap = 40.dp)
+            }
+        }
+    }
+}
+
+/** The explanation, the two buttons and the privacy line */
+@Composable
+private fun Choices(onChooseFolder: () -> Unit, onAddSongs: () -> Unit, gap: androidx.compose.ui.unit.Dp) {
+    val colors = MaterialTheme.colorScheme
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             stringResource(R.string.welcome_text),
             color = colors.onBackground.copy(alpha = 0.78f),
@@ -58,7 +89,7 @@ fun WelcomeScreen(onChooseFolder: () -> Unit = {}, onAddSongs: () -> Unit = {}) 
             lineHeight = 24.sp,
             textAlign = TextAlign.Center,
         )
-        Spacer(Modifier.height(40.dp))
+        Spacer(Modifier.height(gap))
         Button(
             onClick = onChooseFolder,
             modifier = Modifier.width(220.dp).height(52.dp),
@@ -77,7 +108,7 @@ fun WelcomeScreen(onChooseFolder: () -> Unit = {}, onAddSongs: () -> Unit = {}) 
         ) {
             Text(stringResource(R.string.add_songs), fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
-        Spacer(Modifier.height(40.dp))
+        Spacer(Modifier.height(gap))
         Text(
             stringResource(R.string.privacy_line),
             color = colors.onBackground.copy(alpha = 0.78f),
