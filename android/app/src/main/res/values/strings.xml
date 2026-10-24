@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ryuon</string>
+    <string name="welcome_text">Choose the folder that holds your album folders. Ryuon plays them one after another and remembers where you stopped.</string>
+    <string name="choose_music_folder">Choose Music Folder</string>
+    <string name="add_songs">Add Songs</string>
+    <string name="privacy_line">Ryuon only sees the folders you choose. No internet, no account, no ads.</string>
+</resources>

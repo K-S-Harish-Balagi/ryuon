@@ -225,7 +225,7 @@ pub fn cmp_two_files(base: Option<&gio::File>, a: &gio::File, b: &gio::File) -> 
     order
 }
 
-fn cmp_like_nautilus(filename_a: &str, filename_b: &str) -> Ordering {
+pub(crate) fn cmp_like_nautilus(filename_a: &str, filename_b: &str) -> Ordering {
     let order;
 
     let sort_last_a = filename_a.as_bytes()[0] == b'.' || filename_a.as_bytes()[0] == b'#';

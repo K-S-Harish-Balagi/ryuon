@@ -22,6 +22,8 @@ mod song_details;
 mod sort;
 mod tidy;
 mod utils;
+#[cfg(test)]
+mod shared_fixtures;
 mod volume_control;
 mod waveform_view;
 mod window;
